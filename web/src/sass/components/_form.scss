@@ -1,0 +1,258 @@
+.form_wrapper{
+	width: 100%;
+	background: white;
+	border-radius: 5px;
+	box-shadow: 0px 5px 20px rgba(47, 61, 2, 0.1);
+	padding: 25px 75px 40px;
+	position: relative;
+
+	@include for-pad{
+		padding: 25px 20px 30px;
+	}
+
+	@include for-mobile{
+		padding: 25px 20px 30px;
+	}
+}
+
+.form_close{
+	display: none;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	transform: rotate(45deg);
+	cursor: pointer;
+
+	&:before,
+	&:after{
+		content: '';
+		background: #F5D58F;
+		position: absolute;
+		border-radius: 2px;
+	}
+
+	&:before{
+		width: 100%;
+		height: 2px;
+		top: 9px;
+		left: 0px;
+	}
+
+	&:after{
+		width: 2px;
+		height: 100%;
+		top: 0px;
+		left: 9px;
+	}
+
+	&:hover{
+
+		&:before,
+		&:after{
+			background: #FFB30F;
+		}
+	}
+}
+
+.form_title{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.form_title_main{
+		font-weight: 600;
+		font-size: 36px;
+		line-height: 44px;
+		margin-right: 9px;
+
+		@include for-mobile{
+			margin-right: 0px;
+			font-size: 28px;
+			line-height: 32px;
+			text-align: center;
+		}
+	}
+
+	.form_title_desc{
+		font-weight: bold;
+		font-size: 16px;
+		color: #FFB30F;
+
+		@include for-mobile{
+			display: none;
+		}
+	}
+}
+
+.form_block{
+	display: flex;
+	margin-top: 30px;
+
+	@include for-pad{
+		flex-direction: column;
+	    align-items: center;
+	}
+
+	@include for-mobile{
+		flex-direction: column;
+	    align-items: center;
+	}
+
+	.form_inputs{
+		display: flex;
+		flex-wrap: wrap;
+		width: 780px;
+
+		.input_wrapper{
+			width: 130px;
+			margin-right: 20px;
+
+			@include for-mobile{
+				width: 100% !important;
+			}
+
+			&._big{
+				width: 220px;
+
+				@include for-pad{
+					width: 196px;
+				}
+			}
+
+			.input_label{
+				font-weight: 500;
+				font-size: 16px;
+				line-height: 26px;
+			}
+
+			input{
+				border: 1px solid #C4C4C4;
+				box-sizing: border-box;
+				border-radius: 2px;
+				width: 100%;
+				height: 40px;
+				padding: 9px 16px 6px;
+			}
+
+			.input_desc{
+				font-weight: 500;
+				font-size: 12px;
+				line-height: 20px;
+				color: #666666;
+			}
+		}
+
+		.form_checkboxes{
+			width: 100%;
+			display: flex;
+			align-items: center;
+			margin-top: 20px;
+
+			@include for-pad{
+				justify-content: center;
+			}
+
+			@include for-mobile{
+				margin: 0px;
+				flex-direction: column;
+			}
+
+			.checkbox_title{
+				font-weight: bold;
+				font-size: 16px;
+				line-height: 26px;
+				margin-right: 15px;
+
+				@include for-pad{
+					margin: 0px 5px 0px 10px;
+				}
+
+				@include for-mobile{
+					margin: 0px;
+					width: 100%;
+				}
+			}
+
+			.checkbox_wrapper{
+				display: flex;
+
+				@include for-mobile{
+				    flex-direction: column;
+					width: 100%;
+				}
+			}
+		}
+
+		@include for-pad{
+			width: initial;
+			justify-content: center;
+
+			.input_wrapper{
+				margin: 0px 7px;
+			}
+		}
+
+		@include for-mobile{
+			width: 100%;
+
+			.input_wrapper{
+				margin: 0px 0px 15px;
+			}
+		}
+	}
+
+	.form_submit{
+		width: calc(100% - 780px);
+
+		@include for-pad{
+		    width: 100%;
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center;
+		    align-items: center;
+		}
+
+		@include for-mobile{
+			width: 100%;
+		}
+
+		button{
+			height: 50px;
+			margin-top: 21px;
+
+			@include for-pad{
+				width: 180px;
+			}
+
+			@include for-mobile{
+				width: 100%;
+			}
+		}
+
+		.form_policy{
+			margin-top: 10px;
+
+			p{
+				font-weight: 500;
+				font-size: 12px;
+				line-height: 15px;
+
+				&:before{
+					top: 0px;
+				}
+
+				&:after{
+					top: 3px;
+				}
+			}
+
+			a{
+				//text-decoration: underline;
+				color: #5BA641;
+			}
+		}
+	}
+}

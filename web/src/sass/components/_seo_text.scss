@@ -1,0 +1,37 @@
+.seo_text{
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    margin: 40px 0px;
+
+    @include for-mobile{
+        font-size: 14px;
+        line-height: 22px;
+        margin: 20px 0px;
+        max-height: 200px;
+        overflow: hidden;
+        position: relative;
+
+        &._active{
+            max-height: initial;
+
+            .seo_text_control{
+                display: none;
+            }
+        }
+    }
+
+    .seo_text_control{
+        display: none;
+
+        @include for-mobile{
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            padding-top: 40px;
+            background-image: linear-gradient(to top,#fcfcf8 50%,transparent);
+            top: 141px;
+            width: 100%;
+        }
+    }
+}

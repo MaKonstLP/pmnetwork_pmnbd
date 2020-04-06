@@ -1,0 +1,54 @@
+<div data-page-type="listing">
+
+	<div class="content_block" data-listing-title>
+
+		{{ this.render('//components/generic/title.twig', {'count':count, 'seo':seo}) | raw }}
+		
+	</div>
+
+	<div class="content_block">
+		{{filter | raw }}
+	</div>
+
+	<div class="content_block" data-listing-text-top>
+		<div class="seo_text" data-seo-text>
+			{{seo.text_top | raw }}
+			<div class="seo_text_control" data-seo-control>
+				<p class="_link">Показать полностью</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="items_list_listing" data-listing-wrapper>
+		<div class="items_list" data-listing-list>
+
+			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt}) | raw }}
+
+		</div>
+	</div>
+
+	<div class="content_block"> 
+		<div data-pagination-wrapper>
+			{{pagination | raw }}
+		</div>
+	</div>
+
+	<div class="content_block">
+		
+        {{ this.render('//components/generic/form.twig') | raw }}
+
+    </div>
+
+	<div class="content_block" data-listing-text-bottom>
+		<div class="seo_text" data-seo-text>
+			{{seo.text_bottom | raw }}
+			<div class="seo_text_control" data-seo-control>
+				<p class="_link">Показать полностью</p>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="content_loading"></div>
+</div>

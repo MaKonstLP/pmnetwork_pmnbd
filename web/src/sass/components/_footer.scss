@@ -1,0 +1,133 @@
+footer{
+    font-size: 14px;
+    border-top: 1px solid rgba(176,176,176, .25);
+    position: relative;
+    z-index: 10;
+    margin: 0px 35px;
+
+    @include for-pad{
+        margin: 0px 30px;
+    }
+
+    @include for-mobile{
+        margin: 0px 15px;
+    }
+
+    .footer_wrap{
+        padding: 30px 0px;
+
+        @include for-mobile{
+            padding: 20px 0px;
+        }
+
+        .footer_row{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            @include for-mobile{
+                flex-direction: column-reverse;
+            }
+
+            .footer_block{
+
+                &._left{
+                    display: flex;
+                    align-items: center;                  
+                }
+
+                &._right{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+
+                    @include for-mobile{
+                        align-items: center;
+                        margin-bottom: 20px;
+                    }
+                }
+
+                .footer_logo{
+                    margin-right: 22px;
+
+                    @include for-mobile{
+                        display: none;
+                    }
+
+                    .footer_logo_img{
+                        width: 135px;
+                        height: 57px;
+                        background-image: url(/img/svadba_logo.svg);
+                        background-size: contain;
+                        filter: hue-rotate(0deg);
+                        transition: filter 0.2s ease;
+                    }
+                    &:hover .footer_logo_img{
+                        filter: hue-rotate(25deg);
+                    }
+                }
+
+                .footer_info{
+                    font-size: 12px;
+                    font-size: 500;
+                    line-height: 15px;
+
+                    @include for-mobile{
+                        text-align: center;
+                    }
+                }
+
+                .footer_phone{                       
+                    padding: 0px 0px 0px 25px;
+                    background-image: url(/img/phone_icon.svg);
+                    background-position: 0px 50%;
+                    background-repeat: no-repeat;
+                    margin-bottom: 6px;
+
+                    p{
+                        font-weight: 600;
+                        font-size: 24px;
+                        line-height: 29px;
+
+                        @include for-mobile{
+                            font-size: 20px;
+                            line-height: 24px;
+                        }
+                    }
+                }
+
+                .footer_phone_button{
+                    text-align: right;
+                    margin-top: -2px;
+                    width: fit-content;
+                    cursor: pointer;
+                    padding: 0px 0px 0px 30px;
+                    position: relative;
+
+                    &:after,
+                    &:before{
+                        content: '';
+                        position: absolute;
+                        top: 4px;
+                        left: 0px;
+                        width: 17px;
+                        height: 17px;
+                        border: 2px solid $clrPagination;
+                        border-radius: 50%;
+                    }
+
+                    &:before{
+                        left: 9px;
+                    }
+
+                    & > p{
+                        display: inline;
+                        text-align: right;
+                        line-height: 25px;
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+}

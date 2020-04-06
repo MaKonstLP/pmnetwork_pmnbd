@@ -1,0 +1,33 @@
+{% for item in items %}
+	<a href="/catalog/{{item.id}}/" class="item swiper-slide {{type}}">
+        <div class="item_img">
+            <img src="{{item.cover_url}}" alt="{{img_alt | replace({"{название}" : item.name})}}"/>
+        </div>
+        <div class="item_info">
+            <div class="item_info_top">
+                <p class="item_name">{{item.name}}</p>
+
+                {% if type != 'other' %}
+                    <p class="item_parent_name">{{item.restaurant_name}}</p>
+                    <p class="item_address">{{item.restaurant_address}}</p>
+                {% endif %}
+                    
+                <div class="item_meta">
+
+                    {% if item.price %}
+                        <div class="item_meta_item">
+                            <span class="item_meta_label">Стоимость: </span><span class="item_meta_text">от {{item.price}} ₽/чел.</span>
+                        </div>
+                    {% endif %}
+
+                    {% if item.capacity %}
+                        <div class="item_meta_item">
+                            <span class="item_meta_label">Вместимость: </span><span class="item_meta_text">{{item.capacity}} чел.</span>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </a>
+{% endfor %}

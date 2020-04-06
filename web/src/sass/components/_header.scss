@@ -1,0 +1,235 @@
+header{
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    background: white;
+    height: 99px;
+    border-bottom: 1px solid #DEDEDE;
+    box-shadow: 0px 3px 6px rgba(3, 49, 52, 0.06);
+    z-index: 100;
+
+    @include for-pad{
+        height: 90px;
+    }
+
+    @include for-mobile{
+        height: 56px;
+    }
+
+    .header_wrap{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+        height: 100%;
+
+        .header_logo{
+            position: absolute;
+            left: 35px;
+
+            @include for-pad{
+                left: 12px;
+            }
+
+            @include for-mobile{
+                left: 15px;
+            }
+
+            .header_logo_img{
+                width: 194px;
+                height: 82px;
+                background-image: url(/img/svadba_logo.svg);
+                background-size: contain;
+                filter: hue-rotate(0deg);
+                transition: filter 0.2s ease;
+
+                @include for-pad{
+                    width: 132px;
+                    height: 56px;
+                }
+
+                @include for-mobile{
+                    width: 90px;
+                    height: 38px;
+                }
+            }
+
+            &:hover .header_logo_img{
+                filter: hue-rotate(25deg);
+            }
+        }
+
+        .header_menu{
+            display: flex;
+
+            @include for-notdesc{
+                display: none;
+            }
+
+            .header_menu_item{
+                line-height: 30px;
+                font-size: 16px;
+                color: $clrButton;
+                font-weight: 600;
+                margin: 0px 33px;
+                padding: 0px 10px;
+
+                &:hover{
+                    color: $clrGreen;
+                }
+
+                &._active{
+                    color: $clrButtonPressed;
+                }
+            }
+        }
+
+        .header_phone{
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            right: 35px;
+
+            @include for-pad{
+                right: 60px;
+            }
+
+            @include for-mobile{
+                right: 50px;
+            }
+
+            & > p{
+                font-size: 26px;
+                color: #000;
+                font-weight: 600;
+                line-height: 32px;
+                margin-bottom: 7px;
+
+                @include for-mobile{
+                    margin-bottom: 0px;
+                    font-size: 16px;
+                    line-height: 20px;
+                }
+            }
+
+            .header_phone_button{
+                text-align: right;
+                margin-top: -2px;
+                width: fit-content;
+                cursor: pointer;
+                padding: 0px 0px 0px 30px;
+                position: relative;
+
+                @include for-mobile{
+                    display: none;
+                }
+
+                &:after,
+                &:before{
+                    content: '';
+                    position: absolute;
+                    top: 4px;
+                    left: 0px;
+                    width: 17px;
+                    height: 17px;
+                    border: 2px solid $clrPagination;
+                    border-radius: 50%;
+                }
+
+                &:before{
+                    left: 9px;
+                }
+
+                & > p{
+                    display: inline;
+                    text-align: right;
+                    line-height: 25px;
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+            }
+        }
+
+        .header_burger{
+            display: none;
+            position: absolute;
+            width: 35px;
+            height: 27px;
+            right: 10px;
+            top: 32px;
+            cursor: pointer;
+            overflow: hidden;
+
+            @include for-notdesc{
+                display: block;
+            }
+
+            @include for-mobile{
+                width: 26px;
+                height: 20px;
+                top: 18px;
+                right: 12px;
+            }
+
+            div{
+                width: 35px;
+                height: 5px;
+                border-radius: 2px;
+                background: $clrGreen;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                transition: transform 0.3s ease;
+
+                @include for-mobile{
+                    width: 25px;
+                    height: 4px;
+                }
+            }
+
+            div:nth-child(1){
+                transform: translate(0px,0px);
+
+                @include for-mobile{
+                    transform: translate(0px,0px);
+                }
+            }
+
+            div:nth-child(2){
+                transform: translate(0px,11px);
+
+                @include for-mobile{
+                    transform: translate(0px,8px);
+                }
+            }
+
+            div:nth-child(3){
+                transform: translate(0px,22px);
+
+                @include for-mobile{
+                    transform: translate(0px,16px);
+                }
+            }
+        }
+    }
+
+    &._active{
+
+        .header_burger{
+
+            div:nth-child(1){
+                transform: translate(0px,11px) rotate(45deg);
+            }
+
+            div:nth-child(2){
+                transform: translate(0px,11px) rotate(-45deg);
+            }
+
+            div:nth-child(3){
+                transform: translate(0px,50px);
+            }
+        }
+    }
+}

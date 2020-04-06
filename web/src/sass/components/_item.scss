@@ -1,0 +1,160 @@
+.object_head{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-left: calc(100% - 450px);
+    position: relative;
+    min-height: 472px;
+    margin-top: 27px;
+}
+
+.object_gallery{
+    width: 710px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.object_meta{
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(50vw - 200px);
+
+    .object_meta_block{
+        display: flex;
+    }
+
+    .object_meta_item{
+        margin: 0px 34px 20px 0px;
+
+        &:last-child{
+            margin-right: 0px;
+        }
+
+        .object_meta_title{
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 22px;
+        }
+
+        .object_meta_value{
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 22px;
+
+            span{
+                font-weight: 600;
+                font-size: 24px;
+            }
+        }
+    }
+}
+
+.object_book{
+    background: white;
+    padding: 15px 20px 25px;
+
+    .object_book_text{
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    .object_book_hidden{
+        margin-top: 6px;
+        display: flex;
+        align-items: flex-end;
+
+        &._active{
+
+            .object_book_phone{
+
+                .object_fake_phone{
+                    display: none;
+                }
+
+                .object_real_phone{
+                    display: block;
+                }
+            }
+
+            .object_book_hidden_button{
+                display: none;
+            }
+        }
+
+        .object_book_phone{
+            margin-right: 11px;
+
+            .object_fake_phone{
+                font-weight: bold;
+                font-size: 26px;
+                line-height: 30px;
+            }
+
+            .object_real_phone{
+                display: none;
+                font-weight: bold;
+                font-size: 26px;
+                line-height: 30px;
+            }
+        }
+
+        .object_book_hidden_button{
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 18px;
+            color: #5BA641;
+            border-bottom: 1px dashed rgba(91,166,65,0.5);
+            margin: 0px 0px 2px;
+            cursor: pointer;
+        }
+    }
+
+    .object_book_action{
+        margin-top: 14px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px;
+        padding-left: 43px;
+        background-image: url(/img/gift_icon.svg);
+        background-position: 0px 50%;
+        background-size: 30px;
+        background-repeat: no-repeat;
+        min-height: 37px;
+    }
+}
+
+.object_parameters{
+
+    .object_parameters_list{
+        margin-top: 20px;
+
+        .object_parameters_title{
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .object_parameters_item{
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 22px;
+        }
+
+        &._marked{
+            
+            .object_parameters_item{
+                padding-left: 20px;
+                background-image: url(/img/list_pin.svg);
+                background-position: 0px 6px;
+                background-size: 12px;
+                background-repeat: no-repeat;
+            }
+        }
+    }
+}
+
+.object_description{
+
+}

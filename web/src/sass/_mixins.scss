@@ -1,0 +1,15 @@
+@mixin for-pad {
+	@media (max-width: 1440px) and (min-width: 768px) { @content; }
+}
+
+@mixin for-mobile {
+ 	@media (max-width: 767px) { @content; }
+}
+
+@mixin for-notdesc {
+ 	@media (max-width: 1440px) { @content; }
+}
+
+@mixin for-lowdesc {
+ 	@media (max-width: 1650px) { @content; }
+}

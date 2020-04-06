@@ -1,0 +1,86 @@
+.items_pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0px 60px;
+
+    @include for-mobile{
+        margin-bottom: 30px;
+    }
+
+    .items_pagination_item{
+        width: 35px;
+        height: 35px;
+        position: relative;
+        transform: rotate(45deg);
+        border: 3px solid $clrPagination;
+        margin: 0px 13px;
+        cursor: pointer;
+
+        @include for-mobile{
+            width: 30px;
+            height: 30px;
+            margin: 0 11px;
+        }
+
+        &._first{
+            margin-right: 26px;
+            &:before{
+                content: '...';
+                transform: rotate(-45deg);
+                position: absolute;
+                left: calc(100% + 4px);
+                bottom: 34px;
+                color: $clrGreen;
+                font-weight: 500;
+                font-size: 16px;
+
+                @include for-mobile{
+                    left: calc(100% + 3px);
+                    bottom: 30px;
+                }
+
+            }
+        }
+
+        &._last{
+            margin-left: 26px;
+            &:before{
+                content: '...';
+                transform: rotate(-45deg);
+                position: absolute;
+                right: calc(100% + 8px);
+                bottom: -18px;
+                color: $clrGreen;
+                font-weight: 500;
+                font-size: 16px;
+            }
+        }
+
+        &._active{
+            pointer-events: none;
+        }
+
+        &:hover,
+        &._active{
+            background-color: $clrPagination;
+        }
+
+        &:after{
+            content: attr(data-page-id);
+            position: absolute;
+            transform: rotate(-45deg);
+            width: 100%;
+            line-height: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            color: $clrBlack;
+
+            @include for-mobile{
+                line-height: 25px;
+                font-size: 14px;
+            }
+        }
+    }
+}

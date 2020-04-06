@@ -1,0 +1,21 @@
+<div class="filter_select">
+	<p class="filter_label">{{filter_item.name}}</p>
+	<div class="filter_select_block" data-type="{{label}}" data-filter-select-block>
+        <div class="filter_select_current" data-filter-select-current>
+            {% if filter_item.active is not null %}
+                {% if filter_item.active|length > 1 %}
+                    <p>Выбрано ({{filter_item.active|length}})</p>
+                {% else %}
+                    <p>{{filter_item.items[filter_item.active|keys|first]}}</p>
+                {% endif %}
+            {% else %}
+                <p>-</p>
+            {% endif %}
+        </div>
+        <div class="filter_select_list">
+        	{% for key,value in filter_item.items %}
+        		<div class="filter_select_item {{filter_item.active[key] is defined ? '_active':''}}" data-value="{{key}}" data-filter-select-item><p>{{value}}</p></div>
+        	{% endfor %}
+        </div>
+    </div>
+</div>

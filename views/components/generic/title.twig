@@ -1,0 +1,9 @@
+<div class="breadcrumbs">
+	{% for link,name in seo.breadcrumbs %}
+		<a class="breadcrumbs_item" href="{{link}}">{{name}}</a>
+	{% endfor %}
+</div>
+<div class="title">
+	<h1>{{seo.h1}}</h1>
+	<div class="title_count">{{count}} зал{{Declension.end_rooms(count)}}</div>
+</div>

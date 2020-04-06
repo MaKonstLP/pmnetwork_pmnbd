@@ -1,0 +1,48 @@
+{
+  "name": "pmnetwork",
+  "version": "1.0.0",
+  "description": "pmnetwork",
+  "main": "index.js",
+  "scripts": {
+    "gulp": "gulp"
+  },
+  "author": "mks63",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^2.1.1",
+    "dragscroll": "0.0.8",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-notify": "^3.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-bulk-import": "^1.0.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-touch-fd": "github:funkedigital/gulp-touch-fd",
+    "gulp-uglify": "^3.0.2",
+    "inputmask": "^4.0.9",
+    "jquery": "^3.4.1",
+    "merge-stream": "^1.0.1",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^7.3.1",
+    "swiper": "^4.5.1",
+    "webpack": "^4.41.4",
+    "webpack-stream": "^5.2.1"
+  },
+  "dependencies": {
+    "chosen-js": "^1.8.7",
+    "jquery-autocomplete": "^1.2.8",
+    "jquery-autocompleter": "^0.3.0",
+    "js-cookie": "2.1.4",
+    "slick-carousel": "^1.8.1",
+    "sortablejs": "^1.10.0"
+  }
+}

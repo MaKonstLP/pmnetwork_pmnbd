@@ -1,0 +1,62 @@
+.main_top{
+    width: 100%;
+    margin: 42px auto 50px;
+    display: flex;
+    align-items: center;
+
+    @include for-notdesc{
+        flex-direction: column;
+        padding: 0px 15px;
+    }
+
+    @include for-pad{
+        margin: 42px auto 35px;
+    }
+
+    @include for-mobile{
+        margin: 32px auto 20px;
+    }
+
+    h1{
+    	width: calc(50% - 35px);
+    	text-align: right;
+    	margin-right: 35px;
+    	font-size: 50px;
+        line-height: 60px;
+
+        @include for-notdesc{
+            text-align: center;
+            margin-right: 0px;
+            width: 100%;
+        }
+
+        @include for-mobile{
+            font-size: 36px;
+            line-height: 40px;
+        }
+    }
+
+    .main_top_desc{
+    	width: 50%;
+
+        @include for-notdesc{
+            text-align: center;
+            width: 100%;
+        }
+
+        @include for-mobile{
+            margin-top: 10px;
+        }
+
+	    p{
+		    font-weight: 500;
+			font-size: 24px;
+		    line-height: 39px;
+
+            @include for-mobile{
+                font-size: 20px;
+                line-height: 29px;
+            }
+		}
+	}
+}

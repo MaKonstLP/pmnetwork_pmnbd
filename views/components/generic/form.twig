@@ -1,0 +1,74 @@
+<div class="form_wrapper">
+	<div class="form_close" data-close-popup>
+
+	</div>
+
+	<div class="form_main">
+
+		<div class="form_title">
+			<p class="form_title_main">Помочь с выбором зала?</p>
+			<p class="form_title_desc">Это бесплатно!</p>
+		</div>
+
+		<form class="form_block" action="/ajax/form">
+
+			<div class="form_inputs">
+
+				<div class="input_wrapper _big">
+					<div class="input_label">Как Вас зовут?</div>
+					<input type="text" name="name" data-required/>
+				</div>
+				<div class="input_wrapper _big">
+					<div class="input_label">Номер телефона</div>
+					<input type="text" name="phone" data-required/>
+				</div>
+				<div class="input_wrapper">
+					<div class="input_label">Дата свадьбы</div>
+					<input type="text" name="date"/>
+					<div class="input_desc">необязательно</div>
+				</div>
+				<div class="input_wrapper">
+					<div class="input_label">Кол-во гостей</div>
+					<input type="text" name="count"/>
+					<div class="input_desc">необязательно</div>
+				</div>
+
+				<div class="form_checkboxes">
+					<div class="checkbox_title">Зал должен быть:</div>
+					<div class="checkbox_wrapper">
+						<div class="checkbox_item">
+							<input type="checkbox" name="water"/>
+							<div class="checkbox_pseudo" data-action="form_checkbox">У воды</div>
+						</div>
+						<div class="checkbox_item">
+							<input type="checkbox" name="tent"/>
+							<div class="checkbox_pseudo" data-action="form_checkbox">С шатром</div>
+						</div>
+						<div class="checkbox_item">
+							<input type="checkbox" name="country"/>
+							<div class="checkbox_pseudo" data-action="form_checkbox">За городом</div>
+						</div>
+						<div class="checkbox_item">
+							<input type="checkbox" name="incity"/>
+							<div class="checkbox_pseudo" data-action="form_checkbox">В черте города</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form_submit">
+				<button class="_button">Забронировать</button>
+				<div class="form_policy checkbox_item">
+					<input type="checkbox" name="policy" class="personalData" checked="">
+					<p class="checkbox_pseudo">Я согласен с <a class="_link">политикой обработки персональных данных</a></p>
+				</div>
+			</div>
+				
+		</form>
+
+	</div>
+	<div class="form_success">
+
+	</div>
+</div>

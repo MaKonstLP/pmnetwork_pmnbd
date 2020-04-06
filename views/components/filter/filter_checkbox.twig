@@ -1,0 +1,5 @@
+{% for key,value in filter_item.items %}
+	<div class="filter_check {{filter_item.active[key] is defined ? '_checked':''}}" data-type="{{label}}" data-filter-checkbox-item>
+		<div class="filter_check_item" data-value="{{key}}"><p>{{value}}</p></div>
+	</div>
+{% endfor %}
