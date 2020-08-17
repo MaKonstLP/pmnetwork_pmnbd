@@ -17,6 +17,9 @@
   padding: 0;
   /* Fix of Webkit flickering */
   z-index: 1;
+  @include for-small-desktop {
+    width: calc(100% - 80px);
+  }
 }
 .swiper-container-no-flexbox .swiper-slide {
   float: left;

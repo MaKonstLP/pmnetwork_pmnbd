@@ -2,8 +2,27 @@
 @import '_colors';
 @import 'components/*';
 
+@font-face {
+    font-family: 'Proxima Nova Thin';
+    src: url('/fonts/ProximaNovaT-Thin.eot');
+    src: url('/fonts/ProximaNovaT-Thin.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/ProximaNovaT-Thin.woff') format('woff'),
+    url('/fonts/ProximaNovaT-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+font-family: 'Proxima Nova Regular';
+src: url('/fonts/ProximaNova-Regular.eot');
+src: url('/fonts/ProximaNova-Regular.eot?#iefix') format('embedded-opentype'),
+url('/fonts/ProximaNova-Regular.woff') format('woff'),
+url('/fonts/ProximaNova-Regular.ttf') format('truetype');
+font-weight: normal;
+font-style: normal;
+}
+
 body{
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Lato', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	padding: 0;
@@ -17,7 +36,8 @@ body{
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
     box-sizing: border-box;
-    background-color: $clrBg;
+    /*background-color: $clrBg;*/
+    background-color: #fff;
 }
 
 body, html {
@@ -62,7 +82,11 @@ body._overflow .main_wrap{
     background: $clrBg;
     position: relative;
     margin-top: 99px;
-    padding-bottom: 55px;
+    //padding-bottom: 55px;
+
+     @include for-small-desktop{
+        margin-top: 90px;
+    }
 
     @include for-pad{
         margin-top: 90px;
@@ -70,8 +94,13 @@ body._overflow .main_wrap{
 
     @include for-mobile{
         margin-top: 55px;
-        padding-bottom: 40px;
+        //padding-bottom: 40px;
     }
+}
+.content_wrap.index_first_page{
+    margin-top: 0;
+    //background: url(/img/first_page.jpg) no-repeat top center;
+
 }
 
 .main_wrapper{
@@ -84,6 +113,10 @@ body._overflow .main_wrap{
     margin: auto;
     position: relative;
 
+    @include for-small-desktop{
+        width: calc(100% - 20px);
+    }
+
     @include for-pad{
         width: calc(100% - 20px);
     }
@@ -93,6 +126,7 @@ body._overflow .main_wrap{
     }
 }
 [data-page-type]{
+    margin-top: 114px;
     .content_loading{
         display: none;
         position: absolute;
@@ -113,8 +147,15 @@ body._overflow .main_wrap{
     }
 
     &[data-page-type="listing"]{
+        margin-top: 114px;
         .content_loading{
             height: calc(100% + 20px);
+        }
+    }
+    &[data-page-type="index"]{
+        margin-top: 480px;
+        @include for-phone{
+          margin-top: 560px;  
         }
     }
 }
@@ -157,21 +198,33 @@ i.icon {
 a {
     text-decoration: none;
     background-color: transparent;
-    color: inherit;
+    color: $clrBlue;
+}
+p {
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 24px;
 }
 
 ._button{
-    padding: 0px 28px;
+    background: linear-gradient(0deg,#ffc24a,#ffc24a),linear-gradient(0deg,#b1c86f,#b1c86f),linear-gradient(0deg,#d64582,#d64582),linear-gradient(111.56deg,#a70c72 -6.24%,#e50799 104.4%),#29edb2;
+    border-radius: 2px;
+    width: 160px;
+    font-size: 15px;
+    line-height: 24px;
+    padding: 15px 36px;
+    border: 1px solid #ffc24a;
+    box-sizing: border-box;
+    display: inline-block;
     cursor: pointer;
-    background: $clrButton;
-    border-radius: 5px;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
+    color: #1a2824;
+    font-weight: 400;
+    margin-left: 0;
+    text-align: center;
 }
 
 ._button:hover{
-    background: $clrGreen;
+    background: $clrButton;
 }
 
 ._button:active{
@@ -190,8 +243,10 @@ a {
 
 h1{
     font-weight: bold;
-    line-height: 44px;
-    font-size: 38px;
+    /*line-height: 44px;
+    font-size: 38px;*/
+    line-height: 48px;
+    font-size: 48px;
     letter-spacing: 0.01em;
 
     @include for-mobile{
@@ -202,43 +257,53 @@ h1{
 }
 
 h2{
-    font-size: 36px;
-    line-height: 44px;
+    /*font-size: 36px;
+    line-height: 44px;*/
+    line-height: 40px;
+    font-size: 32px;
     text-align: center;
     font-weight: bold;
-
     @include for-mobile{
-        font-weight: 700;
-        font-size: 32px;
-        line-height: 36px;
+        font-size: 24px;
+        line-height: 32px;
     }
 }
 
 h3{
+    line-height: 36px;
     font-size: 28px;
     font-weight: bold;
+    @include for-mobile{
+        font-size: 24px;
+        line-height: 32px;
+    }
 }
 
 ._link{
-    color: $clrGreen;
-    border-bottom: 1px solid $clrLinkBorder;
+    color: $clrGrey;
+    border-bottom: 1px dashed $clrGrey;
 
     &:hover{
-        color: $clrButton;
-        border-bottom: 1px solid $clrButton;
+        border-bottom: none;
     }
 }
 
 .title{
     display: flex;
     justify-content: center;
-    align-items: baseline;
+    //align-items: baseline;
     margin-top: 55px;
     flex-wrap: wrap;
+    text-align: center;
+    flex-direction: column;
 
     @include for-notdesc{
         flex-direction: column;
         align-items: center;
+    }
+
+    @include for-small-desktop{
+        margin-top: 50px;
     }
 
     @include for-pad{
@@ -254,10 +319,15 @@ h3{
     }
 
     .title_count{
-        font-size: 26px;
-        line-height: 32px;
+        //font-size: 26px;
+        //line-height: 32px;
         color: $clrTextInactive;
         margin-left: 15px;
+        font-family: 'Playfair Display', sans-serif;
+        font-style: italic;
+        font-size: 24px;
+        line-height: 32px;
+        margin-top: 8px;
 
         @include for-notdesc{
             text-align:center;
@@ -342,6 +412,10 @@ h3{
 
 .checkbox_item{
     margin-right: 20px;
+
+    @include for-small-desktop{
+        margin: 0px 10px;
+    }
 
     @include for-pad{
         margin: 0px 10px;

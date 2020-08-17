@@ -13,13 +13,29 @@ export default class YaMap{
 
         myPlacemark = new ymaps.Placemark(myMap.getCenter(), {
             hintContent: 'hintContent',
-            balloonContent: 'balloonContent'
+            balloonContent: '\
+                            <div class="balloon_content_wrap">\
+                                <div class="balloon_content_img">\
+                                    <img src="'+ $('.map_img').attr('src') +'">\
+                                </div>\
+                                <div class="ballon_content_text">\
+                                    <a class="ballon_content_name" href="#">'+ $('.map_rest_name').html() +'</a>\
+                                    <p class="ballon_content_address">'+ $('.map_rest_address').html() +'</p>\
+                                </div>\
+                            </div>\
+            ',
         }, {
-            iconLayout: 'default#image',
+            //iconLayout: 'default#image',
+            preset: 'islands#darkGreenIcon',
+            hideIconOnBalloonOpen: false,
+            balloonOffset: [0,-37],
         });
 
-	    myMap.geoObjects
-		        .add(myPlacemark); 
+	    myMap.geoObjects.add(myPlacemark); 
+        
+        if($(window).width() > 600){
+            myPlacemark.balloon.open();
+        }
 		});
 	}
 }

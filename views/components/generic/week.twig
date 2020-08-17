@@ -1,0 +1,5 @@
+{{ now | date_modify('monday this week') | date('m-d-Y') }}
+								{{ now | date_modify('this week') | date('m-d-Y') }}
+								{{ now | date_modify('sunday this week') | date('m-d-Y') }}
+								{{ now | date_modify('first day of this month') | date('m-d-Y') }}
+								{{ now | date_modify('last day of this month') | date('m-d-Y') }}

@@ -8,14 +8,19 @@
         margin-bottom: 30px;
     }
 
+    @include for-phone{
+        display: none;
+    }
+
     .items_pagination_item{
-        width: 35px;
+        width: 20px;
         height: 35px;
         position: relative;
-        transform: rotate(45deg);
-        border: 3px solid $clrPagination;
+        //transform: rotate(45deg);
+        //border: 3px solid $clrPagination;
         margin: 0px 13px;
         cursor: pointer;
+        color: $clrBlue;
 
         @include for-mobile{
             width: 30px;
@@ -27,11 +32,11 @@
             margin-right: 26px;
             &:before{
                 content: '...';
-                transform: rotate(-45deg);
+                //transform: rotate(-45deg);
                 position: absolute;
-                left: calc(100% + 4px);
-                bottom: 34px;
-                color: $clrGreen;
+                left: calc(100% + 12px);
+                bottom: 10px;
+                color: $clrBlue;
                 font-weight: 500;
                 font-size: 16px;
 
@@ -47,11 +52,11 @@
             margin-left: 26px;
             &:before{
                 content: '...';
-                transform: rotate(-45deg);
+                //transform: rotate(-45deg);
                 position: absolute;
-                right: calc(100% + 8px);
-                bottom: -18px;
-                color: $clrGreen;
+                right: calc(100% + 12px);
+                bottom: 10px;
+                color: $clrBlue;
                 font-weight: 500;
                 font-size: 16px;
             }
@@ -62,20 +67,21 @@
         }
 
         &:hover,
-        &._active{
-            background-color: $clrPagination;
+        &._active:after{
+            //background-color: $clrPagination;
+            color: $clrBlack;
         }
 
         &:after{
             content: attr(data-page-id);
             position: absolute;
-            transform: rotate(-45deg);
+            //transform: rotate(-45deg);
             width: 100%;
-            line-height: 30px;
-            font-size: 16px;
+            font-size: 17px;
+            line-height: 25px;
             font-weight: 500;
             text-align: center;
-            color: $clrBlack;
+            color: $clrBlue;
 
             @include for-mobile{
                 line-height: 25px;
@@ -83,4 +89,30 @@
             }
         }
     }
+}
+div[data-listing-pagitem]{
+    color: $clrBlue;
+    font-size: 17px;
+    line-height: 25px;
+    height: 35px;
+    cursor: pointer;
+    position: relative;
+}
+div[data-page-increase="-1"]:before{
+    color: $clrBlue;
+    font-size: 17px;
+    line-height: 25px;
+    height: 35px;
+    content:"←";
+    position: absolute;
+    left: -25px;
+}
+div[data-page-increase="1"]:before{
+    color: $clrBlue;
+    font-size: 17px;
+    line-height: 25px;
+    height: 35px;
+    content:"→";
+    position: absolute;
+    right: -25px;
 }

@@ -9,6 +9,11 @@ export default class Index{
 
 		//КЛИК ПО КНОПКЕ "ПОДОБРАТЬ"
 		$('[data-filter-button]').on('click', function(){
+			console.log('click');
+			if($(this).hasClass('filter_submit_button')) {
+				console.log('filter_submit_button');
+				$(this).closest('.popup_filter_wrap').slideToggle('Fast');
+			}
 			self.redirectToListing();
 		});
 	}

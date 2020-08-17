@@ -7,8 +7,10 @@ import Index from './components/index';
 import Widget from './components/widget';
 import Form from './components/form';
 import YaMap from './components/map';
+import Slider from './components/slider';
 
 window.$ = $;
+window.jQuery = $;
 
 (function($) {
   	$(function() {
@@ -29,12 +31,17 @@ window.$ = $;
 	    	var widget = new Widget();
 	    }
 
+	    if ($('[data-gallery-main-swiper]').length > 0) {
+	    	var slider = new Slider();
+	    }
+
 	    if ($('.map').length > 0) {
 	    	var yaMap = new YaMap();
 	    }
 
 	    var main = new Main();
 	    var form = [];
+	    var see_more = [];
 
 	    $('form').each(function(){
 	    	form.push(new Form($(this)))

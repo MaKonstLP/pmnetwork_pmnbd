@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\svadbanaprirode\assets;
+namespace frontend\modules\pmnbd\assets;
 
 use yii\web\AssetBundle;
 
@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $sourcePath = '@frontend/modules/svadbanaprirode/web/dist';
+    public $sourcePath = '@frontend/modules/pmnbd/web/dist';
     //public $baseUrl = '@web';
     //public $basePath = '@frontend/modules/svadbanaprirode/web';
     public $css = [

@@ -10,11 +10,14 @@ export default class Form {
 		this.$formWrap = this.$form.parents('.formWrap');
 		this.$submitButton = this.$form.find('button[type="submit"]');
 		this.$policy = this.$form.find('[name="policy"]');
+		this.$policy_checkbox = this.$form.find('[data-action="form_checkbox"]');
 		this.to = (this.$form.attr('action') == undefined || this.$form.attr('action') == '') ? this.to : this.$form.attr('action');
 		let im_phone = new Inputmask('+7 (999) 999-99-99', {
 			clearIncomplete: true,
 	    });
+
 	    im_phone.mask($(this.$form).find('[name="phone"]'));
+
 
 		this.bind();
 	}
@@ -64,11 +67,42 @@ export default class Form {
 			this.checkValid();
 		})
 
-		$('[data-action="form_checkbox"]').on('click',(e) => {
-			let $el = $(e.currentTarget);
-			let $input = $el.siblings('input');
+		this.$policy_checkbox.on('click',(e) => {
 
+			let $el = $(e.currentTarget);
+			let $input = $el.children('input');
+			if ($el.hasClass('_active')){
+				$el.removeClass('_active');
+			} else {
+				$el.addClass('_active');
+			}
 			$input.prop("checked", !$input.prop("checked"));
+		})
+
+		this.calendarInit();
+
+		this.$form.on('click', '.date_wrapper_arrow', (e) => {
+			let $el = $(e.currentTarget);
+			this.calendarInit($el.data('next_date'));
+		})
+
+		this.$form.on('click', 'input[name="date"]', (e) => {
+			let $el = $(e.currentTarget);
+			if ($el.html() == '') {
+				this.calendarInit();
+			} else {
+				this.calendarInit($el.html());
+			}
+			
+		})
+
+		this.$form.on('click', '.date_wrapper_week p', (e) => {
+			let $el = $(e.currentTarget);
+			let $elParent = $el.parent();
+			if (!$elParent.hasClass('week_title')) {
+				$elParent.parents('.date_wrapper').find('input').val($el.data('cur_date'));
+			} 
+			
 		})
 	}
 
@@ -83,6 +117,9 @@ export default class Form {
 			var valid = true;
 			var name = $field.attr('name');
 			var pattern_email = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
+			var time_cur = Date.parse($field.val());
+			var date_now = new Date();
+			var time_now = new Date(date_now.getFullYear(), date_now.getMonth(), date_now.getDate()).getTime();
 
 			if ($field.val() == '') {
 				valid = false;
@@ -97,24 +134,29 @@ export default class Form {
 					var custom_error = 'Неверный формат электронной почты';
 				}
 
+				if (name === 'date' && time_cur < time_now) {
+					valid = false;
+					var custom_error = 'Вы указали прошедшую дату';
+				}
+
 		        if (name === 'policy' && $field.prop('checked'))
 		          valid = true;
 			}
 			if (valid) {
-				$field.removeClass('_invalid');
+				$field.removeClass('_invalid').addClass('check_approove');
 
-        		if ($field.parent().find('.form_input_error').length > 0)
-					$field.parent().find('.form_input_error').html('');
+        		if ($field.parent().find('.input_error').length > 0)
+					$field.parent().find('.input_error').html('');
 
 			} else {
-				$field.addClass('_invalid');
+				$field.addClass('_invalid').removeClass('check_approove');
 				var form_error = $field.data('error') || 'Заполните поле';
 				var error_message = custom_error || form_error;
 
-				if ($field.siblings('.form_input_error').length  == 0) {
-					$field.parent('.elementWrap').append('<div class="form_input_error">' + error_message + '</div>');
+				if ($field.siblings('.input_error').length  == 0) {
+					$field.parent('.input_wrapper').append('<div class="input_error">' + error_message + '</div>');
 				} else {
-					$field.siblings('.form_input_error').html(error_message);
+					$field.siblings('.input_error').html(error_message);
 				}
 			}
 	}
@@ -188,5 +230,69 @@ export default class Form {
 			this.error();
 			this.disabled = false;
 	    });
+	}
+
+	calendarInit($chooseDate = '') {
+		if ($chooseDate == '') {
+			var $curDate = new Date();
+			var $now = true;
+		} else {
+			var $curDate = new Date($chooseDate);
+			if ($curDate.getMonth() == new Date().getMonth() && $curDate.getFullYear() == new Date().getFullYear()) var $now = true; else var $now = false;
+		}
+		var mnths = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+		var $firstDayMonth = new Date($curDate.getFullYear(), $curDate.getMonth(),1);
+		var $prevDate = new Date($firstDayMonth.getFullYear(), $firstDayMonth.getMonth(),0);
+		var $countDaysMonth = 33 - new Date($curDate.getFullYear(), $curDate.getMonth(), 33).getDate();
+		var $lastDayMonth = new Date($curDate.getFullYear(), $curDate.getMonth(),$countDaysMonth);
+		var $nextDate = new Date($lastDayMonth.getFullYear(), $lastDayMonth.getMonth(),$lastDayMonth.getDate()+1);
+
+		var $render = '<div class="date_wrapper_title">\
+							<p class="date_wrapper_cur_month">'
+								+ mnths[$curDate.getMonth()] + ' ' + $curDate.getFullYear() +
+							'</p>\
+							<div class="date_wrapper_arrows">'
+								+ (!$now ? '<div class="date_wrapper_arrow _prev" data-next_date="' + $prevDate.getFullYear() + '-' + ((($prevDate.getMonth()+1) <10) ? ('0' + ($prevDate.getMonth()+1)) : ($prevDate.getMonth()+1)) + '-' + (($prevDate.getDate() < 10) ? ('0' + $prevDate.getDate()) : $prevDate.getDate()) +'"></div>' : '')+
+								'<div class="date_wrapper_arrow _next" data-next_date="' + $nextDate.getFullYear() + '-' + ((($nextDate.getMonth()+1) <10) ? ('0' + ($nextDate.getMonth()+1)) : ($nextDate.getMonth()+1)) + '-' + (($nextDate.getDate() <10) ? ('0' + $nextDate.getDate()) : $nextDate.getDate()) +'"></div>\
+							</div>\
+						</div>\
+						<div class="date_wrapper_weeks">\
+							<div class="date_wrapper_week week_title">\
+								<p>Пн</p>\
+								<p>Вт</p>\
+								<p>Ср</p>\
+								<p>Чт</p>\
+								<p>Пт</p>\
+								<p>Сб</p>\
+								<p>Вс</p>\
+							</div>'
+		+ this.renderWeek($firstDayMonth) +
+		'</div>';
+
+		this.$form.find('.input_wrapper_date_wrapper').html();
+		this.$form.find('.input_wrapper_date_wrapper').html($render);
+		
+	}
+
+	renderWeek($date, $renderWeek = '') {
+		var $curWeekDay = $date.getDay();
+		$curWeekDay = ($curWeekDay == 0) ? 7 : $curWeekDay;
+
+		var $firstDayWeek = new Date($date.getFullYear(), $date.getMonth(),$date.getDate() - $curWeekDay);
+
+		$renderWeek += '<div class="date_wrapper_week">';
+		for (var $i=1; $i<8; $i++){
+			var $weekDay = new Date($firstDayWeek.getFullYear(), $firstDayWeek.getMonth(),$firstDayWeek.getDate()+$i);
+			var $class = (($weekDay.getMonth() != $date.getMonth()) ? 'not_this_month' : '');
+			$class = (($weekDay.getFullYear() == new Date().getFullYear() && $weekDay.getMonth() == new Date().getMonth() && $weekDay.getDate() == new Date().getDate()) ? '_now' : $class);
+			$renderWeek += '<p'+(($class != '') ? (' class="'+$class+'"') : '')+' data-cur_date="'+ $weekDay.getFullYear() + '-' + ((($weekDay.getMonth()+1) <10) ? ('0' + ($weekDay.getMonth()+1)) : ($weekDay.getMonth()+1)) + '-' + (($weekDay.getDate() < 10) ? ('0' + $weekDay.getDate()) : $weekDay.getDate()) +'">'+$weekDay.getDate()+'</p>';
+		}
+		$renderWeek += '</div>';
+
+		var $nextWeekDay = new Date($weekDay.getFullYear(), $weekDay.getMonth(),$weekDay.getDate()+1);
+
+		if ($date.getMonth() < $nextWeekDay.getMonth() || $date.getFullYear() < $nextWeekDay.getFullYear()) return $renderWeek;
+
+		return this.renderWeek($nextWeekDay, $renderWeek);
 	}
 }

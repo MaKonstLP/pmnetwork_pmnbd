@@ -1,22 +1,66 @@
 <div data-page-type="index">
-
+	<div class="main_top_slider" >
+		<img src="/img/first_page.jpg" >
+	</div>
 	<div class="main_top">
-        <h1>{{seo.h1}}</h1>
+        <h1>{{seo.h1|replace({'[city]':'Санкт-Петербурге'})|raw}}</h1>
         <div class="main_top_desc">
-            {{seo.text_top | raw}}
-        </div>                    
+            {{count}} заведен{{Declension.get_num_ending(count,['ие','ия','ий'])}}
+        </div>     
+        <div class="main_search">
+	    	<div class="main_search_city">
+	    		<input class="main_search_city_input" type="text" placeholder="Город">
+	    		<div class="main_search_city_list" >
+	    			<p>Казань</p> 
+	    			<p>Москва</p>
+	    			<p>Нижний Новгород</p> 
+	    			<p>Самара</p>
+                    <p>Санкт-Петербург</p>
+                    <p>Уфа</p>
+                    <p>Ульяновск</p>
+	    		</div>
+	    	</div>
+	    	<div class="main_search_type_room">
+	    		<span class="type_room_choose">Тип площадки</span><span class="choose"></span>
+	    		<div class="main_search_type_room_list" >
+	    			<p>Актовый зал</p> 
+	    			<p>Антикафе</p>
+	    			<p>Арт-пространство</p> 
+	    			<p>База отдыха</p>
+                    <p>Банкетный комплекс</p>
+                    <p>Веранда</p>
+                    <p>Кафе</p>
+	    		</div>
+	    	</div> 
+	    	<span class="main_search_submit">Подобрать</span>
+	    </div>   
+	    <div class="main_rectangle_wrap">
+	    	<div class="main_rectangle">
+	    		<div class="main_rectangle_1"></div>
+	    		<div class="main_rectangle_2"></div>
+	    		<div class="main_rectangle_count">350</div>
+	    		<div class="main_rectangle_type">ресторанов</div>
+	    	</div>
+	    	<div class="main_rectangle"><div class="main_rectangle_1"></div><div class="main_rectangle_2"></div><div class="main_rectangle_count">241</div><div class="main_rectangle_type">кафе</div>
+	    	</div>
+	    	<div class="main_rectangle"><div class="main_rectangle_1"></div><div class="main_rectangle_2"></div><div class="main_rectangle_count">120</div><div class="main_rectangle_type">баров</div></div>
+	    	<div class="main_rectangle"><div class="main_rectangle_1"></div><div class="main_rectangle_2"></div><div class="main_rectangle_count">44</div><div class="main_rectangle_type">лофта</div></div>
+	    	<div class="main_rectangle"><div class="main_rectangle_1"></div><div class="main_rectangle_2"></div><div class="main_rectangle_count">90</div><div class="main_rectangle_type">веранд</div></div>
+	    </div>       
     </div>
 
-	<div class="content_block">
+    
+
+	<!--div class="content_block">
 		<div class="title">
 			<h2>Банкетные залы на природе</h2>
 			<div class="title_count">{{count}} зал{{Declension.end_rooms(count)}}</div>
 		</div>
 
 		{{filter | raw }}
-	</div>
+	</div-->
 
-	{% for widget in widgets %}
+	{#% for widget in widgets %}
 		<div data-widget-wrapper>
 			<div class="listing_widget_header">
 				<h3 class="listing_widget_title">{{widget.title}}</h3>
@@ -46,10 +90,269 @@
 				</div>
 			</div>
 		</div>
-	{% endfor %}
-
-	<div class="content_block">
-		{{ this.render('//components/generic/form.twig') | raw }}
+	{% endfor %#}
+	<div class="listing_wrap" style="/*height: 550px;*/background: #F8F8F8;">
+		<div class="content_block" data-widget-wrapper>
+			<!--div class="listing_widget_header">
+				<h3 class="listing_widget_title">{{widgets[0].title}}</h3>
+				<p class="listing_widget_subtitle">{{widgets[0].subtitle}}</p>
+			</div-->
+			<div class="listing_widget_arrow _prev"></div>
+			<div class="items_list_listing swiper-container" data-listing-wrapper>
+				
+				<div class="items_list swiper-wrapper" data-listing-list>
+					{{ this.render('//components/generic/listing.twig', {'items':widgets[0].items, 'img_alt': widgets[0].img_alt}) | raw }}
+					<!--a href="/catalog/{{widget.slice.alias}}/" class="item listing_widget_link swiper-slide">
+						<div class="listing_widget_link_img"></div>
+						<div class="listing_widget_link_text">{{widgets[0].link_text}}</div>
+						<div class="listing_widget_link_arrow"></div>
+					</a-->
+				</div>
+				<div class="listing_widget_controll">
+					<div class="listing_widget_pagination"></div>
+				</div>	
+			</div>
+			<div class="listing_widget_arrow _next"></div>	
+			
+			<!--div class="listing_widget_footer">
+				<div class="seo_text" data-seo-text>
+					{{widgets[0].text | raw }}
+					<div class="seo_text_control" data-seo-control>
+						<p class="_link">Показать полностью</p>
+					</div>
+				</div>
+			</div-->
+		</div>
 	</div>
+
+	<div class="content_info">
+		<div class="content_info_top">
+			<img class="main_girl" src="/img/main_girl.png">
+			<img class="main_girl_mobile" src="/img/main_girl_mobile.png">
+			<div class="content_info_top_right">
+				<div class="content_info_rectangle_wrap"><div class="content_info_rectangle"></div></div>
+				<div class="content_info_top_text seo_text" data-seo-text>
+					<p>День рождения – теплый и душевный праздник, который хочется провести в кругу друзей и родных. Где в Самаре лучше отметить юбилей? Как подобрать ресторан, куда действительно будет приятно пригласить дорогих сердцу людей? Удобнее всего обратиться к единому интернет-каталогу “Мой День”, в котором собрано огромное количество различных столичных заведений, приглашающих отпраздновать у них День рождения.</p>
+					<p>У нас представлено множество заведений, в которых можно взять в аренду банкетный зал для проведения торжества. Вся информация о залах собрана в одном месте. Здесь найдете подробное описание каждого заведения с указанием количества залов и их вместимости, красочные актуальные фото и все сведения, касающиеся дополнительных условий.</p>
+					<div class="seo_text_control" data-seo-control>
+						<p class="_link">Показать полностью</p>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="content_block">
+			<p class="content_info_adv_title">
+				Вы с легкостью подберете подходящий банкетный зал для празднования дня рождения благодаря нашим преимуществам:
+			</p>
+			<div class="content_info_adv main_rectangle_wrap">
+				<div class="content_info_wrap">
+					<div class="main_rectangle">
+						<div class="main_rectangle_1"></div>
+						<img class="main_rectangle_icon content_info_icon_2" src="/img/rest_base.svg">
+					</div>
+					<div class="content_info_adv_h">
+						Большая база ресторанов
+					</div>
+					<div class="content_info_adv_p">
+						У нас есть заведения, расположенные на центральных улицах столицы и за ее пределами, в живописных парках и на берегу водоемов, с просторными помещениями и открытыми летними террасами
+					</div>
+				</div>
+				<div class="content_info_wrap">
+					<div class="main_rectangle">
+						<div class="main_rectangle_1"></div>
+						<img class="main_rectangle_icon content_info_icon_2" src="/img/booking.svg">
+					</div>
+					<div class="content_info_adv_h">
+						Бронирование на сайте
+					</div>
+					<div class="content_info_adv_p">
+						Не нужно отдельно искать контакты и способы связи с заведением. Заказать помещение на юбилей можно через каталог, сделав пару кликов.
+					</div>
+				</div>
+				<div class="content_info_wrap">
+					<div class="main_rectangle">
+						<div class="main_rectangle_1"></div>
+						<img class="main_rectangle_icon content_info_icon_2" src="/img/date_calendar.svg">
+					</div>
+					<div class="content_info_adv_h">
+						Выбор свободных дат прямо в карточке ресторана
+					</div>
+					<div class="content_info_adv_p">
+						Моментально узнайте, где есть места в нужный день.
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="content_info_slider">
+			<img src="/img/content_info.jpg">
+		</div>
+	</div>
+	
+
+	<div class="main_blog">
+		<h3>Последние записи блога</h2>
+		<a class="all_articles" href="#">Все статьи</a>
+		<div class="content_block">
+			<div class="blog_item blog_item_1">
+				<div class="blog_img">
+					<a href="#"><img src="/img/blog/blog_item_1.jpg"></a>
+				</div>
+				<div class="blog_text">
+					<p class="blog_date">12 декабря 2019</p>
+					<a href="#"><p class="blog_title">По пути: особенности свадебной логистики в Петербурге</p></a>
+					<p class="blog_description">Можно родиться в Питере и знать все его дворики и переулки, как свои пять пальцев, или влюбиться в его атмосферу на расстоянии — в любом случае, выбирая этот.</p>
+				</div>
+			</div>
+			<div class="blog_item blog_item_2">
+				<div class="blog_img">
+					<a href="#"><img src="/img/blog/blog_item_2.jpg"></a>
+				</div>
+				<div class="blog_text">
+					<p class="blog_date">12 декабря 2019</p>
+					<a href="#"><p class="blog_title">Свадебное агентство «Вдвоем»: вдвойне счастливее</p></a>
+					<p class="blog_description">Мечты невесты о волшебной лесной сказке стали реальностью благодаря агентству Event №1. Живописная природа, необычный декор и яркая эмоциональная программ</p>
+				</div>
+			</div>
+			<div class="blog_item blog_item_3">
+				<div class="blog_img">
+					<a href="#"><img src="/img/blog/blog_item_3.jpg"></a>
+				</div>
+				<div class="blog_text">
+					<p class="blog_date">12 декабря 2019</p>
+					<a href="#"><p class="blog_title">50 потрясающих поз для свадебной фотосессии</p></a>
+					<p class="blog_description">Если вы с женихом никогда не были профессиональными моделями, фотосъемка обернется для вас серьезным стрессом.</p>
+				</div>
+			</div>
+			<div class="blog_item blog_item_4">
+				<div class="blog_img">
+					<a href="#"><img src="/img/blog/blog_item_4.jpg"></a>
+				</div>
+				<div class="blog_text">
+					<p class="blog_date">12 декабря 2019</p>
+					<a href="#"><p class="blog_title">Невеста в положении – что надо знать?</p></a>
+					<p class="blog_description">Нередко свадьбу играют, когда невеста в положении. Рассказываем в подробностях, как устроить торжество в этом случае.</p>
+				</div>
+			</div>
+			<div class="blog_item blog_item_5">
+				<div class="blog_img">
+					<a href="#"><img src="/img/blog/blog_item_5.jpg"></a>
+				</div>
+				<div class="blog_text">
+					<p class="blog_date">12 декабря 2019</p>
+					<a href="#"><p class="blog_title">Как готовиться со свадебным органайзером «Помощник Невесты»?</p></a>
+					<p class="blog_description">Показываем, что есть внутри нашего свадебного органайзера и как подготовиться к свадьбе с его помощью.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="main_podborki">
+		<h3>Подборки заведений</h2>
+		<div class="content_block">
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_1.jpg">	
+					</a>
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Рестораны с японской кухней</a><span>12</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_2.jpg">
+						</a>	
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Рестораны с вайфаем</a><span>4</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_3.jpg">
+					</a>	
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Недорогие рестораны</a><span>20</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_4.jpg">	
+					</a>
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Кафе с верандой</a><span>9</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_5.jpg">	
+					</a>
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Суши-бары</a><span>15</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_6.jpg">	
+					</a>
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Быстрый перекус</a><span>36</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_7.jpg">	
+					</a>
+				</div>
+				<div class="restaurant_text">
+					<a href="#">Итальянская кухня</a><span>76</span>	
+				</div>
+			</div>
+			<div class="restaurant_item">
+				<div class="restaurant_img">
+					<a href="#">
+						<img src="/img/restaurants/restaurant_8.jpg">	
+					</a>
+				</div>
+				<div class="restaurant_text">
+					<a href="#">В  центре города</a><span>11</span>	
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="bottom_block">
+		<h2>День рождения в ресторане – удобно, красиво, доступно</h2>
+		<div class="content_block seo_text" data-seo-text>
+			<p>Если вы решили праздновать день рождения в кафе, все хлопоты по организации мероприятия будут лежать на персонале. Вам не придется тратить время на готовку блюд и сервировку стола, заниматься изнурительной уборкой после ухода гостей.</p>
+			<p>В современных заведениях вам предложат большой выбор блюд европейской, средиземноморской, кавказской, японской, русской и другой кухни. Вы без труда подберете угощения на любой вкус, а опытные повара приготовят их в самом лучшем виде.</p>
+			<p>Также заведения предлагают множество дополнительных услуг для проведения банкета:</p>
+			<ul>
+				<li>— музыкальное сопровождение,</li>
+				<li>— праздничное оформление столов и залов,</li>
+				<li>— аренда светового и звукового оборудования,</li>
+				<li>— выступления артистов и аниматоров,</li>
+				<li>— фейерверк, фаер-шоу и многие другие.</li>
+			</ul>
+			<p>Стоимость празднования может варьироваться в широких пределах, и каждый виновник торжества сможет выбрать место в желаемой ценовой категории.</p>
+			<div class="seo_text_control" data-seo-control>
+				<p class="_link">Показать полностью</p>
+			</div>
+		</div>
+	</div>
+
+		{{ this.render('//components/generic/form.twig',{'title': 'Поможем выбрать зал на день рождения'}) | raw }}
+
 
 </div>

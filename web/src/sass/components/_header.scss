@@ -1,13 +1,20 @@
 header{
-    position: fixed;
+    /*position: fixed;*/
+    position: absolute;
     width: 100%;
     top: 0px;
     left: 0px;
-    background: white;
+    /*background: white;*/
     height: 99px;
-    border-bottom: 1px solid #DEDEDE;
-    box-shadow: 0px 3px 6px rgba(3, 49, 52, 0.06);
+    /*border-bottom: 1px solid #DEDEDE;*/
+    /*box-shadow: 0px 3px 6px rgba(3, 49, 52, 0.06);*/
     z-index: 100;
+    background: rgba(255,255,255,0);
+    color: #000;
+
+    @include for-small-desktop{
+        height: 90px;
+    }
 
     @include for-pad{
         height: 90px;
@@ -23,40 +30,75 @@ header{
         align-items: center;
         padding: 0px;
         height: 100%;
+        position: relative;
+        &.home{
+            color: #fff;
+            .header_logo_text{
+                color: #fff;
+            }
+            .city{
+                color: #fff;
+                border-bottom: 1px dashed rgba(255,255,255,.3);
+            }
+            .header_phone{
+                color: #fff;
+                 & > ._link{
+                    border-color: rgba(255,255,255,.3);
+                }
+                & > p, & > a{
+                    color: #fff;
+                }
+            }
+        }
+        
 
-        .header_logo{
+        .header_city{
             position: absolute;
-            left: 35px;
-
-            @include for-pad{
-                left: 12px;
+            left: 217px;
+            cursor: pointer;
+            @include for-small-desktop{
+                left: 202px;
             }
-
             @include for-mobile{
-                left: 15px;
+                left: 202px;
             }
-
-            .header_logo_img{
-                width: 194px;
-                height: 82px;
-                background-image: url(/img/svadba_logo.svg);
-                background-size: contain;
-                filter: hue-rotate(0deg);
-                transition: filter 0.2s ease;
-
-                @include for-pad{
-                    width: 132px;
-                    height: 56px;
+            @include for-phone{
+                background: url(/img/geo_label_mobile.svg) no-repeat;
+                width: 17px;
+                height: 22px;
+                left: auto;
+                right: 30px;
+                &.home{
+                    background: url(/img/geo_label_mobile_home.svg) no-repeat;
                 }
-
-                @include for-mobile{
-                    width: 90px;
-                    height: 38px;
+                img, span {
+                    display: none;
                 }
             }
 
-            &:hover .header_logo_img{
-                filter: hue-rotate(25deg);
+            
+
+        }
+        .city{
+            border-bottom: 1px dashed $clrBlue;
+            position: relative;
+            color: $clrBlue;
+            margin-left: 4px;
+            &:hover{
+                border-bottom: none;
+            }
+        }
+
+        .choose{
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: -3px 10px 3px;
+            border: solid #C4C4C4;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            &._expand{
+                transform: rotate(225deg);
             }
         }
 
@@ -88,29 +130,48 @@ header{
         .header_phone{
             position: absolute;
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            flex-direction: row;
             right: 35px;
+            color: $clrBlue;
+            height: 32px;
+
+            @include for-small-desktop{
+               right: 20px; 
+            }
 
             @include for-pad{
                 right: 60px;
             }
 
             @include for-mobile{
-                right: 50px;
+                display: none;
             }
 
-            & > p{
+            & > p, & > a{
                 font-size: 26px;
-                color: #000;
+                color: $clrBlue;
                 font-weight: 600;
                 line-height: 32px;
                 margin-bottom: 7px;
+                font-size: 15px;
+                line-height: 24px;
+                margin-left: 10px;
 
                 @include for-mobile{
                     margin-bottom: 0px;
                     font-size: 16px;
                     line-height: 20px;
+                }
+            }
+            & > a {
+                color: #000;
+            }
+            & > ._link{
+                font-weight: normal;
+                cursor: pointer;
+                border-color: $clrBlue;
+                &:hover{
+                    border-bottom: none;
                 }
             }
 
@@ -231,5 +292,206 @@ header{
                 transform: translate(0px,50px);
             }
         }
+    }
+    .city_list_top{
+        .header_logo_2{
+            color: #000;
+            top: 19px;
+            .header_logo_text{
+            font-family: 'Proxima Nova Regular', sans-serif;
+        }
+        }
+        
+    }
+}
+.header_logo{
+            position: absolute;
+            left: 35px;
+            color: #000;
+
+            @include for-small-desktop{
+                left: 20px;
+            }
+
+            @include for-pad{
+                left: 12px;
+            }
+
+            @include for-mobile{
+                left: 15px;
+            }
+
+            .header_logo_img{
+                width: 33px;
+                height: 33px;
+                background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(98.07deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
+                border-radius: 50%;
+                background-size: contain;
+                filter: hue-rotate(0deg);
+                transition: filter 0.2s ease;
+            }
+
+            .header_logo_text{
+                font-size: 18px;
+                font-weight: 300;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                font-family: 'Proxima Nova Thin', sans-serif;
+            }
+
+            /*&:hover .header_logo_img{
+                #filter: hue-rotate(25deg);
+            }*/
+        }
+
+        .header_logo_2{
+            left: 75px;
+
+            @include for-small-desktop{
+                left: 60px;
+            }
+            @include for-mobile{
+                left: 60px;
+            }
+        }
+.city_list_wrap{
+    position: absolute;
+    background: #fff;
+    color: #000;
+    padding: 12px 0;
+    cursor: auto;
+    top: 70px;
+    left: 230px;
+    display: none;
+    width: 710px;
+    height: 625px;
+    border-radius: 4px;
+    &.__visible{
+        display: block;
+    }
+    &:before{
+        content: ''; 
+        position: absolute;
+        border: 8px solid transparent;
+        border-bottom: 8px solid white;
+        top: -16px;
+        left: 25px;
+        @include for-mobile{
+            left: 210px;
+        }
+    }
+    input{
+        font-size: 17px;
+        line-height: 25px;
+        border-bottom: 1px solid #848484;
+        color: #848484;
+        padding: 9px 20px 9px 0;
+        background: url(/img/search.svg) no-repeat right;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 20px;
+        display: inline-block;
+        padding: 4px 20px 4px 0;
+        width: 200px;
+
+        @include for-phone{
+            width: 95%;
+            margin: 12px 12px 12px 12px;
+        }
+    }
+
+    @include for-mobile{
+        left: 15px;
+        top: 55px;
+    }
+    @include for-phone{
+        top: 0;
+        left: 0;
+        overflow: scroll;
+        z-index: 10;
+        width: 100%;
+        height: auto;
+        border-radius: unset;
+    }
+}
+.city_list_top{
+    display: none;
+    height: 45px;
+    .header_logo_2{
+        color: #000;
+        top: 19px;
+        font-family: 'Proxima Nova Regular', sans-serif;
+    }
+    @include for-phone{
+        display: block;
+    }
+}
+.city_list_close{
+    position: absolute;
+    transform: rotate(45deg);
+    top: 16px;
+    right: 5px;
+    width: 28px;
+    height: 28px;
+    &:before{
+        content: '';
+        background: #000;
+        position: absolute;
+        border-radius: 2px;
+        width: 100%;
+        height: 2px;
+        top: 13px;
+        left: 0;
+    }
+    &:after{
+        content: '';
+        background: #000;
+        position: absolute;
+        border-radius: 2px;
+        width: 2px;
+        height: 100%;
+        top: 0;
+        left: 13px;
+    }
+}
+.city_list{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: 90%;
+}
+.city_list_title{
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    font-size: 17px;
+    margin: 0 30px 10px 12px;
+}
+.city_list_item {
+    display: flex;
+    align-items: flex-start;
+    width: 25%;
+    padding: 12px 12px 0;
+    .char {
+        margin-right: 8px;
+        font-size: 17px;
+        text-align: center;
+        color: #848484;
+        width: 12px;
+        font-size: 14px;
+    }
+    .city_in_char {
+        font-size: 17px;
+        line-height: 25px;
+        font-size: 14px;
+        line-height: 20px;
+    }
+    a{
+        display: block;
+        color: #3067F3;
+    }
+
+    @include for-phone{
+        width: 100%;
     }
 }

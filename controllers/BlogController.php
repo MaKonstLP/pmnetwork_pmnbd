@@ -22,75 +22,33 @@ use common\models\GorkoApi;
 use common\models\GorkoApiTest;
 use app\modules\pmnbd\models\ElasticItems;
 
-class ListingController extends Controller
+class BlogController extends Controller
 {
-	protected $per_page = 36;
+	protected $per_page = 12;
 
 	public $filter_model,
 		   $slices_model;
 
-	public function beforeAction($action)
-	{
-		$this->filter_model = Filter::find()->where(['<','sort',5])->with('items')->all();
-		$this->slices_model = Slices::find()->all();
-
-	    return parent::beforeAction($action);
-	}
-
-	public function actionSlice($slice)
-	{
-		$slice_obj = new QueryFromSlice($slice);
-		if($slice_obj->flag){
-			$this->view->params['menu'] = $slice;
-			$params = $this->parseGetQuery($slice_obj->params, $this->filter_model, $this->slices_model);
-			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
-			$this->setSeo($slice_obj->seo);
-			$slice_obj->seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(2);
-			return $this->actionListing(
-				$page 			=	$params['page'],
-				$per_page		=	$this->per_page,
-				$params_filter	= 	$params['params_filter'],
-				$seo 			=	$slice_obj->seo
-			);
-		}
-		else{
-			return $this->goHome();
-		}				
-	}
 
 	public function actionIndex()
-	{
-		$getQuery = $_GET;
-		unset($getQuery['q']);
-		if(count($getQuery) > 0){
-			$params = $this->parseGetQuery($getQuery, $this->filter_model, $this->slices_model);
-			$seo = $params['seo'];
-			$this->setSeo($seo);
-			$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(1);
-			return $this->actionListing(
-				$page 			=	$params['page'],
-				$per_page		=	$this->per_page,
-				$params_filter	= 	$params['params_filter'],
-				$seo 			=	$seo
-			);	
-		}
-		else{
-			$seo = Pages::find()->where(['name' => 'listing'])->one();
-			$this->setSeo($seo);
-			$seo->breadcrumbs = Breadcrumbs::get_breadcrumbs(1);
-			return $this->actionListing(
-				$page 			=	1,
-				$per_page		=	$this->per_page,
-				$params_filter	= 	[],
-				$seo 			=	$seo
-			);
-		}
+	{	
+		$page =	(isset($_GET['pages']) ? $_GET['pages'] : 1);
+		$seo = Pages::find()->where(['name' => 'blogs'])->one();
+		$this->setSeo($seo);
+		$seo->breadcrumbs = Breadcrumbs::get_breadcrumbs($page);
+		return $this->actionListing(
+			$page,
+			$per_page		=	$this->per_page,
+			$params_filter	= 	[],
+			$seo 			=	$seo
+		);	
 	}
 
 	public function actionListing($page, $per_page, $params_filter, $seo)
 	{
 		$elastic_model = new ElasticItems;
 		$items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
+		$title_item = array_shift($items->items);
 
 		$filter = FilterWidget::widget([
 			'filter_active' => $params_filter,
@@ -103,6 +61,7 @@ class ListingController extends Controller
 		]);
 
 		return $this->render('index.twig', array(
+			'title_item' => $title_item,
 			'items' => $items->items,
 			'filter' => $filter,
 			'pagination' => $pagination,

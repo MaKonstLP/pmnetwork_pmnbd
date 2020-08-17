@@ -1,16 +1,18 @@
 .filter{
     display: flex;
     padding: 38px 17px 35px;
-    background-color: white;
+    background-color: $clrBackground;
     align-items: center;
     margin-top: 40px;
-    box-shadow: $shadowCard;
+    //box-shadow: $shadowCard;
+
+
 
     @include for-notdesc{
         flex-wrap: wrap;
     }
 
-    @include for-pad{
+   /* @include for-small-desktop{
         padding: 38px 17px 25px;
 
         &>div:nth-child(-n+3){
@@ -19,6 +21,15 @@
 
         &>div:nth-child(3n){
             margin-right: 0px;
+        }
+    }*/
+
+    @include for-pad{
+        padding: 38px 17px 25px;
+        justify-content: center;
+
+        &>div:nth-child(-n+4){
+            margin-bottom: 40px;
         }
     }
 
@@ -29,54 +40,74 @@
 
     .filter_label{
         position: absolute;
-        bottom: 100%;
         cursor: initial;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 26px;
+        display: none;
+        font-size: 9px;
+        line-height: 14px;
+        color: #C4C4C4;
+        bottom: 39px;
+        z-index: 1;
+        left: 16px;
     }
 
     .filter_select{
         cursor: pointer;
         width: 100%;
-        margin-right: 15px;
+        //margin-right: 15px;
         position: relative;
 
+        @include for-small-desktop{
+            //width: calc((100% / 3) - 10px);
+        }
+
         @include for-pad{
-            width: calc((100% / 3) - 10px);
+            width: calc((100% / 4) - 10px);
         }
 
         @include for-mobile{
             margin: 38px 0px 0px;
+        }
+
+        @include for-phone{
+            display: none;
         }
     }
 
     .filter_select_block{
         position: relative;
 
-        
-
         &._active{
 
             .filter_select_list{
                 display: block;
             }
-
+            
             .filter_select_current:after{
                 transform: rotate(-135deg);
-                top: 17px;
+                //top: 17px;
+            }
+        }
+
+        .filter_select_current.choosen:after{
+            display: none;
+        }
+        .filter_select_current.choosen{
+           .choose{
+                display: block;
             }
         }
     }
 
     .filter_select_current{
-        height: 39px;
+        height: 56px;
         white-space: nowrap;
-        border: 1px solid $clrLightGrey;
+        border: 1px solid $clrExtraLightGrey;
+        background-color: #fff;
         border-radius: 2px;
         padding: 0px 65px 0px 16px;
         position: relative;
         overflow: hidden;
+        
 
         &:after{
             content: '';
@@ -87,22 +118,65 @@
             border-bottom: 2px solid $clrLightGrey;
             border-radius: 2px;
             transform: rotate(45deg);
-            top: 13px;
+            top: 24px;
             right: 12px;
             z-index: 2;
         }
 
+        .choose{
+            display: none;
+            position: absolute;
+            right: 0;
+            &:before{
+                content: '';
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                border-bottom: 2px solid $clrLightGrey;
+                border-radius: 2px;
+                transform: rotate(-135deg);
+                top: 24px;
+                right: 16px;
+                z-index: 2;
+                //display: none;
+            }
+            &:after{
+                content: '';
+                position: absolute;
+                border-bottom: 2px solid $clrLightGrey;
+                border-radius: 2px;
+                z-index: 2;
+                width: 16px;
+                height: 16px;
+                right: 6px;
+                transform: rotate(135deg);
+                top: 24px;
+            }
+        }
+
+        .count{
+            position: absolute;
+            right: 38px;
+            top: 16px;
+            border: 1px solid #3067F3;
+            //width: 20px;
+            border-radius: 36px;
+            padding: 2px 5px;
+            background: #fff;
+        }
+
         p{
             position: absolute;
-            top: 0;
+            top: 16px;
             left: 16px;
-            line-height: 38px;
-            font-size: 16px;
-            font-weight: 500;
+            //line-height: 38px;
+            //font-size: 16px;
+            //font-weight: 500;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
             width: calc(100% - 42px);
+            color: $clrGrey;
         }
     }
 
@@ -117,32 +191,53 @@
         border-radius: 2px;
         cursor: initial;
         z-index: 3;
+        max-height: 312px;
     }
 
     .filter_select_item{
         padding: 0px 15px 0px 15px;
         white-space: nowrap; 
         cursor: pointer;
-
+        position: relative;
         &:hover{
-            background: $clrGreen;
+            //background: #ffc24a;
 
-            p{
+            /*p{
                 color: white;
-            }
+            }*/
         }
 
         &._active{
-            background: $clrUltraLightGrey;
-
-            &:hover p{
-                color: $clrBlack;
+            p.choose{
+                &:before{
+                width: 8px;
+                height: 13px;
+                margin: -3px 10px 3px;
+                border: solid $clrBlue;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+                position: absolute;
+                top: 4px;
+                left: -4px;
+                content: "";  
+                }  
             }
         }
-
         p{
             font-weight: 500;
             line-height: 36px; 
+            padding-left: 30px;
+        }
+        p.choose{
+            //
+            width: 20px;
+            height: 20px;
+            border: 1px solid #C4C4C4;
+            box-sizing: border-box;
+            border-radius: 2px;
+            position: absolute;
+            top: 8px;
+            padding: 0;
         }
     }
 
@@ -152,6 +247,10 @@
         cursor: pointer;
         white-space: nowrap;
         margin-right: 15px;
+
+        @include for-small-desktop{
+            width: calc((100% / 3) - 10px);
+        }
 
         @include for-pad{
             width: calc((100% / 3) - 10px);
@@ -191,19 +290,29 @@
     }
 
     .filter_submit{
+        @include for-small-desktop{
+            margin-left: 0;
+        }
+
         @include for-pad{
-            margin-left: auto;
+            margin-left: 0;
         }
 
         @include for-mobile{
-            margin-top: 14px;
-            width: 100%;
+            //margin-top: 14px;
+            //width: 100%;
+        }
+
+        @include for-phone{
+            display: none;
         }
     }
 
     .filter_submit_button{
-        line-height: 40px;
-        margin: 0px 0px 0px 15px;
+
+        @include for-small-desktop{
+            margin: 0;
+        }
 
         @include for-pad{
             margin: 0;
@@ -211,8 +320,262 @@
 
         @include for-mobile{
             margin: 0;
-            width: 100%;
-            text-align: center;
+            //width: 100%;
+            //text-align: center;
         }
+    }
+    .filter_mobile{
+        display: none;
+        width: 100%;
+        ._button{
+            width: 100%;
+        }
+        @include for-phone{
+            display: block;
+            p{
+                background: url(/img/filter_icon.svg) no-repeat left center;
+                width: max-content;
+                padding-left: 30px;
+                margin: 0 auto;
+            }
+        }
+    }
+}
+.fast_filters{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 24px;
+    width: 100%;
+    flex-direction: row;
+    height: auto;
+    a{
+        border: 1px solid #C4C4C4;
+        box-sizing: border-box;
+        border-radius: 54px;
+        width: max-content;
+        padding: 8px 16px;
+        white-space: pre;
+        margin: 8px 5px;
+        font-size: 14px;
+        line-height: 20px;
+        color: #000;
+
+        & > span{
+            font-size: 11px;
+            line-height: 20px;
+            color: #848484;
+            margin-left: 1px;
+        }
+    }
+    a:hover{
+        background-color: #c4c4c43b;
+    }
+    @include for-mobile{
+
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        //overflow-x: scroll;
+        justify-content: left;
+        .mCSB_container{
+            padding: 10px 0;
+        }
+    }
+}
+.before_filter{
+    margin-top: 32px;
+}
+.filter_reset{
+    width: 100%;
+    margin-left: 16px;
+    a{
+        border-bottom: 1px dashed rgba(48, 103, 243, 0.3);
+        color: $clrBlue;
+        width: max-content;
+        cursor: pointer;
+        &:hover{
+           border-color: $clrBlue;
+        }
+    }
+
+    @include for-pad{
+        width: max-content;
+        position: absolute;
+        bottom: 40px;
+        right: 40px;
+    }
+
+    @include for-phone{
+            display: none;
+        }
+}
+.popup_filter_wrap{
+    position: fixed;
+    z-index: 9999999;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+
+    .popup_layout{
+        background-color: #fff;
+        opacity: 1;
+    }   
+}
+.popup_filter{
+    position: relative;
+    .popup_filter_title{
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 24px;
+        margin: 23px 15px 16px;
+        color: #1A2824;
+    }
+    .filter{
+        background-color: #fff;
+        margin-top: 0;
+        padding: 0 0 25px;
+        .filter_select{
+            margin: 0;
+        }
+        .filter_select{
+            @include for-phone{
+                display: block;
+            }
+        }
+        .filter_label{
+            font-weight: bold;
+            font-size: 17px;
+            line-height: 24px;
+            color: rgb(26, 40, 36);
+            bottom: auto;
+            top: 16px;
+            left: 15px;
+            display: block !important;
+        }
+        .filter_select_current{
+            border-right: none;
+            border-left: none;
+            border-top: none;
+            p{
+                display: none;
+            }
+            .count{
+                display: none !important;
+            }
+            .choose{
+                position: relative;
+            }
+            .choose:before{
+                content: "Сбросить";
+                color: $clrBlue;
+                border-bottom: 1px dashed $clrBlue;
+                display: block !important;
+                top: 18px;
+                width: max-content;
+                right: auto;
+                left: 140px;
+                transform: none;
+                height: auto;
+            }
+            .choose:after{
+                display: none !important;
+            }
+        }
+        .filter_select_list{
+            position: relative;
+            max-height: none;
+            border-right: none;
+            border-left: none;
+            border-top: none;
+            padding-top: 0;
+        }
+        .filter_select_current:after{
+            display: block !important;
+            border-color: #1A2824;
+        }
+    }
+    .filter_select_block._active{
+        .filter_select_current{
+            border-bottom: none; 
+        }
+    }
+    .filter_submit{
+        width: 100%;
+        padding: 15px;
+        .filter_submit_button{
+            width: 100%;
+        }
+        @include for-phone{
+            display: block;
+        }
+    }
+    .filter_reset{
+        text-align: center;
+        @include for-phone{
+            display: block;
+        }
+    }
+    .filter_mobile{
+        display: none;
+        @include for-phone{
+            display: none;
+        }
+    }
+}
+.popup_filter_top{
+    position: relative;
+    height: 45px;
+    .header_logo_2 {
+        color: #000;
+        top: 19px;
+    }
+    .popup_filter_close {
+        position: absolute;
+        transform: rotate(45deg);
+        top: 16px;
+        right: 5px;
+        width: 28px;
+        height: 28px;
+        &:before {
+            content: '';
+            background: #000;
+            position: absolute;
+            border-radius: 2px;
+            width: 100%;
+            height: 2px;
+            top: 13px;
+            left: 0;
+        }
+        &:after {
+            content: '';
+            background: #000;
+            position: absolute;
+            border-radius: 2px;
+            width: 2px;
+            height: 100%;
+            top: 0;
+            left: 13px;
+        }
+    }
+    .header_logo{
+        top: 16px;
+    }
+    .header_logo_2{
+        top: 22px;
+    }
+     .header_logo_img {
+        width: 33px;
+        height: 33px;
+        background: linear-gradient(0deg,#ffc24a,#ffc24a),linear-gradient(0deg,#b1c86f,#b1c86f),linear-gradient(0deg,#d64582,#d64582),linear-gradient(98.07deg,#a70c72 -6.24%,#e50799 104.4%),#29edb2;
+        border-radius: 50%;
+        background-size: contain;
+        -webkit-filter: hue-rotate(0);
+        filter: hue-rotate(0);
+        transition: -webkit-filter .2s ease;
+        transition: filter .2s ease;
+        transition: filter .2s ease,-webkit-filter .2s ease;
     }
 }

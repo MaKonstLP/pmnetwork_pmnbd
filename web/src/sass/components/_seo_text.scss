@@ -1,10 +1,8 @@
 .seo_text{
     font-weight: 500;
-    font-size: 16px;
-    line-height: 26px;
     margin: 40px 0px;
 
-    @include for-mobile{
+    @include for-phone{
         font-size: 14px;
         line-height: 22px;
         margin: 20px 0px;
@@ -21,17 +19,29 @@
         }
     }
 
+    p{
+        margin: 24px auto;
+    }
+
     .seo_text_control{
         display: none;
 
-        @include for-mobile{
+        ._link{
+            margin: 0;
+            color: #3067F3;
+            border-bottom: 1px dashed #3067F3;
+        }
+
+        @include for-phone{
             display: flex;
-            justify-content: center;
+            justify-content: left;
             position: absolute;
-            padding-top: 40px;
+            //padding-top: 40px;
             background-image: linear-gradient(to top,#fcfcf8 50%,transparent);
-            top: 141px;
+            bottom: 0;
             width: 100%;
+            height: 25px;
+            cursor: pointer;
         }
     }
 }

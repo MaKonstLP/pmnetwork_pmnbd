@@ -7,19 +7,25 @@
 	</div>
 
 	<div class="content_block">
-		{{filter | raw }}
-	</div>
-
-	<div class="content_block" data-listing-text-top>
-		<div class="seo_text" data-seo-text>
+		<div class="fast_filters">
+			<a href="#">Конференц-залы <span>12</span></a>
+			<a href="#">Банкетные залы на 10, 12 человек <span>4</span></a>
+			<a href="#">Загородные рестораны <span>46</span></a>
+			<a href="#">Недорогие рестораны <span>2</span></a>
+			<a href="#">Банкетные залы на 50 человек <span>45</span></a>
+			<a href="#">Дорогие рестораны <span>60</span></a>
+			<a href="#">Веранды и террасы <span>56</span></a>
+		</div>
+		<div class="seo_text before_filter" data-seo-text> 
 			{{seo.text_top | raw }}
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>
 		</div>
+		{{filter | raw }}
 	</div>
 
-	<div class="items_list_listing" data-listing-wrapper>
+	<div class="items_list_listing content_block" data-listing-wrapper>
 		<div class="items_list" data-listing-list>
 
 			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt}) | raw }}
@@ -31,24 +37,37 @@
 		<div data-pagination-wrapper>
 			{{pagination | raw }}
 		</div>
+		<div data-append-items>Показать еще</div>
 	</div>
 
-	<div class="content_block">
-		
-        {{ this.render('//components/generic/form.twig') | raw }}
-
-    </div>
-
 	<div class="content_block" data-listing-text-bottom>
-		<div class="seo_text" data-seo-text>
+		<div class="seo_text text_bottom" data-seo-text>
 			{{seo.text_bottom | raw }}
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>
 		</div>
 	</div>
-
-
+		
+        {{ this.render('//components/generic/form.twig', {'title': 'Поможем выбрать зал на день рождения'}) | raw }}
 
 	<div class="content_loading"></div>
+</div>
+
+<div class="popup_filter_wrap">
+    <div class="popup_layout" data-close-popup></div>
+    <div class="popup_filter_top">
+        <a href="/" class="header_logo">
+            <div class="header_logo_img"></div>
+        </a>
+        <a href="/" class="header_logo header_logo_2">
+            <div class="header_logo_text">МОЙ ДЕНЬ</div>
+        </a>
+        <div class="popup_filter_close"></div>
+    </div>
+    <div class="popup_filter">
+    	<p class="popup_filter_title">Фильтр площадок</p>
+        {{filter | raw }}
+    </div>
+
 </div>

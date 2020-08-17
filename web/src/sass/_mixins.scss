@@ -1,15 +1,35 @@
+@mixin for-small-desktop {
+	@media (max-width: 1440px) and (min-width: 1000px) { @content; }
+}
+
 @mixin for-pad {
-	@media (max-width: 1440px) and (min-width: 768px) { @content; }
+	@media (max-width: 1000px) and (min-width: 768px) { @content; }
 }
 
 @mixin for-mobile {
- 	@media (max-width: 767px) { @content; }
+ 	@media (max-width: 768px) { @content; }
+}
+
+@mixin for-phone {
+  @media (max-width: 600px) { @content; }
 }
 
 @mixin for-notdesc {
- 	@media (max-width: 1440px) { @content; }
+ 	@media (max-width: 1000px) { @content; }
 }
 
 @mixin for-lowdesc {
  	@media (max-width: 1650px) { @content; }
+}
+@mixin placeholder {
+  &::-webkit-input-placeholder { @content; }
+  &:-moz-placeholder           { @content; }
+  &::-moz-placeholder          { @content; }
+  &:-ms-input-placeholder      { @content; }  
+}
+@mixin form_placeholder {
+  &::-webkit-input-placeholder { @content; }
+  &:-moz-placeholder           { @content; }
+  &::-moz-placeholder          { @content; }
+  &:-ms-input-placeholder      { @content; }  
 }

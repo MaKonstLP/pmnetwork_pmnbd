@@ -7,6 +7,11 @@
 		width: 100%;
 	}
 
+	@include for-small-desktop{
+		margin: 60px auto 0px;
+		padding: 0px 10px;
+	}
+
 	@include for-pad{
 		margin: 60px auto 0px;
 		padding: 0px 10px;
@@ -37,6 +42,10 @@
 
 	@include for-notdesc{
 		width: 100%;
+	}
+
+	@include for-small-desktop{
+		padding: 0px 10px;
 	}
 
 	@include for-pad{
@@ -85,7 +94,12 @@
 .swiper-container{
 	padding: 0px 15px;
 
+	@include for-mobile {
+	    padding: 0;
+	  }
+
 	.items_list{
+		flex-wrap: nowrap;
 		@include for-lowdesc{
             flex-wrap: nowrap;
         }
@@ -93,6 +107,7 @@
         margin: 25px 0px 20px;
 
 		.swiper-slide{
+			margin: 0px;
 			@include for-lowdesc{
 	            margin: 0px;
 	        }
@@ -103,7 +118,7 @@
 		display: none;
 		justify-content: center;
 		align-items: center;
-
+		display: flex;
 		@include for-lowdesc{
 			display: flex;
 		}
@@ -126,13 +141,17 @@
 		}
 
 		.listing_widget_pagination{
+			display: none;
 			margin: 0px 11px;
 
+			@include for-notdesc{
+		    	display: block;
+		    }
 		    .swiper-pagination-bullet{
 		    	width: 10px;
 		    	height: 10px;
 		    	border: 1px solid $clrPagination;
-		    	border-radius: 0px;
+		    	border-radius: 50%;
 		    	margin: 0px 4px;
 		    	transform: rotate(45deg);
 
@@ -142,4 +161,31 @@
 		    }
 		}
 	}		
+}
+.listing_widget_arrow{
+	width: 24px;
+    height: 48px;
+    background: url(/img/arrow.svg) no-repeat;
+    position: absolute;
+    top: 180px;
+    @include for-pad{
+    	display: none;
+    }
+    @include for-mobile{
+    	display: none;
+    }
+
+    &._prev{
+    	left: -40px;
+    	@include for-small-desktop{
+            left: 0;
+        }
+    }
+    &._next{
+    	transform: rotate(180deg);
+    	right: -40px;
+    	@include for-small-desktop{
+            right: 0;
+        }
+    }
 }

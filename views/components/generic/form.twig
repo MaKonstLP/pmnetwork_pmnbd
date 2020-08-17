@@ -6,62 +6,37 @@
 	<div class="form_main">
 
 		<div class="form_title">
-			<p class="form_title_main">Помочь с выбором зала?</p>
-			<p class="form_title_desc">Это бесплатно!</p>
+			<p class="form_title_main">{{title}}</p>
 		</div>
 
 		<form class="form_block" action="/ajax/form">
 
 			<div class="form_inputs">
-
-				<div class="input_wrapper _big">
-					<div class="input_label">Как Вас зовут?</div>
-					<input type="text" name="name" data-required/>
-				</div>
-				<div class="input_wrapper _big">
-					<div class="input_label">Номер телефона</div>
-					<input type="text" name="phone" data-required/>
+				<div class="input_wrapper">
+					<input type="text" name="name" data-required placeholder="Как Вас зовут?" class="not_check_approove"/>
 				</div>
 				<div class="input_wrapper">
-					<div class="input_label">Дата свадьбы</div>
-					<input type="text" name="date"/>
-					<div class="input_desc">необязательно</div>
+					<input type="text" name="phone" data-required placeholder="Номер телефона" />
 				</div>
 				<div class="input_wrapper">
-					<div class="input_label">Кол-во гостей</div>
-					<input type="text" name="count"/>
-					<div class="input_desc">необязательно</div>
+					<input type="text" name="email" data-required placeholder="Электронная почта" />
 				</div>
-
-				<div class="form_checkboxes">
-					<div class="checkbox_title">Зал должен быть:</div>
-					<div class="checkbox_wrapper">
-						<div class="checkbox_item">
-							<input type="checkbox" name="water"/>
-							<div class="checkbox_pseudo" data-action="form_checkbox">У воды</div>
-						</div>
-						<div class="checkbox_item">
-							<input type="checkbox" name="tent"/>
-							<div class="checkbox_pseudo" data-action="form_checkbox">С шатром</div>
-						</div>
-						<div class="checkbox_item">
-							<input type="checkbox" name="country"/>
-							<div class="checkbox_pseudo" data-action="form_checkbox">За городом</div>
-						</div>
-						<div class="checkbox_item">
-							<input type="checkbox" name="incity"/>
-							<div class="checkbox_pseudo" data-action="form_checkbox">В черте города</div>
-						</div>
+				<div class="input_wrapper date_wrapper">
+					<input type="text" name="date" data-required disabled placeholder="Желаемая дата" class="not_check_approove"/>
+					<div class="input_wrapper_date_wrapper" style="display: none;">
+						
 					</div>
 				</div>
-
+				<div class="input_wrapper _big_width">
+					<input type="text" name="comment" placeholder="Комментарий" />
+				</div>
 			</div>
 
 			<div class="form_submit">
-				<button class="_button">Забронировать</button>
-				<div class="form_policy checkbox_item">
+				<button class="_button">Отправить</button>
+				<div class="form_policy checkbox_item _active" data-action="form_checkbox">
 					<input type="checkbox" name="policy" class="personalData" checked="">
-					<p class="checkbox_pseudo">Я согласен с <a class="_link">политикой обработки персональных данных</a></p>
+					<p class="checkbox_pseudo" >Я согласен с <a href="#">политикой обработки персональных данных</a></p>
 				</div>
 			</div>
 				

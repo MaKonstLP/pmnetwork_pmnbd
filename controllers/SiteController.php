@@ -10,6 +10,7 @@ use common\models\elastic\ItemsWidgetElastic;
 use common\models\Pages;
 use common\models\Filter;
 use common\models\Slices;
+use app\modules\pmnbd\models\ElasticItems;
 
 class SiteController extends Controller
 {
@@ -24,7 +25,8 @@ class SiteController extends Controller
         $slices_model = Slices::find()->all();
 
         $itemsWidget = new ItemsWidgetElastic;
-        $apiMain = $itemsWidget->getMain($filter_model, $slices_model, 'rooms');
+        $elastic_model = new ElasticItems;
+        $apiMain = $itemsWidget->getMain($filter_model, $slices_model, 'restaurants', $elastic_model);
 
         $seo = Pages::find()->where(['name' => 'index'])->one();
         $this->setSeo($seo);
@@ -47,4 +49,12 @@ class SiteController extends Controller
         $this->view->params['desc'] = $seo['description'];
         $this->view->params['kw'] = $seo['keywords'];
     }
+
+    public function actionError()
+    {
+        echo "Произошла ошибка на сайте. Обратитесь к администратору.";
+        exit;
+        return $this->render('error.twig');
+    }
+    
 }

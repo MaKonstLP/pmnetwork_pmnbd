@@ -9,15 +9,25 @@ export default class Filter{
 		this.init(this.$filter);
 
 		//КЛИК ПО БЛОКУ С СЕЛЕКТОМ
-		this.$filter.find('[data-filter-select-current]').on('click', function(){
+		this.$filter.find('[data-filter-select-current]').on('click', function(e){
+			let $target = $(e.target);
 			let $parent = $(this).closest('[data-filter-select-block]');
-			self.selectBlockClick($parent);	
+			if ($target.is('span.choose')) {
+				if ($(this).siblings('.filter_select_list').is(':visible')){
+					self.selectBlockClick($parent);
+				}
+				let $clear = $parent.find('[data-filter-select-item]._active').removeClass('_active');
+				self.selectStateRefresh($parent);
+			} else {
+				self.selectBlockClick($parent);
+			}
+				
 		});
 
 		//КЛИК ПО СТРОКЕ В СЕЛЕКТЕ
 		this.$filter.find('[data-filter-select-item]').on('click', function(){
 			$(this).toggleClass('_active');
-			self
+			//self
 			self.selectStateRefresh($(this).closest('[data-filter-select-block]'));
 		});
 
@@ -32,6 +42,16 @@ export default class Filter{
 		    if (!$(e.target).closest('.filter_select_block').length){
 		    	self.selectBlockActiveClose();
 		    }
+		});
+
+		//ОТКРЫТЬ ПОПАП ФИЛЬТРА НА МОБИЛКЕ
+		this.$filter.find('[data-filter-mobile]').on('click', function(){
+			$('body').find('.popup_filter_wrap').slideToggle('Fast');
+		});
+
+		//ЗАКРЫТЬ ПОПАП ФИЛЬТРА НА МОБИЛКЕ
+		$('body').on('click', '.popup_filter_close', function(e) {
+		    $(this).closest('.popup_filter_wrap').slideToggle('Fast');
 		});
 	}
 
@@ -133,25 +153,35 @@ export default class Filter{
 		let self = this;
 		let blockType = $block.data('type');		
 		let $items = $block.find('[data-filter-select-item]._active');
-		let selectText = '-';
-
+		let $filterLabel = $block.siblings('[data-filter-label]');
+		let selectText = $filterLabel.html();
+		let $countItems = $block.find('[data-filter-select-count]');
+		
 		if($items.length > 0){
 			self.state[blockType] = '';
+			$block.find('[data-filter-select-current]').addClass('choosen');
+			selectText = $items[0];
+			$countItems.html($items.length);
+			$filterLabel.show();
 			$items.each(function(){
 				if(self.state[blockType] !== ''){
 					self.state[blockType] += ','+$(this).data('value');
-					selectText = 'Выбрано ('+$items.length+')';
+					//selectText = 'Выбрано ('+$items.length+')';
+					$countItems.show();
 				}
 				else{
 					self.state[blockType] = $(this).data('value');
 					selectText = $(this).text();
+					$countItems.hide();
 				}
 			});
 		}
 		else{
 			delete self.state[blockType];
+			$block.find('[data-filter-select-current]').removeClass('choosen');
+			$countItems.hide();
+			$filterLabel.hide();
 		}
-
 		$block.find('[data-filter-select-current] p').text(selectText);
 	}
 
