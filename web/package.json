@@ -29,7 +29,7 @@
     "gulp-touch-fd": "github:funkedigital/gulp-touch-fd",
     "gulp-uglify": "^3.0.2",
     "inputmask": "^4.0.9",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "merge-stream": "^1.0.1",
     "node-sass": "^4.13.0",
     "sass-loader": "^7.3.1",
