@@ -126,7 +126,7 @@ body._overflow .main_wrap{
     }
 }
 [data-page-type]{
-    margin-top: 114px;
+    margin-top: 140px;
     .content_loading{
         display: none;
         position: absolute;
@@ -139,6 +139,9 @@ body._overflow .main_wrap{
         z-index: 10;
         overflow: hidden;
     }
+    @include for-mobile{
+      margin-top: 100px;  
+    }
 
     &._loading{
         .content_loading{
@@ -147,7 +150,6 @@ body._overflow .main_wrap{
     }
 
     &[data-page-type="listing"]{
-        margin-top: 114px;
         .content_loading{
             height: calc(100% + 20px);
         }

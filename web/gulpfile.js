@@ -43,8 +43,8 @@ gulp.task('scripts', function() {
             // }
           ],
         },
-        // mode: 'development',
-        mode: 'production',
+        mode: 'development',
+        // mode: 'production',
         // plugins: [
         //   new ExtractTextPlugin("/../../src/css/modules.css"),
         // ]

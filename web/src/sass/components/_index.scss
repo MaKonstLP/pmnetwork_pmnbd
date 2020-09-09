@@ -33,6 +33,7 @@
     	font-size: 50px;
         line-height: 60px;
         letter-spacing: 0.01em;
+        max-width: 1000px;
 
         @include for-notdesc{
             text-align: center;
@@ -54,7 +55,7 @@
     .main_top_desc{
     	/*width: 50%;*/
         color: #fff;
-        margin:20px auto;
+        margin: 14px auto 28px;
         text-align: center;
         font-family: 'Playfair Display', sans-serif;
         font-style: italic;
@@ -236,16 +237,17 @@
 }
 .main_rectangle_wrap{
     display: flex; 
+    position: absolute;
+    top: 255px;
     &:not(.content_info_adv){
         @include for-mobile{
-            margin-top: 70px;
+            top: 325px;
         }
     }
 
     &:not(.content_info_adv){
         @include for-phone{
-            position: absolute;
-            bottom: -60px;
+            top: 395px;
         }
     }
     
@@ -322,6 +324,10 @@
         right: 27.95%;
         top: 70.31%;
         bottom: -26.57%;
+        left: 8.8%;
+        right: 34.95%;
+        top: 44.31%;
+        bottom: -1px;
         background: #FF6B00;
         mix-blend-mode: normal;
         opacity: 0.2;
@@ -412,14 +418,14 @@
 
     .main_girl{
         position: absolute;
-        left: 12%;
+        left: 16%;
         bottom: 0;
         z-index: 5;
         @include for-small-desktop{
             left: 90px;
         }
         @include for-pad{
-            left: 90px;
+            left: 5%;
         }
         @include for-mobile{
             left: -80px;
@@ -442,12 +448,15 @@
     }
     .content_info_rectangle_wrap{
         position: absolute;
-        left: 10.5%;
+        left: 14.5%;
         bottom: -2%;
         clip: rect(-6px 382px 382px -30px);
         height: 100%;
         @include for-small-desktop{
             left: 4rem;
+        }
+        @include for-pad{
+            left: 4.5%;
         }
         @include for-mobile{
             bottom: 0;
@@ -469,11 +478,12 @@
     .content_info_top_right{
         display: inline-block;
         width: 100%;
+        min-height: 300px;
         //background: linear-gradient(to right, white 0%, white 25%,#F1E5D3 25%,#F1E5D3 50%,#F1E5D3 100%);
     }
     .content_info_top_text{
-        width: 651px;
-        margin: 40px 0 64px 38%;
+        width: 750px;
+        margin: 40px 0 64px 40%;
         font-size: 15px;
         line-height: 24px;
         color: #1A2824;
@@ -503,6 +513,7 @@
         }
         @include for-pad{
             width: auto;
+            margin-right: 40px;
         }
         @include for-mobile{
             width: auto;
@@ -541,6 +552,8 @@
        //background: url(/img/content_info.jpg) no-repeat; 
        height: 370px;
        justify-content: center;
+       position: relative;
+       top: auto;
        @include for-mobile{
             height: 400px;
         }
@@ -629,6 +642,9 @@
     .content_block{
         z-index: 2;
         height: 500px;
+        @include for-pad{
+            height: 575px;
+        }
         @include for-mobile{
             height: 550px;
             width: 100%;
@@ -647,6 +663,9 @@
         width: 100%;
         img{
             height: 100%;
+        }
+        @include for-pad{
+            height: 575px;
         }
         @include for-mobile{
             height: 550px;

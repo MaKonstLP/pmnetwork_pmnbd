@@ -13,7 +13,9 @@
             <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                 {% for image in item.images%}
                     <div class="object swiper-slide">
-                       <img src="{{ image.realpath }}" data-gallery-img-view/>
+                        <div class="object_img">
+                           <img src="{{ image.realpath }}" data-gallery-img-view/>
+                       </div>
                     </div>
                 {% endfor %}
             </div>
@@ -28,7 +30,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="content_block object_desc_wrap">
         <div class="object_desc">
@@ -66,9 +67,20 @@
                     <div class="object_book_hidden">
                         <p class="object_book_phone object_meta_value">
                             <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
-                            <a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a>
                         </p>
-                        <div class="object_book_hidden_button" data-action="show_phone">Показать номер</div>
+                        <div class="object_book_hidden_button" data-popup-phone>Показать номер</div>
+                        <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
+                            <div class="popup_phone">
+                                <div class="form_close" data-close-popup></div>
+                                <p class="popup_phone_title">{{seo.h1}}</p>
+                                <div class="popup_phone_present">
+                                    <img src="/img/present.svg">
+                                    <p>Забронируй зал и получи подарок!</p>
+                                </div>
+                                <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone">{{rest_item.restaurant_phone}}</a>
+                                <p class="popup_phone_address">{{rest_item.restaurant_address|raw}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,7 +100,7 @@
                         <img src="{{same_object.images[1].realpath}}">
                     </div>
                     <div class="same_object_desc">
-                        <div class="title"><a href="/catalog/{{item.restaurant_id}}/{{same_object.id}}">{{same_object.name}}</a></div>
+                        <div class="title"><a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">{{same_object.name}}</a></div>
                         <div class="object_desc_item">
                            <p class="object_desc_title">Вместимость:</p>
                            <p class="object_desc_value">{{same_object.capacity}} человек</p>
@@ -113,7 +125,7 @@
                    {% for other_room in other_rooms %} 
                         <div class="other_object swiper-slide">
                             <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'}) }}">
-                            <div class="title"><a href="/catalog/{{other_room.restaurant_id}}/{{other_room.id}}/">{{other_room.name}}</a></div>
+                            <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>
                             <div class="restaurant_name">{{other_room.restaurant_name}}</div>
                             <div class="object_meta_item">
                                 <div class="object_desc_item">

@@ -17,9 +17,21 @@
 	                    <div class="object_book_hidden">
 	                        <p class="object_book_phone object_meta_value">
 	                            <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
-	                            <a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a>
+	                            <!--a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a-->
 	                        </p>
-	                        <div class="object_book_hidden_button" data-action="show_phone">Показать номер</div>
+	                        <div class="object_book_hidden_button" data-popup-phone>Показать номер</div>
+                            <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
+                                <div class="popup_phone">
+                                    <div class="form_close" data-close-popup></div>
+                                    <p class="popup_phone_title">Ресторан {{item.restaurant_name}}</p>
+                                    <div class="popup_phone_present">
+                                        <img src="/img/present.svg">
+                                        <p>Забронируй зал и получи подарок!</p>
+                                    </div>
+                                    <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone">{{item.restaurant_phone}}</a>
+                                    <p class="popup_phone_address">{{item.restaurant_address|raw}}</p>
+                                </div>
+                            </div>
 	                    </div>
 	                </div>
 	            </div>
@@ -43,7 +55,7 @@
 	            <div class="object_meta">
 	                <div class="object_meta_item">
 	                    <p class="object_meta_title">Адрес:</p>
-	                    <p class="item_address">{{item.restaurant_address|raw}}</p>
+	                    <a class="item_address" href="#map">{{item.restaurant_address|raw}}</a>
 	                </div>
 	            </div>
 	    	</div>
@@ -86,15 +98,24 @@
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">Тип ресторана</p>
-                        <p class="rest_desc_value">Банкетный зал</p>
+                        <p class="rest_desc_value">
+                            {% for type in item.restaurant_types%}
+                                {{loop.first ? type.name : type.name|lower}}{{loop.last ? '' : ', '}}
+                            {% endfor %}
+                        </p>
                     </div>  
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">Расположение</p>
-                        <p class="rest_desc_value">За городом</p>
+                        {% set location = {'1':'Около моря','2':'Около реки','7':'Около озера','3':'В горах','4':'В городе','5':'В центре города','6':'За городом'} %}  
+                        <p class="rest_desc_value">
+                            {% for type in item.restaurant_location%}
+                                {{loop.first ? location[type.id] : location[type.id]|lower}}{{loop.last ? '' : ', '}}
+                            {% endfor %}
+                        </p>
                     </div>
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">Алкоголь</p>
-                        <p class="rest_desc_value _check">{{item.restaurant_alcohol == 1 ? 'В наличии' : 'Отсутствует'}}</p>
+                        {{item.restaurant_alcohol == 1 ? '<p class="rest_desc_value _check">В наличии</p>':''}}
                         <p class="rest_desc_value _check">{{item.restaurant_own_alcohol|replace({' алкоголь': ''})}}</p>
                     </div>
                     <div class="rest_desc_item">
@@ -148,7 +169,7 @@
                             <img src="{{same_object.images[1].realpath}}">
                         </div>
                         <div class="same_object_desc">
-                            <div class="title"><a href="/catalog/{{item.restaurant_id}}/{{same_object.id}}/">{{same_object.name}}</a></div>
+                            <div class="title"><a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">{{same_object.name}}</a></div>
                             <div class="object_desc_item">
                                <p class="object_desc_title">Вместимость:</p>
                                <p class="object_desc_value">{{same_object.capacity}} человек</p>
@@ -164,14 +185,14 @@
         </div>
     </div>
 
-    <div class="map">
+    <div class="map" name="map">
         <div class="map_data_wrap">
             <div class="map_data">
                 <div class="map_img_wrap">
                     <img class="map_img" src="{{ item.restaurant_cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'}) }}">
                 </div>
                 
-                <a href="/catalog/{{item.restaurant_id}}/" class="map_rest_name">{{ item.restaurant_name }}</a>
+                <a href="/catalog/restoran-{{item.restaurant_slug}}/" class="map_rest_name">{{ item.restaurant_name }}</a>
                 <p class="map_rest_address">{{ item.restaurant_address }}</p>
                 <p class="map_close">Спасибо, закрыть</p>
             </div>

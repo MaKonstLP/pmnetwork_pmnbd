@@ -74,7 +74,7 @@ export default class Filter{
 		let data = {
 			'filter' : JSON.stringify(self.state)
 		}
-
+		console.log('filter111', data);
 		this.promise = new Promise(function(resolve, reject) {
 			self.reject = reject;
 			self.resolve = resolve;
@@ -99,7 +99,7 @@ export default class Filter{
 		let data = {
 			'filter' : JSON.stringify(self.state)
 		}
-
+		console.log('filter', data);
 		this.promise = new Promise(function(resolve, reject) {
 			self.reject = reject;
 			self.resolve = resolve;

@@ -104,7 +104,7 @@
 .popup_img{
 	display: none;
 	position: relative;
-	max-width: 956px;
+	width: 956px;
 	.popup_img_close{
     	top: -22px;
 	    right: -22px;
@@ -137,4 +137,49 @@
     img{
     	width: 100%;
     }
+}
+.popup_phone_wrap{
+	top: -30px;
+	left: 0;
+	position: absolute;
+	.popup_layout{
+		background: none;
+	}
+	.form_close {
+		display: block;
+		&:before, 
+		&:after{
+			//background:$clrBlue;
+		}
+	}
+	.popup_phone{
+		position: absolute;
+	    z-index: 2;
+	    background: #fff;
+	    padding: 16px;
+	    box-shadow: 0 5px 20px rgba(34,36,28,.1);
+	}
+	.popup_phone_title{
+	    font-size: 18px;
+	    line-height: 24px;
+	    font-weight: 700;
+	}
+	.popup_phone_present{
+	    margin: 8px auto;
+		display: flex;
+		align-items: center;
+		img {
+			width: 30px;
+			margin-right: 8px;
+		}
+	}
+	.popup_real_phone{
+		color: $clrBlack;
+		font-size: 18px;
+	    line-height: 24px;
+	    font-weight: 700;
+	}
+	.popup_phone_address{
+	    margin-top: 8px;
+	}
 }

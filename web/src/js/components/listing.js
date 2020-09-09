@@ -21,7 +21,7 @@ export default class Listing{
 			$page_id = (isNaN($page_id)) ?  $(this).data('page-id') : $page_id;
 			self.reloadListing($page_id);
 		});
-		console.log(this);
+		//console.log(this);
 
 		//КЛИК ПО ПОКАЗАТЬ ЕЩЕ
 		$('body').on('click', '[data-append-items]', function(){
@@ -43,7 +43,6 @@ export default class Listing{
 
 	reloadListing(page = 1){
 		let self = this;
-
 		self.block.addClass('_loading');
 		self.filter.filterListingSubmit(page);
 		self.filter.promise.then(

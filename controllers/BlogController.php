@@ -33,7 +33,7 @@ class BlogController extends Controller
 	public function actionIndex()
 	{	
 		$page =	(isset($_GET['pages']) ? $_GET['pages'] : 1);
-		$seo = Pages::find()->where(['name' => 'blogs'])->one();
+		$seo = Pages::find()->where(['type' => 'blog'])->one();
 		$this->setSeo($seo);
 		$seo->breadcrumbs = Breadcrumbs::get_breadcrumbs($page);
 		return $this->actionListing(

@@ -7,11 +7,15 @@ var animation = new Animation;
 export default class Form {
 	constructor(form) {
 		this.$form = $(form);
-		this.$formWrap = this.$form.parents('.formWrap');
+		this.$formWrap = this.$form.parents('.form_main');
 		this.$submitButton = this.$form.find('button[type="submit"]');
 		this.$policy = this.$form.find('[name="policy"]');
 		this.$policy_checkbox = this.$form.find('[data-action="form_checkbox"]');
 		this.to = (this.$form.attr('action') == undefined || this.$form.attr('action') == '') ? this.to : this.$form.attr('action');
+		this.$formModal = this.$form.parents('body').find('.popup_wrap');
+		this.$formModalMain = this.$formModal.find('.form_main');
+		this.$formSuccess = this.$formModal.find('.form_success');
+		
 		let im_phone = new Inputmask('+7 (999) 999-99-99', {
 			clearIncomplete: true,
 	    });
@@ -182,7 +186,7 @@ export default class Form {
 
 	reset() {
 		this.$form[0].reset();
-		this.$form.find('input').removeClass('form_input_valid form_input_filled');
+		this.$form.find('input').removeClass('form_input_valid form_input_filled check_approove');
 	}
 
 	beforeSend() {
@@ -192,6 +196,9 @@ export default class Form {
 	success(data) {
 		//modal.append(data);
 		//modal.show();
+		this.$formModalMain.hide();
+		this.$formSuccess.show();
+		this.$formModal.not('._active').addClass('_active');
 		this.reset();
 		// this.$submitButton.removeClass('button__pending');
 	}
@@ -210,11 +217,12 @@ export default class Form {
 	    this.beforeSend();
 
 	    var formData = new FormData(this.$form[0]);
-
+	    formData.append($('[name="csrf-param"]').attr('content'), $('[name="csrf-token"]').attr('content'));
 	    for (var pair of formData.entries()) {
-		    console.log(pair[0]+ ', ' + pair[1]); 
+		    console.log('pair ', pair[0]+ ', ' + pair[1]); 
 		}
 
+		console.log('form ', this.$form[0]);
 	    fetch(this.to,{
 			method: 'POST',
 			body: formData
@@ -222,7 +230,8 @@ export default class Form {
 	    .then(status)
 	    .then(json)
 	    .then(data => {
-			this.success(data);
+	    	console.log(data);
+			this.success('success ',data);
 			// this.reset();
 			this.disabled = false;
 	    })

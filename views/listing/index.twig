@@ -2,7 +2,7 @@
 
 	<div class="content_block" data-listing-title>
 
-		{{ this.render('//components/generic/title.twig', {'count':count, 'seo':seo}) | raw }}
+		{{ this.render('//components/generic/title.twig', {'count':count, 'seo':seo, 'appParams':appParams}) | raw }}
 		
 	</div>
 
@@ -17,7 +17,7 @@
 			<a href="#">Веранды и террасы <span>56</span></a>
 		</div>
 		<div class="seo_text before_filter" data-seo-text> 
-			{{seo.text_top | raw }}
+			{{seo.text_top |replace({'**city_dec**': appParams.subdomen_dec}) | raw }}
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>

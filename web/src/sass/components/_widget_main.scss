@@ -162,7 +162,7 @@
 		}
 	}		
 }
-.listing_widget_arrow{
+.listing_widget_arrow, .slider_arrow{
 	width: 24px;
     height: 48px;
     background: url(/img/arrow.svg) no-repeat;
@@ -188,4 +188,7 @@
             right: 0;
         }
     }
+}
+.slider_arrow{
+	top: calc(50% - 24px);
 }

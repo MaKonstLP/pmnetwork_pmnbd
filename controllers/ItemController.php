@@ -1,4 +1,5 @@
 <?php
+
 namespace app\modules\pmnbd\controllers;
 
 use Yii;
@@ -9,7 +10,8 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\Rooms;
 use common\models\elastic\ItemsElastic;
-use common\components\Breadcrumbs;
+use frontend\modules\pmnbd\components\Breadcrumbs;
+use frontend\modules\pmnbd\components\Declension;
 use common\models\elastic\ItemsWidgetElastic;
 use app\modules\pmnbd\models\ElasticItems;
 use yii\web\NotFoundHttpException;
@@ -17,13 +19,18 @@ use yii\web\NotFoundHttpException;
 class ItemController extends Controller
 {
 
-	public function actionIndex($restId, $id=null)
+	public function actionIndex($restSlug, $roomSlug = null)
 	{
-		
-		//ItemsElastic::refreshIndex();
-		//exit;
 
-		$rest_item = ElasticItems::get($restId);
+		$rest_item = ElasticItems::find()->query([
+			'bool' => [
+				'must' => [
+					['match' => ['restaurant_slug' => $restSlug]],
+					['match' => ['restaurant_city_id' => \Yii::$app->params['subdomen_id']]],
+				],
+			]
+		])->one();
+
 		/*echo "<pre>";
 		var_dump($rest_item);
 		exit;*/
@@ -39,36 +46,48 @@ class ItemController extends Controller
 
 		asort($rooms_capacity_arr);
 
-		if (isset($id)) {
+		$other_rests = ElasticItems::find()->limit(5)->query([
+			'bool' => [
+				'must' => [
+					['match' => ['restaurant_district' => $rest_item->restaurant_district]]
+				],
+				'must_not' => [
+					['match' => ['restaurant_id' => $rest_item->restaurant_id]]
+				],
+			],
+		])->all();
+
+		if (isset($roomSlug)) {
 			foreach ($rooms as $key => $room) {
-				if ($room['id'] == $id) {
+				if ($room['slug'] == $roomSlug) {
 					$item = $room;
 					unset($rooms[$key]);
 					break;
 				}
 			}
-			if (!isset($item)){
+			if (!isset($item)) {
 				throw new NotFoundHttpException();
 			}
 			$seo['h1'] = $item['name'] . ' в ресторане ' . $rest_item->restaurant_name;
-			$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(2);
+			$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(3, $rest_item);
 			$seo['desc'] = $rest_item->restaurant_name;
 			$seo['address'] = $rest_item->restaurant_address;
 
-			$itemsWidget = new ItemsWidgetElastic;
-			$other_rooms = $itemsWidget->getOther($rest_item->restaurant_id, $id);
+			$other_rooms = array_reduce($other_rests, function ($acc, $rest) {
+				return array_merge($acc, $rest['rooms']);
+			}, []);
 
 			return $this->render('index.twig', array(
 				'item' => $item,
-				'queue_id' => $id,
+				'rest_item' => $rest_item,
+				'queue_id' => $item['id'],
 				'seo' => $seo,
 				'same_objects' => $rooms,
 				'other_rooms' => $other_rooms
 			));
-
 		}
 
-		$seo['h1'] = 'Ресторан ' . $rest_item->restaurant_name . ' в Санкт-Петербурге' ;
+		$seo['h1'] = 'Ресторан ' . $rest_item->restaurant_name . ' в ' . Yii::$app->params['subdomen_dec'];
 		$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(2);
 		$seo['desc'] = $rest_item->restaurant_name;
 		$seo['address'] = $rest_item->restaurant_address;
@@ -76,16 +95,7 @@ class ItemController extends Controller
 		//$itemsWidget = new ItemsWidgetElastic;
 		//$other_rooms = $itemsWidget->getOther($rest_item->restaurant_id, $id);
 
-		$other_rests = ElasticItems::find()->limit(5)->query([
-		    'bool' => [
-		        'must' => [
-		            ['match' => ['restaurant_district' => $rest_item->restaurant_district]]
-		        ],
-		        'must_not' => [
-		            ['match' => ['restaurant_id' => $rest_item->restaurant_id]]
-		        ],
-		    ],
-		])->all();
+		
 		/*echo $rest_item->restaurant_district;
 		echo "<pre>";
 		var_dump($other_rests);
@@ -94,7 +104,7 @@ class ItemController extends Controller
 		$parking = 'Нет';
 		if (!empty($rest_item->restaurant_parking)) {
 			preg_match('~(\d+)~ims', $rest_item->restaurant_parking, $match);
-			$parking = (isset($match[1])&&($match[1] != 0) ? $match[1] . ' авто' : 'Есть');
+			$parking = $rest_item->restaurant_parking . ' мест'.Declension::get_num_ending($rest_item->restaurant_parking,['о','а','']);
 		}
 
 		#Временно
@@ -115,20 +125,21 @@ class ItemController extends Controller
 					</ul>
 					<h2>Подробности уточняйте у банкетного менеджера!</h2>';
 		#Временно
+					//echo "<pre>";var_dump($rest_item);exit;
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => min($rooms_price_arr),
 			'rooms_capacity' => $rooms_capacity_arr,
-			'queue_id' => $id,
+			'queue_id' => $roomSlug,
 			'seo' => $seo,
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
 			'parking' => $parking,
 			'text' => $text
 		));
-		
+
 		//$item = ApiItem::getData($item->restaurants->gorko_id);
 
-		
+
 	}
 }

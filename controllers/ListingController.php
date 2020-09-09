@@ -9,15 +9,15 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use frontend\widgets\FilterWidget;
 use frontend\widgets\PaginationWidgetPrevNext;
-use frontend\components\ParamsFromQuery;
-use frontend\components\QueryFromSlice;
-use frontend\components\Breadcrumbs;
-use backend\models\Pages;
+use common\components\ParamsFromQuery;
+use common\components\QueryFromSlice;
+use frontend\modules\pmnbd\components\Breadcrumbs;
+use common\models\Pages;
 use common\models\ItemsFilter;
 use common\models\elastic\ItemsFilterElastic;
 use common\models\elastic\ItemsElastic;
-use backend\models\Filter;
-use backend\models\Slices;
+use common\models\Filter;
+use common\models\Slices;
 use common\models\GorkoApi;
 use common\models\GorkoApiTest;
 use app\modules\pmnbd\models\ElasticItems;
@@ -31,7 +31,7 @@ class ListingController extends Controller
 
 	public function beforeAction($action)
 	{
-		$this->filter_model = Filter::find()->where(['<','sort',5])->with('items')->all();
+		$this->filter_model = Filter::find()->where(['active' => true])->with('items')->orderBy('sort')->all();
 		$this->slices_model = Slices::find()->all();
 
 	    return parent::beforeAction($action);
@@ -41,7 +41,6 @@ class ListingController extends Controller
 	{
 		$slice_obj = new QueryFromSlice($slice);
 		if($slice_obj->flag){
-			$this->view->params['menu'] = $slice;
 			$params = $this->parseGetQuery($slice_obj->params, $this->filter_model, $this->slices_model);
 			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
 			$this->setSeo($slice_obj->seo);
@@ -75,7 +74,7 @@ class ListingController extends Controller
 			);	
 		}
 		else{
-			$seo = Pages::find()->where(['name' => 'listing'])->one();
+			$seo = Pages::find()->where(['type' => 'listing'])->one();
 			$this->setSeo($seo);
 			$seo->breadcrumbs = Breadcrumbs::get_breadcrumbs(1);
 			return $this->actionListing(
@@ -90,6 +89,7 @@ class ListingController extends Controller
 	public function actionListing($page, $per_page, $params_filter, $seo)
 	{
 		$elastic_model = new ElasticItems;
+
 		$items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
 
 		$filter = FilterWidget::widget([
@@ -107,14 +107,17 @@ class ListingController extends Controller
 			'filter' => $filter,
 			'pagination' => $pagination,
 			'seo' => $seo,
-			'count' => $items->total
+			'count' => $items->total,
+			'appParams' => \Yii::$app->params,
 		));	
 	}
 
 	public function actionAjaxFilter(){
+		
 		$params = $this->parseGetQuery(json_decode($_GET['filter'], true), $this->filter_model, $this->slices_model);
 
-		$items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'rooms');
+		$elastic_model = new ElasticItems;
+		$items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model);
 
 		$pagination = PaginationWidgetPrevNext::widget([
 			'total' => $items->pages,
@@ -142,6 +145,7 @@ class ListingController extends Controller
 			'title' => $title,
 			'text_top' => $text_top,
 			'text_bottom' => $text_bottom,
+			'appParams' => \Yii::$app->params,
 		]);
 	}
 

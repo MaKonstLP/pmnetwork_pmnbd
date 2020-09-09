@@ -6,10 +6,10 @@
 	<div class="form_main">
 
 		<div class="form_title">
-			<p class="form_title_main">{{title}}</p>
+			<p class="form_title_main">{{ title ? title : 'Поможем выбрать зал на день рождения'}}</p>
 		</div>
 
-		<form class="form_block" action="/ajax/form">
+		<form class="form_block" action="/ajax/form/">
 
 			<div class="form_inputs">
 				<div class="input_wrapper">
@@ -22,13 +22,13 @@
 					<input type="text" name="email" data-required placeholder="Электронная почта" />
 				</div>
 				<div class="input_wrapper date_wrapper">
-					<input type="text" name="date" data-required disabled placeholder="Желаемая дата" class="not_check_approove"/>
+					<input type="text" name="date" readonly placeholder="Желаемая дата" class="not_check_approove"/>
 					<div class="input_wrapper_date_wrapper" style="display: none;">
 						
 					</div>
 				</div>
 				<div class="input_wrapper _big_width">
-					<input type="text" name="comment" placeholder="Комментарий" />
+					<input type="text" name="comment" data-required placeholder="Комментарий" />
 				</div>
 			</div>
 
@@ -44,6 +44,9 @@
 
 	</div>
 	<div class="form_success">
-
+		<p class="form_title_main">Заявка успешно отправлена</p>
+		<p>Спасибо за проявленный интерес. Мы свяжемся с вами в течение рабочего дня, чтобы обсудить детали.</p>
+		<p class="form_close_bottom" data-close-popup>Спасибо, закрыть</p>
 	</div>
+	
 </div>
