@@ -9,7 +9,7 @@ use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
 use common\components\AsyncRenewRestaurants;
 
-class TestController extends Controller
+class TestController extends BaseFrontendController
 {
 	public function actionSendmessange()
 	{

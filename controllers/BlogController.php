@@ -10,7 +10,7 @@ use backend\models\Pages;
 use common\models\elastic\ItemsFilterElastic;
 use frontend\modules\pmnbd\models\ElasticItems;
 
-class BlogController extends Controller
+class BlogController extends BaseFrontendController
 {
 	protected $per_page = 12;
 

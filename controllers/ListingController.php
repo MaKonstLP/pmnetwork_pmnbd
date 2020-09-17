@@ -14,7 +14,7 @@ use common\models\Seo;
 use common\models\Slices;
 use frontend\modules\pmnbd\models\ElasticItems;
 
-class ListingController extends Controller
+class ListingController extends BaseFrontendController
 {
 	protected $per_page = 36;
 
@@ -92,11 +92,6 @@ class ListingController extends Controller
 	{
 		$elastic_model = new ElasticItems;
 		$items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
-
-		if($page > 1){
-			$seo['text_top'] = '';
-			$seo['text_bottom'] = '';
-		}
 
 		$filter = FilterWidget::widget([
 			'filter_active' => $params_filter,

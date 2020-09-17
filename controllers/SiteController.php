@@ -3,36 +3,23 @@
 namespace app\modules\pmnbd\controllers;
 
 use Yii;
-use yii\base\InvalidArgumentException;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use common\widgets\FilterWidget;
-use common\models\elastic\ItemsWidgetElastic;
-use common\models\Pages;
 use common\models\Filter;
 use common\models\Slices;
 use frontend\modules\pmnbd\models\ElasticItems;
 use common\models\elastic\ItemsFilterElastic;
+use common\models\Pages;
 use common\models\Seo;
 use common\models\Subdomen;
 use common\models\SubdomenPages;
 use frontend\modules\pmnbd\models\MediaEnum;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 use yii\web\Response;
-use common\components\QueryFromSlice;
-use common\components\ParamsFromQuery;
+use frontend\components\QueryFromSlice;
+use frontend\components\ParamsFromQuery;
 
-class SiteController extends Controller
+class SiteController extends BaseFrontendController
 {
     const MAIN_FILTERS = ['mesto'];
-    
-   /*  public function actionUp()
-    {
-        foreach (Pages::find()->all() as $key => $value) {
-            $value->createSiteObject();
-        }
-    } */
 
     public function actionIndex()
     {
@@ -60,7 +47,7 @@ class SiteController extends Controller
 
             if (!$resultSliceAlias || !($subdomen = Subdomen::findOne(['city_id' => $cityId]))) return;
 
-            $redirect = \Yii::$app->params['siteProtocol']
+            $redirect = \Yii::$app->params['siteProtocol'] . '://'
                 . $subdomen->alias . '.'
                 . \Yii::$app->params['siteAddress']
                 . "/catalog/$resultSliceAlias/";
@@ -70,7 +57,7 @@ class SiteController extends Controller
 
         $filter_model = Filter::find()->with('items')->all();
 
-        $items = new ItemsFilterElastic(['mesto' => ['2','3','5','7','8']], 10000, 1, false, 'restaurants', new ElasticItems());
+        $items = new ItemsFilterElastic(['mesto' => ['2', '3', '5', '7', '8']], 10000, 1, false, 'restaurants', new ElasticItems());
         $mainWidget = $this->renderPartial('//components/generic/listing.twig', [
             'items' => array_slice($items->items, 0, 30)
         ]);
@@ -87,7 +74,7 @@ class SiteController extends Controller
             },
             [] //[ '1' => 200, '3' => 70 ...]
         );
-       
+
         $filtersItemsForSelect = array_filter($filter_model, function ($filter) {
             return in_array($filter->alias, self::MAIN_FILTERS);
         });
@@ -107,10 +94,10 @@ class SiteController extends Controller
             'svoy-alko'     => ['name' => 'Рестораны со своим алкоголем'],
         ];
         foreach ($mainSlices as $alias => $sliceTexts) {
-            $slice = Slices::find()->where(['alias' => $alias])->one();
+            $slices_model = Slices::find()->all();
             $filter_model = Filter::find()->where(['active' => true])->with('items')->orderBy('sort')->all();
-            $slice_obj = new QueryFromSlice($slice);
-            $temp_params = new ParamsFromQuery($slice_obj->params, $filter_model, $slice);
+            $slice_obj = new QueryFromSlice($alias);
+            $temp_params = new ParamsFromQuery($slice_obj->params, $filter_model, $slices_model);
             $sliceItems = new ItemsFilterElastic($temp_params->params_filter, 10000, 1, false, 'restaurants', new ElasticItems());
             $mainSlices[$alias]['count'] = $sliceItems->total;
         }
@@ -126,7 +113,7 @@ class SiteController extends Controller
         ]);
     }
 
-   public function actionError()
+    public function actionError()
     {
         return $this->render('error.twig');
     }
@@ -134,10 +121,9 @@ class SiteController extends Controller
     public function actionRobots()
     {
         header('Content-type: text/plain');
-        if(Yii::$app->params['subdomen_alias']){
-            $subdomen_alias = Yii::$app->params['subdomen_alias'].'.';
-        }
-        else{
+        if (Yii::$app->params['subdomen_alias']) {
+            $subdomen_alias = Yii::$app->params['subdomen_alias'] . '.';
+        } else {
             $subdomen_alias = '';
         }
         // echo "User-agent: *\nSitemap: https://'.$subdomen_alias.'birthday-place.ru/sitemap/";
@@ -145,14 +131,22 @@ class SiteController extends Controller
         exit;
     }
 
-    private function getSeo($type, $page=1, $count = 0){
+    private function getSeo($type, $page = 1, $count = 0)
+    {
         $seo = (new Seo($type, $page, $count))->withMedia([MediaEnum::HEADER_IMAGE, MediaEnum::ADVANTAGES]);
         return $seo->seo;
     }
 
-    private function setSeo($seo){
+    private function setSeo($seo)
+    {
         $this->view->title = $seo['title'];
         $this->view->params['desc'] = $seo['description'];
         $this->view->params['kw'] = $seo['keywords'];
+    }
+
+    public function actionUp()
+    {
+        Pages::createSiteObjects();
+        SubdomenPages::createSiteObjects();
     }
 }

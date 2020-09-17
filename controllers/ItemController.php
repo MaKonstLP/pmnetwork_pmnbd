@@ -9,7 +9,7 @@ use frontend\modules\pmnbd\components\Declension;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\NotFoundHttpException;
 
-class ItemController extends Controller
+class ItemController extends BaseFrontendController
 {
 
 	public function actionIndex($restSlug, $roomSlug = null)
