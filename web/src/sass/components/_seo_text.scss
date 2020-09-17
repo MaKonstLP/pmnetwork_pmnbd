@@ -2,13 +2,21 @@
     font-weight: 500;
     margin: 40px 0px;
 
+    
+
     @include for-phone{
         font-size: 14px;
         line-height: 22px;
         margin: 20px 0px;
-        max-height: 200px;
         overflow: hidden;
         position: relative;
+
+        &._hidden{
+            max-height: 200px;
+            .seo_text_control{
+                display: flex;
+            }
+        }
 
         &._active{
             max-height: initial;
@@ -33,7 +41,7 @@
         }
 
         @include for-phone{
-            display: flex;
+            //display: flex;
             justify-content: left;
             position: absolute;
             //padding-top: 40px;

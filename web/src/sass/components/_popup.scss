@@ -137,6 +137,36 @@
     img{
     	width: 100%;
     }
+
+    @include for-pad{
+    	width: 100%;
+    	.popup_img_slider_wrap{
+    		width: 94%;
+    		margin: auto;
+    	}
+    	.popup_img_close{
+    		right: 0;
+    	}
+    }
+    @include for-mobile{
+    	width: 90%;
+    	height: 88%;
+    	.popup_img_slider_wrap{
+    		margin: auto;
+    		height: 100%;
+    	}
+    	.popup_img_close{
+    		right: 0;
+    	}
+    }
+    @include for-phone{
+    	width: 100%;
+    	height: auto;
+    	.popup_img_slider_wrap{
+    		width: 94%;
+    		margin: auto;
+    	}
+    }
 }
 .popup_phone_wrap{
 	top: -30px;
@@ -163,6 +193,7 @@
 	    font-size: 18px;
 	    line-height: 24px;
 	    font-weight: 700;
+	    width: 90%;
 	}
 	.popup_phone_present{
 	    margin: 8px auto;

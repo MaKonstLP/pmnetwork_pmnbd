@@ -18,6 +18,8 @@ use common\models\Subdomen;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Response;
+use common\components\QueryFromSlice;
+use common\components\ParamsFromQuery;
 
 class SiteController extends Controller
 {
@@ -64,7 +66,7 @@ class SiteController extends Controller
 
         $filter_model = Filter::find()->with('items')->all();
 
-        $items = new ItemsFilterElastic(['mesto' => ['2,3,5,7,8']], 10000, 1, false, 'restaurants', new ElasticItems());
+        $items = new ItemsFilterElastic(['mesto' => ['2','3','5','7','8']], 10000, 1, false, 'restaurants', new ElasticItems());
         $mainWidget = $this->renderPartial('//components/generic/listing.twig', [
             'items' => array_slice($items->items, 0, 30)
         ]);
@@ -89,13 +91,34 @@ class SiteController extends Controller
         $seo = Pages::find()->where(['type' => 'index'])->one();
         $this->setSeo($seo);
 
+        #Фиксированные срезы на главной
+        $mainSlices = [
+            'check-1500'    => ['name' => 'Недорогие рестораны'],
+            'veranda'       => ['name' => 'Веранды'],
+            'loft'          => ['name' => 'Лофты'],
+            'tent'          => ['name' => 'Шатры'],
+            '15-people'     => ['name' => 'Банкет на 15 человек'],
+            '20-25-people'  => ['name' => 'Банкет на 20 человек'],
+            '30-people'     => ['name' => 'Банкет на 30 человек'],
+            'svoy-alko'     => ['name' => 'Рестораны со своим алкоголем'],
+        ];
+        foreach ($mainSlices as $alias => $sliceTexts) {
+            $slice = Slices::find()->where(['alias' => $alias])->one();
+            $filter_model = Filter::find()->where(['active' => true])->with('items')->orderBy('sort')->all();
+            $slice_obj = new QueryFromSlice($slice);
+            $temp_params = new ParamsFromQuery($slice_obj->params, $filter_model, $slice);
+            $sliceItems = new ItemsFilterElastic($temp_params->params_filter, 10000, 1, false, 'restaurants', new ElasticItems());
+            $mainSlices[$alias]['count'] = $sliceItems->total;
+        }
+
         return $this->render('index.twig', [
             'appParams' => \Yii::$app->params,
             'filters' => $filtersItemsForSelect,
             'seo' => $seo,
             'slider' =>  $mainWidget,
             'count' => $items->total,
-            'mainRestTypesCounts' => $mainRestTypesCounts
+            'mainRestTypesCounts' => $mainRestTypesCounts,
+            'mainSlices' => $mainSlices
         ]);
     }
 

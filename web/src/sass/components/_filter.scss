@@ -36,6 +36,7 @@
     @include for-mobile{
         padding: 0px 17px 25px;
         margin-top: 25px;
+        background-color: $clrBg;
     }
 
     .filter_label{
@@ -190,7 +191,7 @@
         border: 1px solid $clrLightGrey;
         border-radius: 2px;
         cursor: initial;
-        z-index: 3;
+        z-index: 13;
         max-height: 312px;
     }
 
@@ -418,7 +419,7 @@
     justify-content: center;
     align-items: center;
     top: 0;
-
+    overflow: hidden scroll;
     .popup_layout{
         background-color: #fff;
         opacity: 1;

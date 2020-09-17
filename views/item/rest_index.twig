@@ -10,7 +10,7 @@
 	    		<div class="object_meta">
 	                <div class="object_meta_item">
 	                    <p class="object_meta_title">Средний чек:</p>
-	                    <p class="object_meta_value">от {{min_price}} ₽/чел.</p>
+	                    <p class="object_meta_value">{{ min_price ? 'от '~min_price~' ₽/чел.' : 'по запросу'}}</p>
 	                </div>
 	                <div class="object_meta_item">
 	                    <p class="object_meta_title">Забронировать по телефону:</p>
@@ -41,16 +41,18 @@
 	                <div class="object_meta_item">
 	                    <p class="object_meta_title">Залы:</p>
 	                    <p class="object_meta_value">{{rooms_capacity|length}} помещени{{Declension.get_num_ending(rooms_capacity|length,['е','я','й'])}}: 
-	                    	{% for id, capacity in rooms_capacity%}
-	                    		<a href="{{id}}/">{{capacity}}</a>
+	                    	{% for slug, capacity in rooms_capacity%}
+	                    		<a href="/catalog/restoran-{{item.restaurant_slug}}/{{slug}}/">{{capacity}}</a>
 	                    		{{loop.last ? '' : ', '}}
                     		{% endfor %}
 	                     человек</p>
 	                </div>
+                    {% if item.restaurant_cuisine %}
 	                <div class="object_meta_item">
 	                    <p class="object_meta_title">Кухня:</p>
 	                    <p class="object_meta_value">{{item.restaurant_cuisine}}</p>
 	                </div>
+                    {% endif %}
 	            </div>
 	            <div class="object_meta">
 	                <div class="object_meta_item">
@@ -76,8 +78,8 @@
                 {% endfor %}
             </div>
             <div class="listing_widget_controll">
-                    <div class="listing_widget_pagination"></div>
-                </div> 
+                <div class="listing_widget_pagination"></div>
+            </div> 
         </div>
         <div class="content_block">
             <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
@@ -127,6 +129,8 @@
                         <p class="rest_desc_value">{{item.restaurant_payment}}</p>
                     </div>
                 </div>
+
+               {% if item.restaurant_special %} 
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">Особенности</p>
@@ -136,15 +140,20 @@
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
+                
+                {% if item.restaurant_extra_services %}
+                {% set extras = item.restaurant_extra_services|split(', ') %}
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">За дополнительную плату</p>
-                        {% set extras = item.restaurant_extra_services|split(', ') %}
+                        
                         {% for extra in extras%}
                         <p class="rest_desc_value _check">{{extra}}</p>
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
             </div>
             <div class="rest_desc_text">
                 <div class="rest_desc_item seo_text" data-seo-text>
@@ -165,8 +174,12 @@
                 {% for same_object in same_objects %}
                     <div class="same_object">
                         <div class="same_object_img">
-                            <img src="{{same_object.images[0].realpath}}">
-                            <img src="{{same_object.images[1].realpath}}">
+                            <div class="same_object_img_item">
+                               <img src="{{same_object.images[0].realpath}}"> 
+                            </div>
+                            <div class="same_object_img_item">
+                               <img src="{{same_object.images[1].realpath}}"> 
+                            </div>
                         </div>
                         <div class="same_object_desc">
                             <div class="title"><a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">{{same_object.name}}</a></div>
@@ -174,10 +187,12 @@
                                <p class="object_desc_title">Вместимость:</p>
                                <p class="object_desc_value">{{same_object.capacity}} человек</p>
                             </div>
+                            {% if same_object.price %}
                             <div class="object_desc_item">
                                <p class="object_desc_title">Стоимость аренды без еды:</p>
                                <p class="object_desc_value">{{same_object.price}} ₽</p>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

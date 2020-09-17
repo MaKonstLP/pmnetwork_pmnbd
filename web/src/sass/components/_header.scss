@@ -295,11 +295,11 @@ header{
     }
     .city_list_top{
         .header_logo_2{
-            color: #000;
             top: 19px;
             .header_logo_text{
-            font-family: 'Proxima Nova Regular', sans-serif;
-        }
+                font-family: 'Proxima Nova Regular', sans-serif;
+                color: #000;
+            }
         }
         
     }
@@ -479,6 +479,9 @@ header{
         color: #848484;
         width: 12px;
         font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        letter-spacing: 0.01em;
     }
     .city_in_char {
         font-size: 17px;
@@ -489,6 +492,10 @@ header{
     a{
         display: block;
         color: #3067F3;
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        letter-spacing: 0.01em;
     }
 
     @include for-phone{

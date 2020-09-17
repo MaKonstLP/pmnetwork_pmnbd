@@ -101,17 +101,19 @@
 
 	<div class="content_info">
 		<div class="content_info_top">
-			<img class="main_girl" src="/img/main_girl.png">
-			<img class="main_girl_mobile" src="/img/main_girl_mobile.png">
-			<div class="content_info_top_right">
-				<div class="content_info_rectangle_wrap">
-					<div class="content_info_rectangle"></div>
-				</div>
-				<div class="content_info_top_text seo_text" data-seo-text>
-					<p>День рождения – теплый и душевный праздник, который хочется провести в кругу друзей и родных. Где в Самаре лучше отметить юбилей? Как подобрать ресторан, куда действительно будет приятно пригласить дорогих сердцу людей? Удобнее всего обратиться к единому интернет-каталогу “Мой День”, в котором собрано огромное количество различных столичных заведений, приглашающих отпраздновать у них День рождения.</p>
-					<p>У нас представлено множество заведений, в которых можно взять в аренду банкетный зал для проведения торжества. Вся информация о залах собрана в одном месте. Здесь найдете подробное описание каждого заведения с указанием количества залов и их вместимости, красочные актуальные фото и все сведения, касающиеся дополнительных условий.</p>
-					<div class="seo_text_control" data-seo-control>
-						<p class="_link">Показать полностью</p>
+			<div class="content_info_block">		
+				<img class="main_girl" src="/img/main_girl.png">
+				<img class="main_girl_mobile" src="/img/main_girl_mobile.png">
+				<div class="content_info_top_right">
+					<div class="content_info_rectangle_wrap">
+						<div class="content_info_rectangle"></div>
+					</div>
+					<div class="content_info_top_text seo_text" data-seo-text>
+						<p>День рождения – теплый и душевный праздник, который хочется провести в кругу друзей и родных. Где в Самаре лучше отметить юбилей? Как подобрать ресторан, куда действительно будет приятно пригласить дорогих сердцу людей? Удобнее всего обратиться к единому интернет-каталогу “Мой День”, в котором собрано огромное количество различных столичных заведений, приглашающих отпраздновать у них День рождения.</p>
+						<p>У нас представлено множество заведений, в которых можно взять в аренду банкетный зал для проведения торжества. Вся информация о залах собрана в одном месте. Здесь найдете подробное описание каждого заведения с указанием количества залов и их вместимости, красочные актуальные фото и все сведения, касающиеся дополнительных условий.</p>
+						<div class="seo_text_control" data-seo-control>
+							<p class="_link">Показать полностью</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -232,99 +234,26 @@
 		</div>
 	</div>
 
+	{% if mainSlices %}
 	<div class="main_podborki">
 		<h3>Подборки заведений</h2>
 		<div class="content_block">
+			{% for alias, slice in mainSlices %}
 			<div class="restaurant_item">
 				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_1.jpg">
+					<a href="/catalog/{{alias}}/" target="_blank">
+						<img src="/img/restaurants/restaurant_{{loop.index}}.jpg">
 					</a>
 				</div>
 				<div class="restaurant_text">
-					<a href="#">Рестораны с японской кухней</a>
-					<span>12</span>
+					<a href="/catalog/{{alias}}/" target="_blank">{{slice.name}}</a>
+					<span>{{slice.count}}</span>
 				</div>
 			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_2.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">Рестораны с вайфаем</a>
-					<span>4</span>
-				</div>
-			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_3.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">Недорогие рестораны</a>
-					<span>20</span>
-				</div>
-			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_4.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">Кафе с верандой</a>
-					<span>9</span>
-				</div>
-			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_5.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">Суши-бары</a>
-					<span>15</span>
-				</div>
-			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_6.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">Быстрый перекус</a>
-					<span>36</span>
-				</div>
-			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_7.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">Итальянская кухня</a>
-					<span>76</span>
-				</div>
-			</div>
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="#">
-						<img src="/img/restaurants/restaurant_8.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="#">В  центре города</a>
-					<span>11</span>
-				</div>
-			</div>
+			{% endfor %}
 		</div>
 	</div>
+	{% endif %}
 
 	<div class="bottom_block">
 		<h2>День рождения в ресторане – удобно, красиво, доступно</h2>
@@ -333,11 +262,11 @@
 			<p>В современных заведениях вам предложат большой выбор блюд европейской, средиземноморской, кавказской, японской, русской и другой кухни. Вы без труда подберете угощения на любой вкус, а опытные повара приготовят их в самом лучшем виде.</p>
 			<p>Также заведения предлагают множество дополнительных услуг для проведения банкета:</p>
 			<ul>
-				<li>— музыкальное сопровождение,</li>
-				<li>— праздничное оформление столов и залов,</li>
-				<li>— аренда светового и звукового оборудования,</li>
-				<li>— выступления артистов и аниматоров,</li>
-				<li>— фейерверк, фаер-шоу и многие другие.</li>
+				<li>музыкальное сопровождение,</li>
+				<li>праздничное оформление столов и залов,</li>
+				<li>аренда светового и звукового оборудования,</li>
+				<li>выступления артистов и аниматоров,</li>
+				<li>фейерверк, фаер-шоу и многие другие.</li>
 			</ul>
 			<p>Стоимость празднования может варьироваться в широких пределах, и каждый виновник торжества сможет выбрать место в желаемой ценовой категории.</p>
 			<div class="seo_text_control" data-seo-control>

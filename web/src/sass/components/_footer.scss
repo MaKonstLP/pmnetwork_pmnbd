@@ -17,7 +17,9 @@ footer{
     @include for-mobile{
         padding: 0 15px;
     }
-
+    .footer_ph{
+        color: $clrBlack;
+    }
     .footer_wrap{
         padding: 30px 40px;
 

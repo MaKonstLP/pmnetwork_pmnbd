@@ -1,14 +1,14 @@
 .items_list_listing{
-    margin-top: 40px;
-
+    padding: 40px 0;
     @include for-mobile{
         margin: 5px 0px 0px;
+        padding: 0;
     }
 
     .items_list{
         display: flex;
         flex-wrap: wrap;
-
+        justify-content: left;
         em{
             background: rgba(122,207,207,0.35);
             border-radius: 3px;
@@ -18,7 +18,7 @@
 
     .item{
         width: calc((100% / 4) - 30px);
-        margin: 15px;
+        margin: 15px 0 15px 40px;
         background-color: $clrCardBg;
         box-shadow: $shadowCard;
         height: auto;
@@ -27,6 +27,13 @@
         transition: box-shadow 0.2s ease;
         border-bottom: none !important;
         border-radius: 5px;
+
+        &:nth-child(4n+1){
+            margin-left: 0;
+        }
+        &.__hide{
+            display: none;
+        }
 
         .item_present{
             position: absolute;
@@ -56,6 +63,10 @@
         }
         @media (max-width: 767px){
             width: calc((100% / 1) - 30px);
+            margin: 15px auto;
+            &:nth-child(4n+1){
+                margin: 15px auto;
+            }
         }
 
         &:hover{
@@ -63,7 +74,7 @@
         }
         @include for-phone{
             &:nth-child(n+7){
-                display: none;
+                //display: none;
             }
         }
         .item_img{
@@ -86,9 +97,9 @@
         .item_info{
             padding: 10px 15px 25px;
             height: calc(100% - 302px);
-            display: flex;
-            justify-content: space-between;
-            flex-direction: column;
+            //display: flex;
+            //justify-content: space-between;
+            //flex-direction: column;
             padding: 7px 12px 42px;
 
             @include for-mobile{
@@ -96,6 +107,7 @@
             }
 
             .item_info_top{
+                min-height: 66px;
                 .item_name{
                     font-weight: bold;
                     line-height: 23px;
@@ -135,20 +147,35 @@
                     color: $clrGrey;
                     margin-top: 4px;
                     padding-left: 14px;
-                    height: 36px;
+                    //height: 36px;
                     &:before{
                         content: url(/img/geo_icon.svg);
                         margin-right: 6px;
                         margin-left: -14px;
                     }
                 }
-
-                .item_meta{
+            }
+            .item_meta{
                     display: flex;
                     flex-wrap: wrap;
                     margin-top: 5px;
                     justify-content: space-between;
-
+                    .item_meta_items {
+                        display: flex;
+                        flex-direction: column;
+                        &:last-child{
+                            width: 43%;
+                            @include for-mobile{
+                                width: 50%;
+                            }
+                        }
+                        &:first-child{
+                            width: 56%;
+                            @include for-mobile{
+                                width: 50%;
+                            }
+                        }
+                    }
                     .item_meta_item{
                         padding: 0px 30px 0px 0px;
                         margin: 10px 0px 0px;
@@ -158,8 +185,8 @@
                         line-height: 15px;
                         margin: 0;
                         padding: 0;
-                        min-width: 40%;
-
+                        //min-width: 40%;
+                        //max-width: 55%;
                         @include for-mobile{
                             //padding: 0px;
                             //width: 100%;
@@ -181,7 +208,6 @@
 
                         .item_meta_text{}
                 }
-            }
         }
     }
 }

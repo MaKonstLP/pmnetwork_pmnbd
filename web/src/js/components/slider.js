@@ -25,7 +25,7 @@ export default class Slider{
             slider_popup.find('[data-swiper-slide-index="'+active+'"]').addClass('swiper-slide-active');
             $('.popup_wrap .popup_form').hide();
             $('.popup_wrap .popup_img').show();
-            $('.popup_wrap').addClass('_active');
+            $('.popup_wrap').not('.popup_phone_wrap').addClass('_active');
             self.initSwiperPopup(slider_popup, active);
         });
 
@@ -177,6 +177,11 @@ export default class Slider{
               nextEl: '.slider_arrow._next',
               prevEl: '.slider_arrow._prev',
             },
+            breakpoints: {
+	        	768:{
+	        		autoHeight: false,
+	        	}
+	        }
 	    });
 	}
 }

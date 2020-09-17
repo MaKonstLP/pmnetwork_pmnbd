@@ -38,9 +38,10 @@ class ItemController extends Controller
 		$rooms_price_arr = [];
 		$rooms_capacity_arr = [];
 		$rooms_type_arr = [];
+
 		foreach ($rooms as $key => $value) {
 			array_push($rooms_price_arr, $value['price']);
-			$rooms_capacity_arr[$value['id']] = $value['capacity'];
+			$rooms_capacity_arr[$value['slug']] = $value['capacity'];
 			$rooms_type_arr[$value['type_name']] = $value['name'];
 		}
 
@@ -107,28 +108,10 @@ class ItemController extends Controller
 			$parking = $rest_item->restaurant_parking . ' мест'.Declension::get_num_ending($rest_item->restaurant_parking,['о','а','']);
 		}
 
-		#Временно
-		$text = '<p>Загородный комплекс  Истра Holiday  расположен в 45 км к северо-западу от Москвы. Рядом с комплексом находится Истринское водохранилище и смешанный лес.</p>
-					<p>Совсем рядом расположен и комплекс Лада Holiday, где также можно организовать событие вашей мечты!</p>
-					<h2>Преимущества:</h2>
-					<ul>
-					<li>Живописные локации для проведения выездной регистрации у воды и свадебной съемки</li>
-					<li>Различные развлечения на территории комплекса: караоке, бильярд, спа</li>
-					<li>Детская комната и спортивные развлечения на свежем воздухе для детей</li>
-					</ul>
-					<h2>Подарки на свадебные банкеты (от 15 гостей):</h2>
-					<ul>
-					<li>Номер для молодоженов (стандарт улучшенный)</li>
-					<li>Аренда зала/площадки для проведения банкета (кроме «Павильон на воде», зала «Весна»)</li>
-					<li>Скидка 10% на номера для гостей</li>
-					<li>Комплимент от отеля: вино и фруктовая ваза</li>
-					</ul>
-					<h2>Подробности уточняйте у банкетного менеджера!</h2>';
-		#Временно
 					//echo "<pre>";var_dump($rest_item);exit;
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
-			'min_price' => min($rooms_price_arr),
+			'min_price' => min(array_filter($rooms_price_arr)),
 			'rooms_capacity' => $rooms_capacity_arr,
 			'queue_id' => $roomSlug,
 			'seo' => $seo,

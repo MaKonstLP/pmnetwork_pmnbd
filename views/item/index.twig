@@ -14,17 +14,20 @@
                 {% for image in item.images%}
                     <div class="object swiper-slide">
                         <div class="object_img">
-                           <img src="{{ image.realpath }}" data-gallery-img-view/>
+                           <img src="{{ image.realpath }}=w746-h498-l95" data-gallery-img-view/>
                        </div>
                     </div>
                 {% endfor %}
             </div>
+            <div class="listing_widget_controll">
+                <div class="listing_widget_pagination"></div>
+            </div> 
         </div>
         <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
             <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                 {% for image in item.images%}
                     <div class="object swiper-slide">
-                       <img src="{{ image.realpath }}"/>
+                       <img src="{{ image.realpath }}=w150-h90-l80"/>
                     </div>
                 {% endfor %}
             </div>
@@ -51,7 +54,7 @@
             <p class="object_desc_item">
                <span class="object_desc_title">Отдельный вход:</span><span class="dots"></span><span class="object_desc_value">{{item.separate_entrance==0 ? 'нет' : 'да' }}</span>
             </p>
-            <p>{{item.features}}</p>
+            <!--p>{{item.features}}</p-->
             <!--p>Anstar House Vatutinki - это уникальное место для проведения идеальной свадьбы. На территории комплекса имеется живописный сад, где возможно организовать выездную церемонию и фотосессию.</p>
             <p>В большом доме на берегу озера жених и невеста смогут провести утренние сборы, а также комфортно разместиться гости.</p>
             <p>Для проведения мероприятий имеется большой банкетный зал. Интерьер выполнен в светлых тонах, что позволяет использовать любое стилистическое оформление.</p-->
@@ -60,7 +63,7 @@
             <div class="object_meta">
                 <div class="object_meta_item">
                     <p class="object_meta_title">Средний чек:</p>
-                    <p class="object_meta_value">от {{item.price}} ₽/чел.</p>
+                    <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу'}}</p>
                 </div>
                 <div class="object_meta_item">
                     <p class="object_meta_title">Забронировать по телефону:</p>
@@ -90,14 +93,19 @@
         </div>
     </div>
 
+    {% if same_objects %}
     <div class="content_block same_objects">
         <h2>Другие залы этой же площадки</h2>
         <div class="same_objects_wrap">
             {% for same_object in same_objects %}
                 <div class="same_object">
                     <div class="same_object_img">
-                        <img src="{{same_object.images[0].realpath}}">
-                        <img src="{{same_object.images[1].realpath}}">
+                        <div class="same_object_img_item">
+                            <img src="{{same_object.images[0].realpath}}=w250-h170-l95">
+                        </div>
+                        <div class="same_object_img_item">
+                            <img src="{{same_object.images[1].realpath}}=w250-h170-l95">
+                        </div>
                     </div>
                     <div class="same_object_desc">
                         <div class="title"><a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">{{same_object.name}}</a></div>
@@ -114,7 +122,8 @@
             {% endfor %}
         </div>
     </div>
-
+    {% endif %}
+    
     <div class="other_objects">
         <h2>Похожие залы</h2>
         <div class="other_objects_wrap content_block">
@@ -124,7 +133,7 @@
                 <div class="other_objects_swiper swiper-wrapper" data-other-objects-list>
                    {% for other_room in other_rooms %} 
                         <div class="other_object swiper-slide">
-                            <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'}) }}">
+                            <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w350-h200-n-l95'}) }}">
                             <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>
                             <div class="restaurant_name">{{other_room.restaurant_name}}</div>
                             <div class="object_meta_item">

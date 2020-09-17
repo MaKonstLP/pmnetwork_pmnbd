@@ -60,7 +60,7 @@ class Module extends \yii\base\Module
                 ->one();
 
             if ($subdomen_model) {
-                Yii::$app->params['subdomen'] = $subdomen->alias;
+                Yii::$app->params['subdomen'] = $subdomen_model->alias;
                 Yii::$app->params['subdomen_id'] = $subdomen_model->city_id;
                 Yii::$app->params['subdomen_name'] = $subdomen_model->name;
                 Yii::$app->params['subdomen_dec'] = $subdomen_model->name_dec;

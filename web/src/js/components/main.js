@@ -9,7 +9,7 @@ export default class Main {
         });
 
         $('body').on('click', '[data-open-popup-form]', function () {
-            $('.popup_wrap').addClass('_active');
+            $('.popup_wrap').not('.popup_phone_wrap').addClass('_active');
         });
 
         $('body').on('click', '[data-close-popup]', function () {
@@ -27,8 +27,6 @@ export default class Main {
             $('.popup_wrap').addClass('_active');
         });*/
         $('body').on('click', '[data-popup-phone]', function () {
-            console.log('top',$(this).offset());
-            console.log('top',$(this).position());
             $('.popup_wrap .popup_phone').css({'top' : $(this).position().top, 'left' : $(this).position().left});
             $('.popup_phone_wrap').addClass('_active');
         });
@@ -66,7 +64,24 @@ export default class Main {
             }
         });
 
+        $('[data-seo-text]').each(function(){
+            if ($(this).height()>200 && $(window).width()<600) {
+                $(this).addClass('_hidden');
+            }
+        })
+
+        //НЕ ПОКАЗЫВАТЬ ЕЩЕ ЕСЛИ НЕТ РЕСТОРАНОВ
+        if($('body').find('[data-page-increase="1"]').length == 0) {
+            $('[data-append-items]').hide();
+        }
+        
+
         $(window).on('resize', function () {
+            $('[data-seo-text]').each(function(){
+                if ($(this).height()>200 && $(window).width()<600) {
+                    $(this).addClass('_hidden');
+                }
+            })
             if ($(window).width() <= 768) {
                 $('.fast_filters').each(function () {
                     if (!$(this).hasClass('mCustomScrollbar')) {
@@ -87,18 +102,41 @@ export default class Main {
         });
 
         $('.main_search_city_list  p').on('click', function () {
-            $('.main_search_city_input').val($(this).html());
+            $('.main_search_city_input').val($(this).html().replace('<span>','').replace('</span>',''));
             $('[data-selected-city-id]').data('selected-city-id', $(this).data('city-id'));
             //$(".main_search_city_list").hide();
         });
+
+        let searchInCityList = function($input){
+            let word = $input.val();
+            $('.main_search_city_list p').each(function(){
+                let city_name = $(this).html().replace('<span>','').replace('</span>','');
+                let $substr = city_name.toLowerCase().search(word.toLowerCase());
+                if (word != '' && $substr == -1) {
+                    $(this).html(city_name);
+                    $(this).hide();
+                } else {
+                    let $str1 = city_name.substring(0,$substr);
+                    let $str2 = city_name.substring($substr, $substr+word.length);
+                    let $str3 = city_name.substring($substr+word.length);
+                    $(this).html($str1+'<span>'+$str2+'</span>'+$str3);
+                    $(this).show();
+                }
+            })
+        }
+
         $('.main_search_city_input')
             .on('focus', function () {
+                searchInCityList($(this));
                 $('.main_search_city_list').slideToggle('Fast');
             })
             .on('blur', function () {
                 setTimeout(function () {
                     $('.main_search_city_list').slideToggle('Fast');
                 }, 100);
+            })
+            .on('keyup', function(){
+                searchInCityList($(this));
             });
 
         $('.main_search_type_room_list  p').on('click', function () {
@@ -197,18 +235,18 @@ export default class Main {
 
         $('.main_rectangle_1').hover(
             function () {
-                $(this).siblings('.main_rectangle_2').css('visibility','visible');
+                $(this).css('background-color','#FFC24A');
             },
             function () {
-                $(this).siblings('.main_rectangle_2').css('visibility','hidden');
+                $(this).css('background-color','#FFAD0F');
             }
         );
         $('.main_rectangle a').hover(
             function () {
-                $(this).siblings('.main_rectangle_2').css('visibility','visible');
+                $(this).siblings('.main_rectangle_1').css('background-color','#FFC24A');
             },
             function () {
-                $(this).siblings('.main_rectangle_2').css('visibility','hidden');
+                $(this).siblings('.main_rectangle_1').css('background-color','#FFAD0F');
             }
         );
     }

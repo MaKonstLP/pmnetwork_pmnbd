@@ -25,18 +25,28 @@ export default class Listing{
 
 		//КЛИК ПО ПОКАЗАТЬ ЕЩЕ
 		$('body').on('click', '[data-append-items]', function(){
-			let visible_items = $(this).closest('[data-page-type="listing"]').find('[data-listing-wrapper] .item:not(:visible)');
-			if (visible_items.length > 0) {
-				visible_items.each(function(){
-					console.log($(this));
-					$(this).slideToggle('Fast');
-					if (!isNaN($page_id)) {
-						self.appendInListing($page_id);
+			let $page_id = +$(this).siblings('[data-pagination-wrapper]').find('[data-listing-pagitem]._active').data('page-id') + +$(this).siblings('[data-pagination-wrapper]').find('[data-page-increase]').data('page-increase');
+			if (!isNaN($page_id)) {
+				self.filter.filterListingSubmit($page_id);
+				self.filter.promise.then(
+					response => {
+						$('[data-listing-list]').append(response.listing.replace(/item swiper-slide/g,'item swiper-slide __hide'));
+						$('[data-pagination-wrapper]').html(response.pagination);
+						let visible_items = $(this).closest('[data-page-type="listing"]').find('[data-listing-list] .item:not(:visible)');
+						if (visible_items.length > 0) {
+							visible_items.each(function(){
+								console.log($(this));
+								$(this).slideToggle('Fast');
+								if (!isNaN($page_id)) {
+									self.appendInListing($page_id);
+								}
+							});
+						} 
+						if($('body').find('[data-page-increase="1"]').length == 0) {
+							$(this).hide();
+						}
 					}
-				});
-			} 
-			if($('body').find('[data-page-increase="1"]').length == 0) {
-				$(this).hide();
+				);
 			}
 		});
 	}

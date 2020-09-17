@@ -10,6 +10,7 @@
     url('/fonts/ProximaNovaT-Thin.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 @font-face {
 font-family: 'Proxima Nova Regular';
@@ -19,6 +20,49 @@ url('/fonts/ProximaNova-Regular.woff') format('woff'),
 url('/fonts/ProximaNova-Regular.ttf') format('truetype');
 font-weight: normal;
 font-style: normal;
+font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Light'), local('Lato-Light'), url('/fonts/latolight.woff2') format('woff2'), url('/fonts/latolight.woff') format('woff'), url('/fonts/latolight.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Light Italic'), local('Lato-LightItalic'), url('/fonts/latolightitalic.woff2') format('woff2'), url('/fonts/latolightitalic.woff') format('woff'), url('/fonts/latolightitalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Regular'), local('Lato-Regular'), url('/fonts/latoregular.woff2') format('woff2'), url('/fonts/latoregular.woff') format('woff'), url('/fonts/latoregular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Italic'), local('Lato-Italic'), url('/fonts/latoitalic.woff2') format('woff2'), url('/fonts/latoitalic.woff') format('woff'), url('/fonts/latoitalic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Bold'), local('Lato-Bold'), url('/fonts/latobold.woff2') format('woff2'), url('/fonts/latobold.woff') format('woff'), url('/fonts/latobold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url('/fonts/latobolditalic.woff2') format('woff2'), url('/fonts/latobolditalic.woff') format('woff'), url('/fonts/latobolditalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
 }
 
 body{
@@ -153,6 +197,9 @@ body._overflow .main_wrap{
         .content_loading{
             height: calc(100% + 20px);
         }
+        .form_wrapper{
+            padding-top: 0;
+        }
     }
     &[data-page-type="index"]{
         margin-top: 480px;
@@ -160,10 +207,19 @@ body._overflow .main_wrap{
           margin-top: 560px;  
         }
     }
+    &[data-page-type="item"]{
+        .breadcrumbs{
+            top: -43px;
+            bottom: auto;
+            flex-wrap: wrap;
+        }
+    }
 }
 
 *{
-    margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;line-height:normal;
+    margin:0;padding:0;border:0;font-size:100%;
+    //font:inherit;
+    vertical-align:baseline;line-height:normal;
     //background: red !important;
 }
 
@@ -175,7 +231,7 @@ textarea {
       outline: none;
       border: none;
       border-radius: 0;
-      font-family: inherit;
+      //font-family: inherit;
       font-size: inherit;
       line-height: inherit;
 }

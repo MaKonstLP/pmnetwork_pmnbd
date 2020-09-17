@@ -2,6 +2,12 @@
   position: relative;
   margin-top: 48px;
   background-color: $clrBackground;
+
+  @include for-mobile{
+    height: 200px; 
+    margin-top: 0;   
+  }
+
   .swiper-container {
       padding: 0;
   }
@@ -60,6 +66,9 @@
       @include for-pad{
         display: block;
         top: 150px;
+      }
+      @include for-mobile{
+        top: 76px;
       }
       @include for-phone{
         display: block;

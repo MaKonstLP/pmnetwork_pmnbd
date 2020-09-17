@@ -90,6 +90,11 @@
 .main_search{
     text-align: center;
     position: relative;
+    display: flex;
+
+    @include for-mobile{
+        display: block;
+    }
 
     .main_search_city{
         display: inline-block;
@@ -98,7 +103,6 @@
         border: 1px solid #DEDEDE;
         box-sizing: border-box;
         text-align: left;
-
         @include for-phone{
             width: 100%;
             margin: 22px auto 0;
@@ -182,6 +186,10 @@
         height: 160px;
         display: none;
 
+        @include for-mobile{
+            width: 100%;
+        }
+
         p{
             font-size: 15px;
             line-height: 24px;
@@ -190,9 +198,13 @@
             cursor: pointer;
             span{
                 color: #000;
+                font-weight: 600;
             }
 
             &:hover{
+                span{
+                    color: $clrBlue;
+                }
                 color: $clrBlue;
             }
         }
@@ -213,6 +225,10 @@
         left: 0;
         height: 160px;
         display: none;
+
+        @include for-mobile{
+            width: 100%;
+        }
 
         p{
             font-size: 15px;
@@ -247,7 +263,10 @@
 
     &:not(.content_info_adv){
         @include for-phone{
-            top: 395px;
+            top: 356px;
+            overflow: hidden;
+            width: 320px;
+            height: 190px;
         }
     }
     
@@ -270,34 +289,34 @@
         margin: 0 10px;
     }
     @include for-phone{
-        width: 104px;
-        height: 104px;
+        width: 105px;
+        height: 105px;
         margin: 0 10px;
 
         &:nth-child(1){
             position: absolute;
-            top: -47px;
-            left: -155px;
+            top: -10px;
+            left: 0;
         }
         &:nth-child(2){
             position: absolute;
-            top: -47px;
-            left: -51px;
+            top: -10px;
+            left: 109px;
         }
         &:nth-child(3){
             position: absolute;
-            top: -47px;
-            left: 53px;
+            top: -10px;
+            left: 221px;
         }
         &:nth-child(4){
             position: absolute;
-            top: 22px;
-            left: -105px;
+            top: 67px;
+            left: 54px;
         }
         &:nth-child(5){
             position: absolute;
-            top: 22px;
-            left: 1px;
+            top: 67px;
+            left: 160px;
         }
     }
 
@@ -307,7 +326,7 @@
         right: 27.06%;
         top: 36.76%;
         bottom: -9.12%;
-        background: linear-gradient(0deg, #FFAD0F, #FFAD0F), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
+        background: #FFAD0F;
         border-radius: 40px;
         transform: rotate(-30deg);
         @include for-mobile{
@@ -319,7 +338,7 @@
     }
     .main_rectangle_2{
         position: absolute;
-        visibility: hidden;
+        //visibility: visi;
         left: 15.8%;
         right: 27.95%;
         top: 70.31%;
@@ -328,9 +347,9 @@
         right: 34.95%;
         top: 44.31%;
         bottom: -1px;
-        background: #FF6B00;
+        background: #FFAD0F;
         mix-blend-mode: normal;
-        opacity: 0.2;
+        //opacity: 0.2;
         border-radius: 30px;
         transform: rotate(-75.7deg);
 
@@ -367,7 +386,7 @@
         @include for-phone{
             font-size: 48px;
             line-height: 64px;
-            margin: 30px -16px -6px;
+            margin: 25px -15px -6px;
         }
     }
     .main_rectangle_type{
@@ -392,7 +411,7 @@
         @include for-phone{
             font-size: 11px;
             line-height: 20px;
-            margin: -25px -16px;
+            margin: -25px -15px;
         }
     }
     .main_rectangle_icon{
@@ -411,6 +430,24 @@
 .content_info{
     position: relative;
 
+    .content_info_block{
+        position: relative;
+        width: 1200px;
+        margin: 0 auto;
+
+        @include for-small-desktop{
+            width: calc(100% - 20px);
+        }
+
+        @include for-pad{
+            width: calc(100% - 20px);
+        }
+
+        @include for-mobile{
+            width: calc(100% - 30px);
+        }
+    }
+
     .content_info_top{
         background: #FFF4D7;
         position: relative;
@@ -418,7 +455,7 @@
 
     .main_girl{
         position: absolute;
-        left: 16%;
+        left: 4%;
         bottom: 0;
         z-index: 5;
         @include for-small-desktop{
@@ -428,7 +465,8 @@
             left: 5%;
         }
         @include for-mobile{
-            left: -80px;
+            left: -100px;
+            width: 290px;
         }
         @include for-phone{
             display: none;
@@ -448,7 +486,7 @@
     }
     .content_info_rectangle_wrap{
         position: absolute;
-        left: 14.5%;
+        left: 0;
         bottom: -2%;
         clip: rect(-6px 382px 382px -30px);
         height: 100%;
@@ -459,10 +497,11 @@
             left: 4.5%;
         }
         @include for-mobile{
-            bottom: 0;
+            bottom: auto;
+            top: 30px;
             height: auto;
             clip: auto;
-            left: -90px;
+            left: -100px;
         }
         @include for-phone{
             display: none;
@@ -476,14 +515,17 @@
         height: 352px;
     }
     .content_info_top_right{
-        display: inline-block;
+        display: flex;
         width: 100%;
         min-height: 300px;
         //background: linear-gradient(to right, white 0%, white 25%,#F1E5D3 25%,#F1E5D3 50%,#F1E5D3 100%);
     }
     .content_info_top_text{
-        width: 750px;
-        margin: 40px 0 64px 40%;
+        //width: 750px;
+        margin: 0 0 0 360px;
+        display: flex;
+    flex-direction: column;
+    justify-content: center;
         font-size: 15px;
         line-height: 24px;
         color: #1A2824;
@@ -508,19 +550,20 @@
             }
         }
         @include for-small-desktop{
-            margin: 40px 40px 40px 450px;
+            margin: 40px 40px 40px 380px;
             width: auto;
         }
         @include for-pad{
             width: auto;
-            margin-right: 40px;
+            margin: 20px 20px 20px 330px;
         }
         @include for-mobile{
             width: auto;
-            margin: 50px 0 50px 200px;
+            margin: 32px 10px 50px 200px;
         }
         @include for-phone{
-            margin: 90% 12px 30px;
+            display: inline-block;
+            margin: 85% 12px 30px;
         }
 
     }
@@ -944,12 +987,18 @@
         a{
             font-size: 15px;
             line-height: 24px;
+            @include for-phone{
+                line-height: 18px;
+            }
         }
         span{
             font-size: 11px;
             line-height: 24px;
             color: #848484;
             margin-left: 5px;
+            @include for-phone{
+                display: none;
+            }
         }
     }
 }
@@ -993,20 +1042,31 @@
                 border-bottom: 1px dashed #3067F3;
             }
         }
+        @include for-mobile{
+            margin-top: 0;
+        }
     }
     
-    p {
+    p:not(._link) {
         color: #1A2824;
-        margin: 10px auto;
+        margin: 10px auto !important;
         text-align: left;
     }
     ul {
-        list-style-type: none;
+        list-style-type: disc;
+        margin-left: 20px;
     }
     li {
         margin: 10px auto;
         font-size: 15px;
         line-height: 24px;
     }
-
+    @include for-mobile{
+        padding-bottom: 0;
+        h2{
+            width: calc(100% - 30px);
+            margin: 0 auto;
+            text-align: left;
+        }
+    }
 }

@@ -16,9 +16,9 @@
                         <p class="item_address">{{item.restaurant_address}}</p>
                         <!--p class="item_parent_name 11111111111">{{item.restaurant_name}}</p-->
                     {% endif %}
-                  
+                 </div> 
                     <div class="item_meta">
-
+                        <div class="item_meta_items">
                         {% if item.rooms %}
                             <div class="item_meta_item">
                                 <span class="item_meta_label">Вместимость: </span>
@@ -31,18 +31,18 @@
                                 </span>
                             </div>
                         {% endif %}
-                        {% if item.restaurant_own_alcohol %}
-                            <div class="item_meta_item">
-                                <span class="item_meta_label">Свой алкоголь: </span><span class="item_meta_text">да</span>
-                            </div>
-                        {% endif %}   
                         {% if item.rooms %}  
                             <div class="item_meta_item">
                                 <span class="item_meta_label">Залов: </span><span class="item_meta_text">{{item.rooms|length}}</span>
                             </div>
-                        {% endif %}     
-                        {{item.restaurant_parking}}
-                          
+                        {% endif %}
+                        </div>
+                        <div class="item_meta_items">
+                        {% if item.restaurant_own_alcohol %}
+                            <div class="item_meta_item">
+                                <span class="item_meta_label">Свой алкоголь: </span><span class="item_meta_text">да</span>
+                            </div>
+                        {% endif %}    
                             <div class="item_meta_item">
                                 <span class="item_meta_label">Парковка: </span>
                                 <span class="item_meta_text">
@@ -53,14 +53,14 @@
                                     {% endif %} 
                             </span>
                             </div>
-                             
+                        </div>    
                     </div>
                     {% if min_price and min_price != 100000000 %}
                         <div class="item_price">
                             <span class="item_meta_text">от {{min_price}} ₽/чел.</span>
                         </div>
                     {% endif %}
-                </div>
+                
             </div>
         </a>
     </div>

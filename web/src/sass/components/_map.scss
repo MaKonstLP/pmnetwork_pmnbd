@@ -83,4 +83,7 @@
 	    line-height: 20px;
 	    color: #848484;
 	}
+	@include for-mobile{
+	    width: 150px;
+	}
 }

@@ -76,7 +76,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     </div>
                 </div>
                 <div class="header_phone">
-                    <a href="tel:+78462057845">(846) 205-78-45</a>
+                    <a href="tel:+78462057845">8 (846) 205-78-45</a>
                     <p data-open-popup-form class="_link">Подберите мне зал</p>
                 </div>
             </div>
@@ -105,8 +105,11 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                 <li>
                                     <span>Типы заведения</span>
                                     <ul>
+                                        <?php $slices_arr = ['restoran','kafe','loft','veranda','otel']; ?>
                                         <?php foreach (\Yii::$app->params['filtersRestTypes'] as $type_alias => $type_name) { ?>
+                                            <?php if (in_array($type_alias, $slices_arr)) { ?>
                                                 <li><a href="/catalog/<?php echo $type_alias; ?>/"><?php echo $type_name; ?></a></li>
+                                            <?php } ?>
                                         <?php } ?>
                                     </ul>
                                 </li>
@@ -123,7 +126,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     </div>
                     <div class="footer_block _right">
 
-                        <p>8 (846) 205-78-45</p>
+                        <a class="footer_ph" href="tel:+78462057845">8 (846) 205-78-45</a>
 
                     </div>
                 </div>
@@ -156,9 +159,9 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 
     <?php $this->endBody() ?>
     <!--link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap&subset=cyrillic" rel="stylesheet"-->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap&subset=cyrillic" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&display=swap&subset=cyrillic" rel="stylesheet">
-    <link href="//cdn.jsdelivr.net/jquery.mcustomscrollbar/3.0.6/jquery.mCustomScrollbar.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&display=swap&subset=cyrillic" rel="stylesheet" crossorigin="anonymous">
+    <link href="//cdn.jsdelivr.net/jquery.mcustomscrollbar/3.0.6/jquery.mCustomScrollbar.min.css" rel="stylesheet" crossorigin="anonymous">
 </body>
 
 </html>
