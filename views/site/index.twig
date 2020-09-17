@@ -1,9 +1,9 @@
 <div data-page-type="index">
 	<div class="main_top_slider">
-		<img src="/img/first_page.jpg">
+		<img src="{{seo.media["header-image"]|first.src}}" alt="{{seo.media['header-image']|first.alt}}">
 	</div>
 	<div class="main_top">
-		<h1>{{seo.h1|replace({'**city_dec**': appParams.subdomen_dec})|raw}}</h1>
+		<h1>{{seo.h1|raw}}</h1>
 		<div class="main_top_desc">
 			{{count}}
 			заведен{{Declension.get_num_ending(count,['ие','ия','ий'])}}
@@ -12,7 +12,7 @@
 			<div class="main_search_city">
 				<input class="main_search_city_input" type="text" placeholder="Город" data-selected-city-id="{{appParams.subdomen_id}}" data-selected-city-alias="{{appParams.subdomen_id}}">
 				<div class="main_search_city_list">
-					{% for subdomenObject in appParams.activeSubdomenRecords %}
+					{% for subdomenObject in subdomenObjects %}
 						<p data-city-id="{{subdomenObject.city_id}}" data-city-alias="{{subdomenObject.alias}}" >{{subdomenObject.name}}</p>
 					{% endfor %}
 				</div>

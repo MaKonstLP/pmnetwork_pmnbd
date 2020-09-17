@@ -3,17 +3,10 @@
 namespace app\modules\pmnbd\controllers;
 
 use Yii;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\Rooms;
-use common\models\elastic\ItemsElastic;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use frontend\modules\pmnbd\components\Declension;
-use common\models\elastic\ItemsWidgetElastic;
-use app\modules\pmnbd\models\ElasticItems;
+use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\NotFoundHttpException;
 
 class ItemController extends Controller
@@ -31,9 +24,6 @@ class ItemController extends Controller
 			]
 		])->one();
 
-		/*echo "<pre>";
-		var_dump($rest_item);
-		exit;*/
 		$rooms = $rest_item['rooms'];
 		$rooms_price_arr = [];
 		$rooms_capacity_arr = [];
@@ -93,22 +83,14 @@ class ItemController extends Controller
 		$seo['desc'] = $rest_item->restaurant_name;
 		$seo['address'] = $rest_item->restaurant_address;
 
-		//$itemsWidget = new ItemsWidgetElastic;
-		//$other_rooms = $itemsWidget->getOther($rest_item->restaurant_id, $id);
-
-		
-		/*echo $rest_item->restaurant_district;
-		echo "<pre>";
-		var_dump($other_rests);
-		exit;*/
-
 		$parking = 'Нет';
 		if (!empty($rest_item->restaurant_parking)) {
 			preg_match('~(\d+)~ims', $rest_item->restaurant_parking, $match);
 			$parking = $rest_item->restaurant_parking . ' мест'.Declension::get_num_ending($rest_item->restaurant_parking,['о','а','']);
 		}
+		
+		$text = '';
 
-					//echo "<pre>";var_dump($rest_item);exit;
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => min(array_filter($rooms_price_arr)),
@@ -118,11 +100,7 @@ class ItemController extends Controller
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
 			'parking' => $parking,
-			'text' => $text
 		));
-
-		//$item = ApiItem::getData($item->restaurants->gorko_id);
-
 
 	}
 }

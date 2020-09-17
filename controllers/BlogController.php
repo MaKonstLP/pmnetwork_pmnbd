@@ -1,26 +1,14 @@
 <?php
 namespace app\modules\pmnbd\controllers;
 
-use Yii;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 use frontend\widgets\FilterWidget;
 use frontend\widgets\PaginationWidgetPrevNext;
 use frontend\components\ParamsFromQuery;
-use frontend\components\QueryFromSlice;
 use frontend\components\Breadcrumbs;
 use backend\models\Pages;
-use common\models\ItemsFilter;
 use common\models\elastic\ItemsFilterElastic;
-use common\models\elastic\ItemsElastic;
-use backend\models\Filter;
-use backend\models\Slices;
-use common\models\GorkoApi;
-use common\models\GorkoApiTest;
-use app\modules\pmnbd\models\ElasticItems;
+use frontend\modules\pmnbd\models\ElasticItems;
 
 class BlogController extends Controller
 {
@@ -136,13 +124,3 @@ class BlogController extends Controller
 	}
 
 }
-
-//class ListingController extends Controller
-//{
-//	public function actionIndex(){
-//		GorkoApiTest::renewAllData([
-//			'city_id=4400&type_id=1&type=11&fields=type'
-//		]);
-//		return 1;
-//	}	
-//}

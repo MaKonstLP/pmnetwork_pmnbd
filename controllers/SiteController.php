@@ -11,10 +11,12 @@ use common\models\elastic\ItemsWidgetElastic;
 use common\models\Pages;
 use common\models\Filter;
 use common\models\Slices;
-use app\modules\pmnbd\models\ElasticItems;
-use common\models\elastic\ItemsElastic;
+use frontend\modules\pmnbd\models\ElasticItems;
 use common\models\elastic\ItemsFilterElastic;
+use common\models\Seo;
 use common\models\Subdomen;
+use common\models\SubdomenPages;
+use frontend\modules\pmnbd\models\MediaEnum;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Response;
@@ -23,12 +25,14 @@ use common\components\ParamsFromQuery;
 
 class SiteController extends Controller
 {
-    //public function getViewPath()
-    //{
-    //    return Yii::getAlias('@app/modules/svadbanaprirode/views/site');
-    //}
-
     const MAIN_FILTERS = ['mesto'];
+    
+   /*  public function actionUp()
+    {
+        foreach (Pages::find()->all() as $key => $value) {
+            $value->createSiteObject();
+        }
+    } */
 
     public function actionIndex()
     {
@@ -56,7 +60,7 @@ class SiteController extends Controller
 
             if (!$resultSliceAlias || !($subdomen = Subdomen::findOne(['city_id' => $cityId]))) return;
 
-            $redirect = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://")
+            $redirect = \Yii::$app->params['siteProtocol']
                 . $subdomen->alias . '.'
                 . \Yii::$app->params['siteAddress']
                 . "/catalog/$resultSliceAlias/";
@@ -88,7 +92,7 @@ class SiteController extends Controller
             return in_array($filter->alias, self::MAIN_FILTERS);
         });
 
-        $seo = Pages::find()->where(['type' => 'index'])->one();
+        $seo = $this->getSeo('index');
         $this->setSeo($seo);
 
         #Фиксированные срезы на главной
@@ -112,27 +116,43 @@ class SiteController extends Controller
         }
 
         return $this->render('index.twig', [
-            'appParams' => \Yii::$app->params,
             'filters' => $filtersItemsForSelect,
             'seo' => $seo,
             'slider' =>  $mainWidget,
             'count' => $items->total,
             'mainRestTypesCounts' => $mainRestTypesCounts,
-            'mainSlices' => $mainSlices
+            'mainSlices' => $mainSlices,
+            'subdomenObjects' => Yii::$app->params['activeSubdomenRecords']
         ]);
     }
 
-    private function setSeo($seo)
+   public function actionError()
     {
+        return $this->render('error.twig');
+    }
+
+    public function actionRobots()
+    {
+        header('Content-type: text/plain');
+        if(Yii::$app->params['subdomen_alias']){
+            $subdomen_alias = Yii::$app->params['subdomen_alias'].'.';
+        }
+        else{
+            $subdomen_alias = '';
+        }
+        // echo "User-agent: *\nSitemap: https://'.$subdomen_alias.'birthday-place.ru/sitemap/";
+        echo "User-agent: *\nDisallow: /";
+        exit;
+    }
+
+    private function getSeo($type, $page=1, $count = 0){
+        $seo = (new Seo($type, $page, $count))->withMedia([MediaEnum::HEADER_IMAGE, MediaEnum::ADVANTAGES]);
+        return $seo->seo;
+    }
+
+    private function setSeo($seo){
         $this->view->title = $seo['title'];
         $this->view->params['desc'] = $seo['description'];
         $this->view->params['kw'] = $seo['keywords'];
     }
-
-    /*  public function actionError()
-    {
-        echo "Произошла ошибка на сайте. Обратитесь к администратору.";
-        exit;
-        return $this->render('error.twig');
-    } */
 }

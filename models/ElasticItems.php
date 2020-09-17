@@ -1,12 +1,10 @@
 <?php
 
-namespace app\modules\pmnbd\models;
+namespace frontend\modules\pmnbd\models;
 
 use common\models\Restaurants;
 use common\models\RestaurantsTypes;
 use yii\helpers\ArrayHelper;
-use common\models\Subdomen;
-use dosamigos\transliterator\TransliteratorHelper;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
 {
@@ -46,7 +44,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
     public static function index()
     {
-        return 'pmn_ny_restaurants';
+        return 'pmn_bd_restaurants';
     }
 
     public static function type()
@@ -175,8 +173,8 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
     public static function refreshIndex()
     {
-        $res = self::deleteIndex();
-        $res = self::updateMapping();
+        // $res = self::deleteIndex();
+        // $res = self::updateMapping();
         $res = self::createIndex();
         $restaurants = Restaurants::find()
             ->with('rooms')

@@ -5,7 +5,7 @@ use Yii;
 use common\models\GorkoApiTest;
 use common\models\Subdomen;
 use common\models\Restaurants;
-use frontend\modules\gorko_ny\models\ElasticItems;
+use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
 use common\components\AsyncRenewRestaurants;
 
@@ -100,15 +100,6 @@ class TestController extends Controller
 		ElasticItems::refreshIndex();
 	}
 
-	public function actionSoftrenewelastic()
-	{
-		ElasticItems::softRefreshIndex();
-	}
-
-	public function actionCreateindex()
-	{
-		ElasticItems::softRefreshIndex();
-	}
 
 	public function actionImgload()
 	{

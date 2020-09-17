@@ -7,11 +7,12 @@ use Yii;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 use common\models\elastic\ItemsFilterElastic;
-use app\modules\pmnbd\models\ElasticItems;
+use frontend\modules\pmnbd\models\ElasticItems;
 use common\models\Filter;
 use common\models\Slices;
 use common\components\QueryFromSlice;
 use common\components\ParamsFromQuery;
+
 /**
  * svadbanaprirode module definition class
  */
@@ -27,8 +28,11 @@ class Module extends \yii\base\Module
      */
     public function init()
     {
+        parent::init();
+
         $subdomen = explode('.', $_SERVER['HTTP_HOST'])[0];
-        if ($subdomen != \Yii::$app->params['siteAddressEssence']) {
+        $siteName = explode(".", \Yii::$app->params['siteAddress'])[0];
+        if ($subdomen != $siteName) {
             $subdomen_model = Subdomen::find()
                 ->where(['alias' => $subdomen])
                 ->one();
@@ -36,6 +40,8 @@ class Module extends \yii\base\Module
             if ($subdomen_model) {
                 Yii::$app->params['subdomen'] = $subdomen;
                 Yii::$app->params['subdomen_id'] = $subdomen_model->city_id;
+                Yii::$app->params['subdomen_alias'] = $subdomen_model->alias;
+                Yii::$app->params['subdomen_baseid'] = $subdomen_model->id;
                 Yii::$app->params['subdomen_name'] = $subdomen_model->name;
                 Yii::$app->params['subdomen_dec'] = $subdomen_model->name_dec;
                 // Yii::$app->params['subdomen_rod'] = $subdomen_model->name_rod;
@@ -45,14 +51,14 @@ class Module extends \yii\base\Module
                         'name' => 'subdomen',
                         'value' => $subdomen,
                         'expire' => time() + 86400 * 30,
-                        'domain' => '.' . explode(":",\Yii::$app->params['siteAddress'])[0]
+                        'domain' => '.' . explode(":", \Yii::$app->params['siteAddress'])[0]
                     ]));
                 }
             } else {
                 throw new NotFoundHttpException();
             }
-        } elseif ($subdomen != \Yii::$app->params['siteAddressEssence'] && $subdomen_cookie = \Yii::$app->request->cookies->get('subdomen')) {
-            $redirect = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$subdomen_cookie.$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        } elseif ($subdomen != $siteName && $subdomen_cookie = \Yii::$app->request->cookies->get('subdomen')) {
+            $redirect = Yii::$app->params['siteProtocol'] . "$subdomen_cookie.$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
             Yii::$app->response->redirect($redirect)->send();
         } else {
             $subdomen_model = Subdomen::find()
@@ -60,8 +66,10 @@ class Module extends \yii\base\Module
                 ->one();
 
             if ($subdomen_model) {
-                Yii::$app->params['subdomen'] = $subdomen_model->alias;
+                Yii::$app->params['subdomen'] = $subdomen;
                 Yii::$app->params['subdomen_id'] = $subdomen_model->city_id;
+                Yii::$app->params['subdomen_alias'] = $subdomen_model->alias;
+                Yii::$app->params['subdomen_baseid'] = $subdomen_model->id;
                 Yii::$app->params['subdomen_name'] = $subdomen_model->name;
                 Yii::$app->params['subdomen_dec'] = $subdomen_model->name_dec;
                 // Yii::$app->params['subdomen_rod'] = $subdomen_model->name_rod;
@@ -74,7 +82,7 @@ class Module extends \yii\base\Module
             ->orderBy(['name' => SORT_ASC])
             ->all();;
 
-        $slices_model = Slices::find()->where(['like','params','%mesto%',false])->all();
+        $slices_model = Slices::find()->where(['like', 'params', '%mesto%', false])->all();
 
         foreach ($slices_model as $key => $slice) {
             $params = json_decode($slice->params, true);
@@ -93,17 +101,16 @@ class Module extends \yii\base\Module
                         }
                         return $acc;
                     },
-                    [] 
+                    []
                 );
 
                 foreach ($filtersRestTypes as $type_name => $type) {
                     if ($type == $items->total) Yii::$app->params['filtersRestTypes'][$slice->alias] = $type_name;
                 }
             }
-           
         }
 
-        $slices_model = Slices::find()->where(['like','params','%dopolnitelno%',false])->all();
+        $slices_model = Slices::find()->where(['like', 'params', '%dopolnitelno%', false])->all();
 
         foreach ($slices_model as $key => $slice) {
             $params = json_decode($slice->params, true);
@@ -114,18 +121,6 @@ class Module extends \yii\base\Module
             if ($items->total > 0) {
                 Yii::$app->params['filtersRestDop'][$slice->alias] = $slice->h1;
             }
-           
         }
-        /* var_dump(Yii::$app->params['filtersRestTypes']);exit; */
-        
-
-        //Yii::$app->setLayoutPath('@app/modules/svadbanaprirode/layouts');
-        //Yii::$app->layout = 'svadbanaprirode';
-        //$this->viewPath = '@app/modules/svadbanaprirode/views/';
-        parent::init();
-        //$this->viewPath = '@app/modules/svadbanaprirode/views/';
-
-
-        // custom initialization code goes here
     }
 }

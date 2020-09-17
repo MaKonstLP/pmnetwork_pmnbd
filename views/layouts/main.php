@@ -62,7 +62,8 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         $reduced = array_reduce($activeSubdomenRecords, function ($acc, $subdomen) use ($address) {
                             $firstLetter = mb_substr($subdomen->name, 0, 1);
                             $alias = $subdomen->alias == 'msk' ? '' : $subdomen->alias.'.';
-                            $acc[$firstLetter] .= "<a href='http://$alias$address'>$subdomen->name</a>\n";
+                            $link = "<a href='http://$alias$address'>$subdomen->name</a>\n";
+                            isset($acc[$firstLetter]) ? $acc[$firstLetter] .= $link : $acc[$firstLetter] = $link;
                             return $acc;
                         }, []);
                         foreach ($reduced as $letter => $links) : ?>
