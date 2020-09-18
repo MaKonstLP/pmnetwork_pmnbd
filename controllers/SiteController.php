@@ -146,7 +146,16 @@ class SiteController extends BaseFrontendController
 
     public function actionUp()
     {
+        /* foreach (SubdomenPages::find()->all() as $key => $value) {
+            $value->delete();
+        } */
         Pages::createSiteObjects();
         SubdomenPages::createSiteObjects();
+    }
+
+    public function actionTest()
+    {
+        $items = ElasticItems::find()->search()['hits']['total'];
+        print_r($items);die;
     }
 }

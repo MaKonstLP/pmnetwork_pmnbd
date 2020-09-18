@@ -61,7 +61,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         $activeSubdomenRecords = \Yii::$app->params['activeSubdomenRecords'];
                         $reduced = array_reduce($activeSubdomenRecords, function ($acc, $subdomen) use ($address) {
                             $firstLetter = mb_substr($subdomen->name, 0, 1);
-                            $alias = $subdomen->alias == 'msk' ? '' : $subdomen->alias.'.';
+                            $alias = $subdomen->alias == 'msk' ? '' : $subdomen->alias . '.';
                             $link = "<a href='http://$alias$address'>$subdomen->name</a>\n";
                             isset($acc[$firstLetter]) ? $acc[$firstLetter] .= $link : $acc[$firstLetter] = $link;
                             return $acc;
@@ -106,19 +106,26 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                 <li>
                                     <span>Типы заведения</span>
                                     <ul>
-                                        <?php $slices_arr = ['restoran','kafe','loft','veranda','otel']; ?>
-                                        <?php foreach (\Yii::$app->params['filtersRestTypes'] as $type_alias => $type_name) { ?>
-                                            <?php if (in_array($type_alias, $slices_arr)) { ?>
-                                                <li><a href="/catalog/<?php echo $type_alias; ?>/"><?php echo $type_name; ?></a></li>
-                                            <?php } ?>
+                                        <?php $slices_arr = [
+                                            'restoran' => 'Рестораны',
+                                            'kafe' => 'Кафе',
+                                            'loft' => 'Лофты',
+                                            'veranda' => 'Веранды',
+                                            'otel' => 'Отели'
+                                        ]; ?>
+                                        <?php foreach ($slices_arr as $alias => $name) { ?>
+                                            <li><a href="/catalog/<?= $alias ?>/"><?= $name ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
                                 <li>
                                     <span>Особенности</span>
                                     <ul>
-                                        <?php foreach (\Yii::$app->params['filtersRestDop'] as $type_alias => $type_name) { ?>
-                                                <li><a href="/catalog/<?php echo $type_alias; ?>/"><?php echo $type_name; ?></a></li>
+                                        <?php foreach ([
+                                            'za-gorodom' => 'День рождения за городом',
+                                            'svoy-alko' => 'Со своим алкоголем'
+                                            ] as $type_alias => $type_name) { ?>
+                                            <li><a href="/catalog/<?php echo $type_alias; ?>/"><?php echo $type_name; ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>

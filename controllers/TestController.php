@@ -31,8 +31,8 @@ class TestController extends BaseFrontendController
 			GorkoApiTest::renewAllData([
 				[
 					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=17',
-					'watermark' => '/var/www/pmnetwork/pmnetwork/frontend/web/img/ny_ball.png',
-					'imageHash' => 'newyearpmn'
+					'watermark' => '/var/www/pmnetwork/frontend/web/img/ny_ball.png',
+					'imageHash' => 'birthdaypmn'
 				]				
 			]);
 		}
@@ -50,8 +50,8 @@ class TestController extends BaseFrontendController
 			GorkoApiTest::showAllData([
 				[
 					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=17',
-					'watermark' => '/var/www/pmnetwork/pmnetwork/frontend/web/img/ny_ball.png',
-					'imageHash' => 'newyearpmn'
+					'watermark' => '/var/www/pmnetwork/frontend/web/img/ny_ball.png',
+					'imageHash' => 'birthdaypmn'
 				]				
 			]);
 		}
@@ -64,8 +64,8 @@ class TestController extends BaseFrontendController
 		$queue_id = Yii::$app->queue->push(new AsyncRenewRestaurants([
 			'gorko_id' => 418147,
 			'dsn' => Yii::$app->db->dsn,
-			'watermark' => '/var/www/pmnetwork/pmnetwork/frontend/web/img/ny_ball.png',
-			'imageHash' => 'newyearpmn'
+			'watermark' => '/var/www/pmnetwork/frontend/web/img/ny_ball.png',
+			'imageHash' => 'birthdaypmn'
 		]));
 	}
 
@@ -74,7 +74,7 @@ class TestController extends BaseFrontendController
 		GorkoApiTest::showOne([
 			[
 				'params' => 'city_id=4088&type_id=1&type=30,11,17,14&is_edit=1',
-				'watermark' => '/var/www/pmnetwork/pmnetwork/frontend/web/img/ny_ball.png'
+				'watermark' => '/var/www/pmnetwork/frontend/web/img/ny_ball.png'
 			]			
 		]);
 	}
