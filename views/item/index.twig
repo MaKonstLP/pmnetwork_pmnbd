@@ -37,22 +37,22 @@
     <div class="content_block object_desc_wrap">
         <div class="object_desc">
             <p class="object_desc_item">
-               <span class="object_desc_title">Вместимость:</span><span class="dots"></span><span class="object_desc_value">{{item.capacity}} человек</span>
+               <span class="object_desc_title">Вместимость:<span class="dots"></span></span><span class="object_desc_value">{{item.capacity}} человек</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Тип зала:</span><span class="dots"></span><span class="object_desc_value">{{item.type_name}} человек</span>
+               <span class="object_desc_title">Тип зала:<span class="dots"></span></span><span class="object_desc_value">{{item.type_name}} человек</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Возможность аренды без еды:</span><span class="dots"></span><span class="object_desc_value">{{item.rent_only==0 ? 'нет' : 'да' }}</span>
+               <span class="object_desc_title">Возможность аренды без еды:<span class="dots"></span></span><span class="object_desc_value">{{item.rent_only==0 ? 'нет' : 'да' }}</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Светлый зал:</span><span class="dots"></span><span class="object_desc_value">{{item.bright_room==0 ? 'нет' : 'да' }}</span>
+               <span class="object_desc_title">Светлый зал:<span class="dots"></span></span><span class="object_desc_value">{{item.bright_room==0 ? 'нет' : 'да' }}</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Схема оплаты:</span><span class="dots"></span><span class="object_desc_value">только за еду и напитки</span>
+               <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">только за еду и напитки</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Отдельный вход:</span><span class="dots"></span><span class="object_desc_value">{{item.separate_entrance==0 ? 'нет' : 'да' }}</span>
+               <span class="object_desc_title">Отдельный вход:<span class="dots"></span></span><span class="object_desc_value">{{item.separate_entrance==0 ? 'нет' : 'да' }}</span>
             </p>
             <!--p>{{item.features}}</p-->
             <!--p>Anstar House Vatutinki - это уникальное место для проведения идеальной свадьбы. На территории комплекса имеется живописный сад, где возможно организовать выездную церемонию и фотосессию.</p>
@@ -101,10 +101,14 @@
                 <div class="same_object">
                     <div class="same_object_img">
                         <div class="same_object_img_item">
-                            <img src="{{same_object.images[0].realpath}}=w250-h170-l95">
+                            <a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">
+                                <img src="{{same_object.images[0].realpath ? same_object.images[0].realpath~'=w250-h170-l95' : same_object.cover_url}}">
+                            </a>
                         </div>
                         <div class="same_object_img_item">
-                            <img src="{{same_object.images[1].realpath}}=w250-h170-l95">
+                            <a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">
+                                <img src="{{same_object.images[1].realpath ? same_object.images[1].realpath~'=w250-h170-l95' : same_object.cover_url}}">
+                            </a>
                         </div>
                     </div>
                     <div class="same_object_desc">
@@ -133,7 +137,9 @@
                 <div class="other_objects_swiper swiper-wrapper" data-other-objects-list>
                    {% for other_room in other_rooms %} 
                         <div class="other_object swiper-slide">
-                            <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w350-h200-n-l95'}) }}">
+                            <div class="other_object_img">
+                                <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w305-h200-s-l95'}) }}">
+                            </div>
                             <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>
                             <div class="restaurant_name">{{other_room.restaurant_name}}</div>
                             <div class="object_meta_item">
@@ -155,112 +161,3 @@
             </div>
         </div>
     </div>
-
-    <!--div class="content_block" data-page-type="item">
-        <div class="object_head">
-
-            <div class="object_meta">
-                <div class="object_meta_item">
-                    <p class="object_meta_title">Банкетное меню</p>
-                    <p class="object_meta_value">от <span>{{item.price}} ₽</span></p>
-                </div>
-                <div class="object_meta_block">
-                    <div class="object_meta_item">
-                        <p class="object_meta_title">Вместимость на банкет:</p>
-                        <p class="object_meta_value">до <span>{{item.capacity}} персон</span></p>
-                    </div>
-
-                    {% if item.capacity_reception %}
-                        <div class="object_meta_item">
-                            <p class="object_meta_title">на фуршет:</p>
-                            <p class="object_meta_value">до <span>{{item.capacity_reception}} персон</span></p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="object_gallery" data-gallery data-id="{{item.id}}">
-                <div class="object_gallery_main" data-bigimg-wrapper>
-                    <img src="{{ item.cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'}) }}"/>
-                </div>
-            </div>
-
-            <div class="object_book">
-                <p class="object_book_text">Узнать об актуальных акциях и забронировать можно по телефону:</p>
-                <div class="object_book_hidden">
-                    <p class="object_book_phone">
-                        <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
-                        <a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a>
-                    </p>
-                    <div class="object_book_hidden_button" data-action="show_phone">Показать номер</div>
-                </div>
-                {#<p class="object_book_action">Забронируй Зал «Екатерининский» до 1 сентября 2019 и получи приятный подарок!</p>#}
-            </div>
-
-            <div class="object_parameters">
-
-                {% if item.restaurant_own_alcohol != 'Нельзя свой алкоголь' or item.restaurant_firework %}
-                    <div class="object_parameters_list _marked">
-                        <p class="object_parameters_title">Разрешены</p>
-
-                        {% if item.restaurant_own_alcohol != 'Нельзя свой алкоголь' %}
-                            <p class="object_parameters_item">{{item.restaurant_own_alcohol}}</p>
-                        {% endif %}
-
-                        {% if item.restaurant_firework %}
-                            <p class="object_parameters_item">Запуск фейерверка</p>
-                        {% endif %}
-                    </div>
-                {% endif %}
-
-                <div class="object_parameters_list _marked">
-                    <p class="object_parameters_title">Что на территории</p>
-
-                    {% if item.restaurant_cuisine %}
-                        <p class="object_parameters_item">{{item.restaurant_cuisine}} кухня</p>
-                    {% endif %}
-                    {% if item.restaurant_parking %}
-                        <p class="object_parameters_item">{{item.restaurant_parking}}</p>
-                    {% endif %}
-                    {% if item.restaurant_special %}
-                        {% set specials = item.restaurant_special|split(',') %}
-                        {% for special in specials %}
-                            <p class="object_parameters_item">{{special}}</p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                {% if item.restaurant_payment %}
-                    <div class="object_parameters_list">
-                        <p class="object_parameters_title">Оплата</p>
-                        <p class="object_parameters_item">{{item.restaurant_payment}}</p>
-                    </div>
-                {% endif %}
-                
-            </div>
-
-        </div>
-    </div>
-
-    <div class="map">
-        <div id="map" data-mapDotX="{{item.restaurant_latitude}}" data-mapDotY="{{item.restaurant_longitude}}" data-balloon="" data-hint="">
-
-        </div>
-    </div>
-
-    <div class="content_block">
-        <div class="object_description">
-
-        </div>
-
-        {{ this.render('//components/generic/form.twig') | raw }}
-
-    </div>
-
-    {#{ this.render('//components/generic/other_widjet.twig', {'items':other_rooms, 'restaurant_name':item.restaurant_name}) | raw }#}
-
-    {{similar_rooms | raw }}
-
-</div>
-
-<script defer src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script-->

@@ -174,7 +174,9 @@
     @include for-mobile{
     	display: none;
     }
-
+    &[aria-disabled="true"]{
+    	display: none;
+    }
     &._prev{
     	left: -40px;
     	@include for-small-desktop{

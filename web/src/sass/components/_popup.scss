@@ -6,6 +6,7 @@
 	display: none;
 	justify-content: center;
 	align-items: center;
+	overflow: auto;
 
 	&._active{
 		display: flex;
@@ -134,9 +135,19 @@
 		    left: 10px;
 	    }
     }
-    img{
-    	width: 100%;
+    .object_gallery_container {
+    	img{
+	    	min-width: auto !important;
+	    	@include for-mobile{
+	    		width: 100%;
+	    	}
+	    }
     }
+    .object{
+    	justify-content: center;
+    	
+    }
+    
 
     @include for-pad{
     	width: 100%;

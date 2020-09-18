@@ -5,21 +5,21 @@
     </div>
 
     <div class="rest_top_wrap">
-    	<div class="content_block">
-	    	<div class="rest_top_left">
-	    		<div class="object_meta">
-	                <div class="object_meta_item">
-	                    <p class="object_meta_title">Средний чек:</p>
-	                    <p class="object_meta_value">{{ min_price ? 'от '~min_price~' ₽/чел.' : 'по запросу'}}</p>
-	                </div>
-	                <div class="object_meta_item">
-	                    <p class="object_meta_title">Забронировать по телефону:</p>
-	                    <div class="object_book_hidden">
-	                        <p class="object_book_phone object_meta_value">
-	                            <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
-	                            <!--a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a-->
-	                        </p>
-	                        <div class="object_book_hidden_button" data-popup-phone>Показать номер</div>
+        <div class="content_block">
+            <div class="rest_top_left">
+                <div class="object_meta">
+                    <div class="object_meta_item">
+                        <p class="object_meta_title">Средний чек:</p>
+                        <p class="object_meta_value">{{ min_price ? 'от '~min_price~' ₽/чел.' : 'по запросу'}}</p>
+                    </div>
+                    <div class="object_meta_item">
+                        <p class="object_meta_title">Забронировать по телефону:</p>
+                        <div class="object_book_hidden">
+                            <p class="object_book_phone object_meta_value">
+                                <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
+                                <!--a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a-->
+                            </p>
+                            <div class="object_book_hidden_button" data-popup-phone>Показать номер</div>
                             <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                                 <div class="popup_phone">
                                     <div class="form_close" data-close-popup></div>
@@ -32,36 +32,36 @@
                                     <p class="popup_phone_address">{{item.restaurant_address|raw}}</p>
                                 </div>
                             </div>
-	                    </div>
-	                </div>
-	            </div>
-	    	</div>
-	    	<div class="rest_top_right">
-	    		<div class="object_meta">
-	                <div class="object_meta_item">
-	                    <p class="object_meta_title">Залы:</p>
-	                    <p class="object_meta_value">{{rooms_capacity|length}} помещени{{Declension.get_num_ending(rooms_capacity|length,['е','я','й'])}}: 
-	                    	{% for slug, capacity in rooms_capacity%}
-	                    		<a href="/catalog/restoran-{{item.restaurant_slug}}/{{slug}}/">{{capacity}}</a>
-	                    		{{loop.last ? '' : ', '}}
-                    		{% endfor %}
-	                     человек</p>
-	                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rest_top_right">
+                <div class="object_meta">
+                    <div class="object_meta_item">
+                        <p class="object_meta_title">Залы:</p>
+                        <p class="object_meta_value">{{rooms_capacity|length}} помещени{{Declension.get_num_ending(rooms_capacity|length,['е','я','й'])}}: 
+                            {% for slug, capacity in rooms_capacity%}
+                                <a href="/catalog/restoran-{{item.restaurant_slug}}/{{slug}}/">{{capacity}}</a>
+                                {{loop.last ? '' : ', '}}
+                            {% endfor %}
+                         человек</p>
+                    </div>
                     {% if item.restaurant_cuisine %}
-	                <div class="object_meta_item">
-	                    <p class="object_meta_title">Кухня:</p>
-	                    <p class="object_meta_value">{{item.restaurant_cuisine}}</p>
-	                </div>
+                    <div class="object_meta_item">
+                        <p class="object_meta_title">Кухня:</p>
+                        <p class="object_meta_value">{{item.restaurant_cuisine}}</p>
+                    </div>
                     {% endif %}
-	            </div>
-	            <div class="object_meta">
-	                <div class="object_meta_item">
-	                    <p class="object_meta_title">Адрес:</p>
-	                    <a class="item_address" href="#map">{{item.restaurant_address|raw}}</a>
-	                </div>
-	            </div>
-	    	</div>
-	    </div>
+                </div>
+                <div class="object_meta">
+                    <div class="object_meta_item">
+                        <p class="object_meta_title">Адрес:</p>
+                        <a class="item_address" href="#map">{{item.restaurant_address|raw}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div class="object_gallery_wrap _rest">
@@ -72,7 +72,7 @@
                 {% for image in item.restaurant_images%}
                     <div class="object swiper-slide">
                         <div class="object_img">
-                            <img src="{{ image.realpath }}" data-gallery-img-view/>
+                            <img src="{{ image.realpath }}=w800-h600-l100" data-gallery-img-view/>
                         </div>
                     </div>
                 {% endfor %}
@@ -86,7 +86,7 @@
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                     {% for image in item.restaurant_images%}
                         <div class="object swiper-slide">
-                           <img src="{{ image.realpath }}"/>
+                           <img src="{{ image.realpath }}=w150-h90-l80"/>
                         </div>
                     {% endfor %}
                 </div>
@@ -155,6 +155,7 @@
                 </div>
                 {% endif %}
             </div>
+            {% if text %}
             <div class="rest_desc_text">
                 <div class="rest_desc_item seo_text" data-seo-text>
                     <p class="rest_desc_title">Описание</p>
@@ -164,6 +165,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 
@@ -175,10 +177,10 @@
                     <div class="same_object">
                         <div class="same_object_img">
                             <div class="same_object_img_item">
-                               <img src="{{same_object.images[0].realpath}}"> 
+                               <img src="{{same_object.images[0].realpath ? same_object.images[0].realpath : same_object.cover_url}}"> 
                             </div>
                             <div class="same_object_img_item">
-                               <img src="{{same_object.images[1].realpath}}"> 
+                               <img src="{{same_object.images[1].realpath ? same_object.images[1].realpath : same_object.cover_url}}"> 
                             </div>
                         </div>
                         <div class="same_object_desc">
@@ -219,6 +221,7 @@
 
     <script defer src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
+    {% if other_rests %}
     <div class="listing_wrap other_rests_wrap">
         <h2>Похожие рестораны</h2>
         <div class="content_block" data-widget-wrapper>
@@ -234,5 +237,5 @@
             <div class="listing_widget_arrow _next"></div>  
         </div>
     </div>
-
+    {% endif %}
 {{ this.render('//components/generic/form.twig', {'title': 'Поможем выбрать зал на день рождения'}) | raw }}

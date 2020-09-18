@@ -26,6 +26,7 @@ export default class Main {
             $('.popup_wrap .popup_img').show();
             $('.popup_wrap').addClass('_active');
         });*/
+        
         $('body').on('click', '[data-popup-phone]', function () {
             $('.popup_wrap .popup_phone').css({'top' : $(this).position().top, 'left' : $(this).position().left});
             $('.popup_phone_wrap').addClass('_active');
@@ -236,17 +237,21 @@ export default class Main {
         $('.main_rectangle_1').hover(
             function () {
                 $(this).css('background-color','#FFC24A');
+                $(this).siblings('.main_rectangle_2').css('visibility', 'visible');
             },
             function () {
                 $(this).css('background-color','#FFAD0F');
+                $(this).siblings('.main_rectangle_2').css('visibility', 'hidden');
             }
         );
         $('.main_rectangle a').hover(
             function () {
                 $(this).siblings('.main_rectangle_1').css('background-color','#FFC24A');
+                $(this).siblings('.main_rectangle_2').css('visibility', 'visible');
             },
             function () {
                 $(this).siblings('.main_rectangle_1').css('background-color','#FFAD0F');
+                $(this).siblings('.main_rectangle_2').css('visibility', 'hidden');
             }
         );
     }

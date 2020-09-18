@@ -338,7 +338,7 @@
     }
     .main_rectangle_2{
         position: absolute;
-        //visibility: visi;
+        visibility: hidden;
         left: 15.8%;
         right: 27.95%;
         top: 70.31%;
@@ -347,9 +347,9 @@
         right: 34.95%;
         top: 44.31%;
         bottom: -1px;
-        background: #FFAD0F;
+        background: #FF6B00;
         mix-blend-mode: normal;
-        //opacity: 0.2;
+        opacity: 0.2;
         border-radius: 30px;
         transform: rotate(-75.7deg);
 

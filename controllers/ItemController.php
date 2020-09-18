@@ -37,7 +37,7 @@ class ItemController extends BaseFrontendController
 
 		asort($rooms_capacity_arr);
 
-		$other_rests = ElasticItems::find()->limit(5)->query([
+		$other_rests = ElasticItems::find()->limit(20)->query([
 			'bool' => [
 				'must' => [
 					['match' => ['restaurant_district' => $rest_item->restaurant_district]]
@@ -47,6 +47,7 @@ class ItemController extends BaseFrontendController
 				],
 			],
 		])->all();
+		shuffle($other_rests);
 
 		if (isset($roomSlug)) {
 			foreach ($rooms as $key => $room) {

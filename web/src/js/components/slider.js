@@ -139,9 +139,11 @@ export default class Slider{
 	        		navigation: false,
 	        		loop: false,
 	        		//centeredSlides: true,
+	        		spaceBetween: 20,
 	        	},
 	        	767:{
 	        		slidesPerView: 1.2,
+	        		spaceBetween: 20,
 	        	}
 	        }
 	    });
@@ -169,7 +171,7 @@ export default class Slider{
 	initSwiperPopup($container, $start){
 		let swiper_popup = new Swiper($container, {
 	        slidesPerView: 1,
-	        spaceBetween: 0,
+	        spaceBetween: 50,
 	        loop: false,
 	        initialSlide: $start,
 	        autoHeight: true,
@@ -181,7 +183,7 @@ export default class Slider{
 	        	768:{
 	        		autoHeight: false,
 	        	}
-	        }
+	        },
 	    });
 	}
 }
