@@ -101,14 +101,10 @@
                 <div class="same_object">
                     <div class="same_object_img">
                         <div class="same_object_img_item">
-                            <a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">
-                                <img src="{{same_object.images[0].realpath ? same_object.images[0].realpath~'=w250-h170-l95' : same_object.cover_url}}">
-                            </a>
+                            <img src="{{same_object.images[0].realpath ? same_object.images[0].realpath~'=w250-h170-l95' : same_object.cover_url}}">
                         </div>
                         <div class="same_object_img_item">
-                            <a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">
-                                <img src="{{same_object.images[1].realpath ? same_object.images[1].realpath~'=w250-h170-l95' : same_object.cover_url}}">
-                            </a>
+                            <img src="{{same_object.images[1].realpath ? same_object.images[1].realpath~'=w250-h170-l95' : same_object.cover_url}}">
                         </div>
                     </div>
                     <div class="same_object_desc">
@@ -138,7 +134,9 @@
                    {% for other_room in other_rooms %} 
                         <div class="other_object swiper-slide">
                             <div class="other_object_img">
-                                <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w305-h200-s-l95'}) }}">
+                                <a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">
+                                    <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w305-h200-s-l95'}) }}">
+                                </a>
                             </div>
                             <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>
                             <div class="restaurant_name">{{other_room.restaurant_name}}</div>
