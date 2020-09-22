@@ -162,78 +162,33 @@
 			</div>
 		</div>
 		<div class="content_info_slider">
-			<img src="/img/content_info.jpg">
+			<img src="{{seo.media["advantages"]|first.src}}">
 		</div>
 	</div>
 
-
+	{% if blogPosts %}
 	<div class="main_blog">
 		<h3>Последние записи блога</h2>
-		<a class="all_articles" href="#">Все статьи</a>
+		<a class="all_articles" href="/blog/">Все статьи</a>
 		<div class="content_block">
-			<div class="blog_item blog_item_1">
+			{% for key,post in blogPosts %}
+			<div class="blog_item blog_item_{{key + 1}}">
 				<div class="blog_img">
-					<a href="#"><img src="/img/blog/blog_item_1.jpg"></a>
+					<a href="{{ post.getUrl() }}"><img src="{{ post.getFileData('image').src }}"></a>
 				</div>
 				<div class="blog_text">
-					<p class="blog_date">12 декабря 2019</p>
-					<a href="#">
-						<p class="blog_title">По пути: особенности свадебной логистики в Петербурге</p>
+					<p class="blog_date">{{ post.published_at }}</p>
+					<a href="{{ post.getUrl() }}">
+						<p class="blog_title">{{ post.name }}</p>
 					</a>
-					<p class="blog_description">Можно родиться в Питере и знать все его дворики и переулки, как свои пять пальцев, или влюбиться в его атмосферу на расстоянии — в любом случае, выбирая этот.</p>
+					<p class="blog_description">{{ post.short_intro }}</p>
 				</div>
 			</div>
-			<div class="blog_item blog_item_2">
-				<div class="blog_img">
-					<a href="#"><img src="/img/blog/blog_item_2.jpg"></a>
-				</div>
-				<div class="blog_text">
-					<p class="blog_date">12 декабря 2019</p>
-					<a href="#">
-						<p class="blog_title">Свадебное агентство «Вдвоем»: вдвойне счастливее</p>
-					</a>
-					<p class="blog_description">Мечты невесты о волшебной лесной сказке стали реальностью благодаря агентству Event №1. Живописная природа, необычный декор и яркая эмоциональная программ</p>
-				</div>
-			</div>
-			<div class="blog_item blog_item_3">
-				<div class="blog_img">
-					<a href="#"><img src="/img/blog/blog_item_3.jpg"></a>
-				</div>
-				<div class="blog_text">
-					<p class="blog_date">12 декабря 2019</p>
-					<a href="#">
-						<p class="blog_title">50 потрясающих поз для свадебной фотосессии</p>
-					</a>
-					<p class="blog_description">Если вы с женихом никогда не были профессиональными моделями, фотосъемка обернется для вас серьезным стрессом.</p>
-				</div>
-			</div>
-			<div class="blog_item blog_item_4">
-				<div class="blog_img">
-					<a href="#"><img src="/img/blog/blog_item_4.jpg"></a>
-				</div>
-				<div class="blog_text">
-					<p class="blog_date">12 декабря 2019</p>
-					<a href="#">
-						<p class="blog_title">Невеста в положении – что надо знать?</p>
-					</a>
-					<p class="blog_description">Нередко свадьбу играют, когда невеста в положении. Рассказываем в подробностях, как устроить торжество в этом случае.</p>
-				</div>
-			</div>
-			<div class="blog_item blog_item_5">
-				<div class="blog_img">
-					<a href="#"><img src="/img/blog/blog_item_5.jpg"></a>
-				</div>
-				<div class="blog_text">
-					<p class="blog_date">12 декабря 2019</p>
-					<a href="#">
-						<p class="blog_title">Как готовиться со свадебным органайзером «Помощник Невесты»?</p>
-					</a>
-					<p class="blog_description">Показываем, что есть внутри нашего свадебного органайзера и как подготовиться к свадьбе с его помощью.</p>
-				</div>
-			</div>
+			{% endfor %}
 		</div>
 	</div>
-
+	{% endif %}
+	
 	{% if mainSlices %}
 	<div class="main_podborki">
 		<h3>Подборки заведений</h2>

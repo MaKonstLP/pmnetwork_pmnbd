@@ -1,0 +1,12 @@
+<div class="blog_item blog_item_{{key}}">
+	<div class="blog_img">
+		<a href="{{ model.getUrl() }}"><img src="{{ model.getFileData('image').src }}"></a>
+	</div>
+	<div class="blog_text">
+		<p class="blog_date">{{ model.published_at }}</p>
+		<a href="{{ model.getUrl() }}">
+			<p class="blog_title">{{ model.name }}</p>
+		</a>
+		<p class="blog_description">{{ modelshort_intro }}</p>
+	</div>
+</div>

@@ -23,14 +23,16 @@ class TestController extends BaseFrontendController
 
 	public function actionIndex()
 	{
+		set_time_limit(300);
+		ini_set('memory_limit', '-1');
 		$subdomen_model = Subdomen::find()
-			//->where(['id' => 57])
+			// ->where(['id' => 12])
 			->all();
 
 		foreach ($subdomen_model as $key => $subdomen) {
 			GorkoApiTest::renewAllData([
 				[
-					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=17',
+					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=9',
 					'watermark' => '/var/www/pmnetwork/frontend/web/img/ny_ball.png',
 					'imageHash' => 'birthdaypmn'
 				]				
@@ -49,7 +51,7 @@ class TestController extends BaseFrontendController
 		foreach ($subdomen_model as $key => $subdomen) {
 			GorkoApiTest::showAllData([
 				[
-					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=17',
+					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=9',
 					'watermark' => '/var/www/pmnetwork/frontend/web/img/ny_ball.png',
 					'imageHash' => 'birthdaypmn'
 				]				
@@ -84,8 +86,7 @@ class TestController extends BaseFrontendController
 		$subdomen_model = Subdomen::find()->all();
 
 		foreach ($subdomen_model as $key => $subdomen) {
-			$restaurants = Restaurants::find()->where(['city_id' => $subdomen->city_id])->all();
-			if(count($restaurants) > 9){
+			if(Restaurants::find()->where(['city_id' => $subdomen->city_id])->count() > 9){
 				$subdomen->active = 1;
 			}
 			else{
@@ -97,6 +98,8 @@ class TestController extends BaseFrontendController
 
 	public function actionRenewelastic()
 	{
+		set_time_limit(300);
+		ini_set('memory_limit', '-1');
 		ElasticItems::refreshIndex();
 	}
 
@@ -156,5 +159,6 @@ class TestController extends BaseFrontendController
             }
         }
         return $message->send();
-    }
+	}
+	
 }

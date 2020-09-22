@@ -2,6 +2,7 @@
 
 namespace app\modules\pmnbd\controllers;
 
+use common\models\blog\BlogPost;
 use Yii;
 use yii\web\Controller;
 use common\models\Filter;
@@ -55,60 +56,76 @@ class SiteController extends BaseFrontendController
             return ['redirect' => $redirect];
         }
 
-        $filter_model = Filter::find()->with('items')->all();
+        
+        $items = ElasticItems::find()->limit(30)->query(
+            ['bool' => ['must' => ['match' => ['restaurant_city_id' => Yii::$app->params['subdomen_id']]]]]
+        )
+        ->addAggregate('types', [
+            'nested' => [
+                'path' => 'restaurant_types',
+            ],
+            'aggs' => [
+                'ids' => [
+                    'terms' => [
+                        'field' => 'restaurant_types.id',
+                        'size' => 10000,
+                    ]
+                ]
+            ]
+        ])->search();
 
-        $items = new ItemsFilterElastic(['mesto' => ['2', '3', '5', '7', '8']], 10000, 1, false, 'restaurants', new ElasticItems());
+        $mainRestTypesCounts = array_reduce($items['aggregations']['types']['ids']['buckets'], function ($acc, $item) {
+            $acc[$item['key']] = $item['doc_count'];
+            return $acc;
+        }, []);
+
         $mainWidget = $this->renderPartial('//components/generic/listing.twig', [
-            'items' => array_slice($items->items, 0, 30)
+            'items' => $items['hits']['hits']
         ]);
-
-        $mainRestTypesCounts = array_reduce(
-            $items->items,
-            function ($acc, $rest) {
-                foreach ($rest->restaurant_types as $type) {
-                    if (!isset($acc[$type['id']])) {
-                        $acc[$type['id']] = 1;
-                    } else $acc[$type['id']] += 1;
-                }
-                return $acc;
-            },
-            [] //[ '1' => 200, '3' => 70 ...]
-        );
-
-        $filtersItemsForSelect = array_filter($filter_model, function ($filter) {
-            return in_array($filter->alias, self::MAIN_FILTERS);
-        });
-
-        $seo = $this->getSeo('index');
+        
+        $totalRests = $items['hits']['total'];
+        $seo = $this->getSeo('index', 1,  $totalRests);
         $this->setSeo($seo);
 
+        $filter_model = Filter::find()->where(['active' => true])->with('items')->orderBy('sort')->all();
+        $slices_model = Slices::find()->all();
+         $filtersItemsForSelect = array_filter($filter_model, function ($filter) {
+            return in_array($filter->alias, self::MAIN_FILTERS);
+        });
         #Фиксированные срезы на главной
         $mainSlices = [
-            'check-1500'    => ['name' => 'Недорогие рестораны'],
-            'veranda'       => ['name' => 'Веранды'],
-            'loft'          => ['name' => 'Лофты'],
-            'tent'          => ['name' => 'Шатры'],
-            '15-people'     => ['name' => 'Банкет на 15 человек'],
-            '20-25-people'  => ['name' => 'Банкет на 20 человек'],
-            '30-people'     => ['name' => 'Банкет на 30 человек'],
-            'svoy-alko'     => ['name' => 'Рестораны со своим алкоголем'],
+            '1500-rub'    => ['name' => 'Недорогие рестораны', 'count' => 0],
+            'veranda'       => ['name' => 'Веранды', 'count' => 0],
+            'loft'          => ['name' => 'Лофты', 'count' => 0],
+            'shater'          => ['name' => 'Шатры', 'count' => 0],
+            '15-chelovek'     => ['name' => 'Банкет на 15 человек', 'count' => 0],
+            '20-25-chelovek'  => ['name' => 'Банкет на 20 человек', 'count' => 0],
+            '30-chelovek'     => ['name' => 'Банкет на 30 человек', 'count' => 0],
+            'svoy-alko'     => ['name' => 'Рестораны со своим алкоголем', 'count' => 0],
         ];
         foreach ($mainSlices as $alias => $sliceTexts) {
-            $slices_model = Slices::find()->all();
-            $filter_model = Filter::find()->where(['active' => true])->with('items')->orderBy('sort')->all();
             $slice_obj = new QueryFromSlice($alias);
             $temp_params = new ParamsFromQuery($slice_obj->params, $filter_model, $slices_model);
-            $sliceItems = new ItemsFilterElastic($temp_params->params_filter, 10000, 1, false, 'restaurants', new ElasticItems());
+            $sliceItems = new ItemsFilterElastic($temp_params->params_filter, 1, 1, false, 'restaurants', new ElasticItems());
             $mainSlices[$alias]['count'] = $sliceItems->total;
         }
+        $mainSlices = array_filter($mainSlices, function($slice) {
+            return $slice['count'] > 0;
+        });
+
+        $blogPosts = BlogPost::findWithMedia()
+        ->limit(5)->where(['published' => 1])
+        ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
+
 
         return $this->render('index.twig', [
             'filters' => $filtersItemsForSelect,
             'seo' => $seo,
             'slider' =>  $mainWidget,
-            'count' => $items->total,
+            'count' => $totalRests,
             'mainRestTypesCounts' => $mainRestTypesCounts,
             'mainSlices' => $mainSlices,
+            'blogPosts' => $blogPosts,
             'subdomenObjects' => Yii::$app->params['activeSubdomenRecords']
         ]);
     }
@@ -155,7 +172,5 @@ class SiteController extends BaseFrontendController
 
     public function actionTest()
     {
-        $items = ElasticItems::find()->search()['hits']['total'];
-        print_r($items);die;
     }
 }

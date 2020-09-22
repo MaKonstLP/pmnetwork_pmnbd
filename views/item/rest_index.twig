@@ -122,7 +122,7 @@
                     </div>
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">Парковка</p>
-                        <p class="rest_desc_value">{{parking}}</p>
+                        <p class="rest_desc_value">{{item.restaurant_parking ? Declension.get(item.restaurant_parking,'мест',true) : 'Нет'}}</p>
                     </div>
                     <div class="rest_desc_item">
                         <p class="rest_desc_title">Оплата</p>

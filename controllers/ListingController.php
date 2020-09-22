@@ -1,4 +1,5 @@
 <?php
+
 namespace app\modules\pmnbd\controllers;
 
 use Yii;
@@ -19,28 +20,24 @@ class ListingController extends BaseFrontendController
 	protected $per_page = 36;
 
 	public $filter_model,
-		   $slices_model;
+		$slices_model;
 
 	public function beforeAction($action)
 	{
 		$this->filter_model = Filter::find()->with('items')->where(['active' => 1])->orderBy(['sort' => SORT_ASC])->all();
 		$this->slices_model = Slices::find()->all();
 
-	    return parent::beforeAction($action);
+		return parent::beforeAction($action);
 	}
 
 	public function actionSlice($slice)
 	{
 		$slice_obj = new QueryFromSlice($slice);
-		if($slice_obj->flag){
+		if ($slice_obj->flag) {
 			$this->view->params['menu'] = $slice;
 			$params = $this->parseGetQuery($slice_obj->params, Filter::find()->with('items')->orderBy(['sort' => SORT_ASC])->all(), $this->slices_model);
 			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
-
-			$canonical = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
-			if($params['page'] > 1){
-				$canonical .= $params['canonical'];
-			}
+			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
 
 			return $this->actionListing(
 				$page 			=	$params['page'],
@@ -50,22 +47,18 @@ class ListingController extends BaseFrontendController
 				$canonical 		= 	$canonical,
 				$type 			=	$slice
 			);
-		}
-		else{
+		} else {
 			return $this->goHome();
-		}				
+		}
 	}
 
 	public function actionIndex()
 	{
 		$getQuery = $_GET;
 		unset($getQuery['q']);
-		if(count($getQuery) > 0){
+		if (count($getQuery) > 0) {
 			$params = $this->parseGetQuery($getQuery, $this->filter_model, $this->slices_model);
-			$canonical = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
-			if($params['page'] > 1){
-				$canonical .= $params['canonical'];
-			}
+			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
 
 			return $this->actionListing(
 				$page 			=	$params['page'],
@@ -73,10 +66,9 @@ class ListingController extends BaseFrontendController
 				$params_filter	= 	$params['params_filter'],
 				$breadcrumbs 	=	Breadcrumbs::get_breadcrumbs(1),
 				$canonical 		= 	$canonical
-			);	
-		}
-		else{
-			$canonical = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+			);
+		} else {
+			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
 
 			return $this->actionListing(
 				$page 			=	1,
@@ -103,18 +95,18 @@ class ListingController extends BaseFrontendController
 			'current' => $page,
 		]);
 
+
 		$seo_type = $type ? $type : 'listing';
 		$seo = $this->getSeo($seo_type, $page, $items->total);
 		$seo['breadcrumbs'] = $breadcrumbs;
-		$this->setSeo($seo, $page, $canonical);
+		$this->setSeo($seo, $page, $canonical, $items->total, $params_filter);
 
-		if($seo_type == 'listing' and count($params_filter) > 0){
+		if ($seo_type == 'listing' and count($params_filter) > 0) {
 			$seo['text_top'] = '';
 			$seo['text_bottom'] = '';
 		}
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
-
 		return $this->render('index.twig', array(
 			'items' => $items->items,
 			'filter' => $filter,
@@ -123,10 +115,11 @@ class ListingController extends BaseFrontendController
 			'count' => $items->total,
 			'menu' => $type,
 			'main_flag' => $main_flag
-		));	
+		));
 	}
 
-	public function actionAjaxFilter(){
+	public function actionAjaxFilter()
+	{
 		$params = $this->parseGetQuery(json_decode($_GET['filter'], true), $this->filter_model, $this->slices_model);
 
 		$elastic_model = new ElasticItems;
@@ -148,16 +141,15 @@ class ListingController extends BaseFrontendController
 			'count' => $items->total
 		));
 
-		if($params['page'] == 1){
+		if ($params['page'] == 1) {
 			$text_top = $this->renderPartial('//components/generic/text.twig', array('text' => $seo['text_top']));
 			$text_bottom = $this->renderPartial('//components/generic/text.twig', array('text' => $seo['text_bottom']));
-		}
-		else{
+		} else {
 			$text_top = '';
 			$text_bottom = '';
 		}
 
-		if($seo_type == 'listing' and count($params['params_filter']) > 0){
+		if ($seo_type == 'listing' and count($params['params_filter']) > 0) {
 			$text_top = '';
 			$text_bottom = '';
 		}
@@ -176,7 +168,8 @@ class ListingController extends BaseFrontendController
 		]);
 	}
 
-	public function actionAjaxFilterSlice(){
+	public function actionAjaxFilterSlice()
+	{
 		$slice_url = ParamsFromQuery::isSlice(json_decode($_GET['filter'], true));
 
 		return $slice_url;
@@ -185,10 +178,9 @@ class ListingController extends BaseFrontendController
 	private function parseGetQuery($getQuery, $filter_model, $slices_model)
 	{
 		$return = [];
-		if(isset($getQuery['page'])){
+		if (isset($getQuery['page'])) {
 			$return['page'] = $getQuery['page'];
-		}
-		else{
+		} else {
 			$return['page'] = 1;
 		}
 
@@ -201,29 +193,26 @@ class ListingController extends BaseFrontendController
 		return $return;
 	}
 
-	private function getSeo($type, $page, $count = 0){
+	private function getSeo($type, $page, $count = 0)
+	{
 		$seo = new Seo($type, $page, $count);
 
 		return $seo->seo;
 	}
 
-	private function setSeo($seo, $page, $canonical){
+	private function setSeo($seo, $page, $canonical, $count, $params_filter)
+	{
 		$this->view->title = $seo['title'];
 		$this->view->params['desc'] = $seo['description'];
-		if($page != 1){
-			$this->view->params['canonical'] = $canonical;
+		$isAnyFilterParamMultiple = count(array_filter($params_filter, function ($params) {
+			return count($params) > 1;
+		})) > 0;
+		if ($page != 1 || $isAnyFilterParamMultiple || count($params_filter) > 2) {
+			$this->view->registerLinkTag(['rel' => 'canonical', 'href' => $canonical], 'canonical');
 		}
-        $this->view->params['kw'] = $seo['keywords'];
+		if ($count < 1 || $isAnyFilterParamMultiple) {
+			$this->view->registerMetaTag(['name' => 'robots', 'content' => 'noindex, nofollow'], 'robots');
+		}
+		$this->view->params['kw'] = $seo['keywords'];
 	}
-
 }
-
-//class ListingController extends Controller
-//{
-//	public function actionIndex(){
-//		GorkoApiTest::renewAllData([
-//			'city_id=4400&type_id=1&type=11&fields=type'
-//		]);
-//		return 1;
-//	}	
-//}

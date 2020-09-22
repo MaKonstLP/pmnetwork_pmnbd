@@ -2,10 +2,10 @@
 
 namespace app\modules\pmnbd\controllers;
 
+use common\models\Seo;
 use Yii;
 use yii\web\Controller;
 use frontend\modules\pmnbd\components\Breadcrumbs;
-use frontend\modules\pmnbd\components\Declension;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\NotFoundHttpException;
 
@@ -23,7 +23,10 @@ class ItemController extends BaseFrontendController
 				],
 			]
 		])->one();
-
+		
+		if(empty($rest_item)) {
+			throw new NotFoundHttpException();
+		}
 		$rooms = $rest_item['rooms'];
 		$rooms_price_arr = [];
 		$rooms_capacity_arr = [];
@@ -49,59 +52,51 @@ class ItemController extends BaseFrontendController
 		])->all();
 		shuffle($other_rests);
 
-		if (isset($roomSlug)) {
-			foreach ($rooms as $key => $room) {
-				if ($room['slug'] == $roomSlug) {
-					$item = $room;
-					unset($rooms[$key]);
-					break;
-				}
-			}
-			if (!isset($item)) {
+		if (!empty($roomSlug)) {
+			$same_objects = array_filter($rooms, function($room) use ($roomSlug){
+				return $room['slug'] != $roomSlug;
+			});
+			$room = current(array_diff_key($rooms, $same_objects));
+			if (empty($room)) {
 				throw new NotFoundHttpException();
 			}
-			$seo['h1'] = $item['name'] . ' в ресторане ' . $rest_item->restaurant_name;
+			$seo = (new Seo('room', 1, 0, (object)$room, 'room', $rest_item))->seo;
 			$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(3, $rest_item);
-			$seo['desc'] = $rest_item->restaurant_name;
 			$seo['address'] = $rest_item->restaurant_address;
-
+			$this->setSeo($seo);
 			$other_rooms = array_reduce($other_rests, function ($acc, $rest) {
 				return array_merge($acc, $rest['rooms']);
 			}, []);
 
 			return $this->render('index.twig', array(
-				'item' => $item,
+				'item' => $room,
 				'rest_item' => $rest_item,
-				'queue_id' => $item['id'],
 				'seo' => $seo,
-				'same_objects' => $rooms,
+				'same_objects' => $same_objects,
 				'other_rooms' => $other_rooms
 			));
 		}
 
-		$seo['h1'] = 'Ресторан ' . $rest_item->restaurant_name . ' в ' . Yii::$app->params['subdomen_dec'];
+		$seo = (new Seo('item', 1, 0, $rest_item, 'rest'))->seo;
 		$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(2);
-		$seo['desc'] = $rest_item->restaurant_name;
 		$seo['address'] = $rest_item->restaurant_address;
-
-		$parking = 'Нет';
-		if (!empty($rest_item->restaurant_parking)) {
-			preg_match('~(\d+)~ims', $rest_item->restaurant_parking, $match);
-			$parking = $rest_item->restaurant_parking . ' мест'.Declension::get_num_ending($rest_item->restaurant_parking,['о','а','']);
-		}
+		$this->setSeo($seo);
 		
-		$text = '';
-
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => min(array_filter($rooms_price_arr)),
 			'rooms_capacity' => $rooms_capacity_arr,
-			'queue_id' => $roomSlug,
 			'seo' => $seo,
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
-			'parking' => $parking,
 		));
 
 	}
+
+	private function setSeo($seo){
+        $this->view->title = $seo['title'];
+        $this->view->params['desc'] = $seo['description'];
+        $this->view->params['kw'] = $seo['keywords'];
+    }
+	
 }

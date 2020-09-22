@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="content_block">
-		<div class="fast_filters">
+		{# <div class="fast_filters">
 			<a href="#">Конференц-залы <span>12</span></a>
 			<a href="#">Банкетные залы на 10, 12 человек <span>4</span></a>
 			<a href="#">Загородные рестораны <span>46</span></a>
@@ -15,9 +15,9 @@
 			<a href="#">Банкетные залы на 50 человек <span>45</span></a>
 			<a href="#">Дорогие рестораны <span>60</span></a>
 			<a href="#">Веранды и террасы <span>56</span></a>
-		</div>
+		</div> #}
 		<div class="seo_text before_filter" data-seo-text> 
-			{{seo.text_top |replace({'**city_dec**': appParams.subdomen_dec}) | raw }}
+			{{seo.text_top | raw }}
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>
