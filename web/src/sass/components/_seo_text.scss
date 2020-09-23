@@ -12,7 +12,7 @@
         position: relative;
 
         &._hidden{
-            max-height: 200px;
+            max-height: 183px;
             .seo_text_control{
                 display: flex;
             }
@@ -35,7 +35,7 @@
         display: none;
 
         ._link{
-            margin: 0;
+            margin: 24px 0 0;
             color: #3067F3;
             border-bottom: 1px dashed #3067F3;
         }
@@ -45,10 +45,10 @@
             justify-content: left;
             position: absolute;
             //padding-top: 40px;
-            background-image: linear-gradient(to top,#fcfcf8 50%,transparent);
+            background-image: linear-gradient(to top,#fcfcf8 33%,transparent);
             bottom: 0;
             width: 100%;
-            height: 25px;
+            height: 48px;
             cursor: pointer;
         }
     }

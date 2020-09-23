@@ -1,8 +1,8 @@
-<div class="breadcrumbs">
+{#<div class="breadcrumbs">
 	{% for link,name in seo.breadcrumbs %}
 		<a class="breadcrumbs_item" href="{{link}}">{{name}}</a>
 	{% endfor %}
-</div>
+</div>#}
 <div class="title">
 	<h1>{{seo.h1|replace({'**city_dec**': appParams.subdomen_dec})|raw}}</h1>
 	<div class="title_count">{{count}} заведен{{Declension.get_num_ending(count,['ие','ия','ий'])}}</div>

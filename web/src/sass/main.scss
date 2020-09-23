@@ -95,6 +95,18 @@ body._overflow .main_wrap{
     filter: blur(4px);
 }
 
+ul {
+    margin-left: 20px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+li {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+}
+
 .main_wrap{
     min-height:100%;
     background-color: $clrBg;
@@ -165,7 +177,7 @@ body._overflow .main_wrap{
     }
 
     @include for-mobile{
-        width: calc(100% - 30px);
+        width: calc(100% - 24px);
     }
 }
 [data-page-type]{

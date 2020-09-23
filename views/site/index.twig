@@ -196,12 +196,12 @@
 			{% for alias, slice in mainSlices %}
 			<div class="restaurant_item">
 				<div class="restaurant_img">
-					<a href="/catalog/{{alias}}/" target="_blank">
+					<a href="/catalog/{{alias}}/">
 						<img src="/img/restaurants/restaurant_{{loop.index}}.jpg">
 					</a>
 				</div>
 				<div class="restaurant_text">
-					<a href="/catalog/{{alias}}/" target="_blank">{{slice.name}}</a>
+					<a href="/catalog/{{alias}}/">{{slice.name}}</a>
 					<span>{{slice.count}}</span>
 				</div>
 			</div>
