@@ -1,5 +1,6 @@
-<div data-page-type="index">
-	<div class="main_top_slider">
+{% set  mainRestTypes = mainRestTypesCounts.1 * mainRestTypesCounts.3 * mainRestTypesCounts.4 * mainRestTypesCounts.36 * mainRestTypesCounts.30 %}
+<div data-page-type="index" {{mainRestTypes > 0 ? '' : 'class=" _short"'}}>
+	<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}">
 		<img src="{{seo.media["header-image"]|first.src}}" alt="{{seo.media['header-image']|first.alt}}">
 	</div>
 	<div class="main_top">
@@ -10,7 +11,7 @@
 		</div>
 		<div class="main_search">
 			<div class="main_search_city">
-				<input class="main_search_city_input" type="text" placeholder="Город" data-selected-city-id="{{appParams.subdomen_id}}" data-selected-city-alias="{{appParams.subdomen_id}}">
+				<input class="main_search_city_input" type="text" placeholder="{{app.params.subdomen_name}}" data-selected-city-id="{{app.params.subdomen_id}}" data-selected-city-alias="{{app.params.subdomen_alias}}">
 				<div class="main_search_city_list">
 					{% for subdomenObject in subdomenObjects %}
 						<p data-city-id="{{subdomenObject.city_id}}" data-city-alias="{{subdomenObject.alias}}" >{{subdomenObject.name}}</p>
@@ -30,7 +31,8 @@
 			</div>
 			<span class="main_search_submit">Подобрать</span>
 		</div>
-		<div class="main_rectangle_wrap">
+
+		<div class="main_rectangle_wrap{{mainRestTypes > 0 ? '' : ' _short'}}">
 			{% if  mainRestTypesCounts.1 > 0 %}
 			<div class="main_rectangle">
 				<div class="main_rectangle_1"></div>
@@ -109,8 +111,7 @@
 						<div class="content_info_rectangle"></div>
 					</div>
 					<div class="content_info_top_text seo_text" data-seo-text>
-						<p>День рождения – теплый и душевный праздник, который хочется провести в кругу друзей и родных. Где в Самаре лучше отметить юбилей? Как подобрать ресторан, куда действительно будет приятно пригласить дорогих сердцу людей? Удобнее всего обратиться к единому интернет-каталогу “Мой День”, в котором собрано огромное количество различных столичных заведений, приглашающих отпраздновать у них День рождения.</p>
-						<p>У нас представлено множество заведений, в которых можно взять в аренду банкетный зал для проведения торжества. Вся информация о залах собрана в одном месте. Здесь найдете подробное описание каждого заведения с указанием количества залов и их вместимости, красочные актуальные фото и все сведения, касающиеся дополнительных условий.</p>
+						{{seo.text_1|raw}}
 						<div class="seo_text_control" data-seo-control>
 							<p class="_link">Показать полностью</p>
 						</div>
@@ -118,49 +119,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="content_block">
-			<p class="content_info_adv_title">
-				Вы с легкостью подберете подходящий банкетный зал для празднования дня рождения благодаря нашим преимуществам:
-			</p>
-			<div class="content_info_adv main_rectangle_wrap">
-				<div class="content_info_wrap">
-					<div class="main_rectangle">
-						<div class="main_rectangle_1"></div>
-						<img class="main_rectangle_icon content_info_icon_2" src="/img/rest_base.svg">
-					</div>
-					<div class="content_info_adv_h">
-						Большая база ресторанов
-					</div>
-					<div class="content_info_adv_p">
-						У нас есть заведения, расположенные на центральных улицах столицы и за ее пределами, в живописных парках и на берегу водоемов, с просторными помещениями и открытыми летними террасами
-					</div>
-				</div>
-				<div class="content_info_wrap">
-					<div class="main_rectangle">
-						<div class="main_rectangle_1"></div>
-						<img class="main_rectangle_icon content_info_icon_2" src="/img/booking.svg">
-					</div>
-					<div class="content_info_adv_h">
-						Бронирование на сайте
-					</div>
-					<div class="content_info_adv_p">
-						Не нужно отдельно искать контакты и способы связи с заведением. Заказать помещение на юбилей можно через каталог, сделав пару кликов.
-					</div>
-				</div>
-				<div class="content_info_wrap">
-					<div class="main_rectangle">
-						<div class="main_rectangle_1"></div>
-						<img class="main_rectangle_icon content_info_icon_2" src="/img/date_calendar.svg">
-					</div>
-					<div class="content_info_adv_h">
-						Выбор свободных дат прямо в карточке ресторана
-					</div>
-					<div class="content_info_adv_p">
-						Моментально узнайте, где есть места в нужный день.
-					</div>
-				</div>
-			</div>
-		</div>
+		{{seo.text_2|raw}}
 		<div class="content_info_slider">
 			<img src="{{seo.media["advantages"]|first.src}}">
 		</div>
@@ -211,19 +170,8 @@
 	{% endif %}
 
 	<div class="bottom_block">
-		<h2>День рождения в ресторане – удобно, красиво, доступно</h2>
 		<div class="content_block seo_text" data-seo-text>
-			<p>Если вы решили праздновать день рождения в кафе, все хлопоты по организации мероприятия будут лежать на персонале. Вам не придется тратить время на готовку блюд и сервировку стола, заниматься изнурительной уборкой после ухода гостей.</p>
-			<p>В современных заведениях вам предложат большой выбор блюд европейской, средиземноморской, кавказской, японской, русской и другой кухни. Вы без труда подберете угощения на любой вкус, а опытные повара приготовят их в самом лучшем виде.</p>
-			<p>Также заведения предлагают множество дополнительных услуг для проведения банкета:</p>
-			<ul>
-				<li>музыкальное сопровождение,</li>
-				<li>праздничное оформление столов и залов,</li>
-				<li>аренда светового и звукового оборудования,</li>
-				<li>выступления артистов и аниматоров,</li>
-				<li>фейерверк, фаер-шоу и многие другие.</li>
-			</ul>
-			<p>Стоимость празднования может варьироваться в широких пределах, и каждый виновник торжества сможет выбрать место в желаемой ценовой категории.</p>
+			{{seo.text_3|raw}}
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>

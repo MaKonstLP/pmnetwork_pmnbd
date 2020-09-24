@@ -92,7 +92,7 @@
     position: relative;
     display: flex;
 
-    @include for-mobile{
+    @include for-phone{
         display: block;
     }
 
@@ -255,6 +255,8 @@
     display: flex; 
     position: absolute;
     top: 255px;
+    width: 100%;
+    justify-content: center;
     &:not(.content_info_adv){
         @include for-mobile{
             top: 325px;
@@ -269,7 +271,12 @@
             height: 190px;
         }
     }
-    
+
+    @include for-mobile{
+        &._short{
+            display: none;
+        }
+    }
 }
 .main_rectangle{
     width: 150.26px;
@@ -301,7 +308,7 @@
         &:nth-child(2){
             position: absolute;
             top: -10px;
-            left: 109px;
+            left: 111px;
         }
         &:nth-child(3){
             position: absolute;
@@ -1009,8 +1016,17 @@
     overflow: hidden;
     width: 100%;
 
+    @include for-mobile{
+        &._short{
+            height: 400px; 
+        }
+    }
+
     @include for-phone{
-      height: 560px;  
+        height: 560px;  
+        &._short{
+            height: 430px; 
+        }
     }
 
     img{
@@ -1051,15 +1067,6 @@
         color: #1A2824;
         margin: 10px auto !important;
         text-align: left;
-    }
-    ul {
-        list-style-type: disc;
-        margin-left: 20px;
-    }
-    li {
-        margin: 10px auto;
-        font-size: 15px;
-        line-height: 24px;
     }
     @include for-mobile{
         padding-bottom: 0;

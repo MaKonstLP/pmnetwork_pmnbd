@@ -10,7 +10,7 @@
 		</div>
 
 		<form class="form_block" action="/ajax/form/">
-
+			<input type="hidden" name="type" value="{{ type ? type : 'main'}}" />
 			<div class="form_inputs">
 				<div class="input_wrapper">
 					<input type="text" name="name" data-required placeholder="Как Вас зовут?" class="not_check_approove"/>
@@ -44,8 +44,8 @@
 
 	</div>
 	<div class="form_success">
-		<p class="form_title_main">Заявка успешно отправлена</p>
-		<p>Спасибо за проявленный интерес. Мы свяжемся с вами в течение рабочего дня, чтобы обсудить детали.</p>
+		<p class="form_title_main" data-form-result-title>Заявка успешно отправлена</p>
+		<p data-form-result-body>Спасибо за проявленный интерес. Мы свяжемся с вами в течение рабочего дня, чтобы обсудить детали.</p>
 		<p class="form_close_bottom" data-close-popup>Спасибо, закрыть</p>
 	</div>
 	

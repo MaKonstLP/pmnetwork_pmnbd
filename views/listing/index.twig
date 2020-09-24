@@ -17,7 +17,7 @@
 			<a href="#">Веранды и террасы <span>56</span></a>
 		</div> #}
 		<div class="seo_text before_filter" data-seo-text> 
-			{{seo.text_top | raw }}
+			<div data-listing-text-top>{{seo.text_top | raw }}</div>
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>
@@ -40,9 +40,9 @@
 		<div data-append-items>Показать еще</div>
 	</div>
 
-	<div class="content_block" data-listing-text-bottom>
+	<div class="content_block">
 		<div class="seo_text text_bottom" data-seo-text>
-			{{seo.text_bottom | raw }}
+			<div data-listing-text-bottom>{{seo.text_bottom | raw }}</div>
 			<div class="seo_text_control" data-seo-control>
 				<p class="_link">Показать полностью</p>
 			</div>

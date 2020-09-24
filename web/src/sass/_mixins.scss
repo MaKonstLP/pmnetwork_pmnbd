@@ -11,7 +11,7 @@
 }
 
 @mixin for-phone {
-  @media (max-width: 560px) { @content; }
+  @media (max-width: 570px) { @content; }
 }
 
 @mixin for-notdesc {

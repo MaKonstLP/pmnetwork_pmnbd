@@ -96,9 +96,10 @@ body._overflow .main_wrap{
 }
 
 ul {
-    margin-left: 20px;
-    margin-top: 24px;
-    margin-bottom: 24px;
+    //margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    list-style-position: inside;
 }
 
 li {
@@ -214,8 +215,16 @@ li {
     }
     &[data-page-type="index"]{
         margin-top: 480px;
+        @media (max-width: 767px) {
+            margin-top: 560px; 
+            &._short{
+                margin-top: 400px; 
+            }
+        }
         @include for-phone{
-          margin-top: 560px;  
+            &._short{
+                //margin-top: 430px; 
+            }
         }
     }
     &[data-page-type="item"]{

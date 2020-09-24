@@ -155,11 +155,11 @@
                 </div>
                 {% endif %}
             </div>
-            {% if text %}
+            {% if seo.text_1 %}
             <div class="rest_desc_text">
                 <div class="rest_desc_item seo_text" data-seo-text>
                     <p class="rest_desc_title">Описание</p>
-                    <p class="rest_desc_value">{{text|striptags}}</p>
+                    <p class="rest_desc_value">{{seo.text_1|striptags}}</p>
                     <div class="seo_text_control" data-seo-control>
                         <p class="_link">Показать полностью</p>
                     </div>

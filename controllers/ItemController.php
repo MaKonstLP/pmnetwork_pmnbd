@@ -2,9 +2,8 @@
 
 namespace app\modules\pmnbd\controllers;
 
+use common\models\Restaurants;
 use common\models\Seo;
-use Yii;
-use yii\web\Controller;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\NotFoundHttpException;
@@ -25,6 +24,9 @@ class ItemController extends BaseFrontendController
 		])->one();
 		
 		if(empty($rest_item)) {
+			echo var_dump($restSlug);
+			echo var_dump(\Yii::$app->params['subdomen_id']);
+			die;
 			throw new NotFoundHttpException();
 		}
 		$rooms = $rest_item['rooms'];
@@ -80,6 +82,9 @@ class ItemController extends BaseFrontendController
 		$seo = (new Seo('item', 1, 0, $rest_item, 'rest'))->seo;
 		$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(2);
 		$seo['address'] = $rest_item->restaurant_address;
+		if($restActiveRecord =  Restaurants::findWithSeo()->where(['id' => $rest_item->id])->one()) {
+			try { $seo['text_1'] = $restActiveRecord->seoObject->text1; } catch (\Throwable $th) {}
+		}
 		$this->setSeo($seo);
 		
 		return $this->render('rest_index.twig', array(

@@ -17,7 +17,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <link rel="icon" type="image/png" href="/img/favicon_bd.ico">
     <title><?php echo $this->title ?></title>
     <?php $this->head() ?>
     <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
@@ -61,7 +61,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         $activeSubdomenRecords = \Yii::$app->params['activeSubdomenRecords'];
                         $reduced = array_reduce($activeSubdomenRecords, function ($acc, $subdomen) use ($address) {
                             $firstLetter = mb_substr($subdomen->name, 0, 1);
-                            $alias = $subdomen->alias == 'msk' ? '' : $subdomen->alias . '.';
+                            $alias = $subdomen->city_id == 4400 ? '' : $subdomen->alias . '.';
                             $link = "<a href='http://$alias$address'>$subdomen->name</a>\n";
                             isset($acc[$firstLetter]) ? $acc[$firstLetter] .= $link : $acc[$firstLetter] = $link;
                             return $acc;
@@ -148,7 +148,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         <div class="popup_layout" data-close-popup></div>
 
         <div class="popup_form">
-            <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?']) ?>
+            <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'header']) ?>
         </div>
 
         <div class="popup_img">

@@ -17,7 +17,7 @@ use frontend\modules\pmnbd\models\ElasticItems;
 
 class ListingController extends BaseFrontendController
 {
-	protected $per_page = 36;
+	protected $per_page = 300;
 
 	public $filter_model,
 		$slices_model;

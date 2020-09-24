@@ -197,6 +197,8 @@ export default class Form {
 		//modal.append(data);
 		//modal.show();
 		this.$formModalMain.hide();
+		data.title && this.$formSuccess.find('[data-form-result-title]').text(data.title);
+		data.body && this.$formSuccess.find('[data-form-result-body]').text(data.body);
 		this.$formSuccess.show();
 		this.$formModal.not('._active').addClass('_active');
 		this.reset();
@@ -217,12 +219,9 @@ export default class Form {
 	    this.beforeSend();
 
 	    var formData = new FormData(this.$form[0]);
-	    formData.append($('[name="csrf-param"]').attr('content'), $('[name="csrf-token"]').attr('content'));
-	    for (var pair of formData.entries()) {
-		    console.log('pair ', pair[0]+ ', ' + pair[1]); 
-		}
-
-		console.log('form ', this.$form[0]);
+		formData.append($('[name="csrf-param"]').attr('content'), $('[name="csrf-token"]').attr('content'));
+		var formUrl = window.location.href;
+	    formData.append('url', formUrl);
 	    fetch(this.to,{
 			method: 'POST',
 			body: formData
@@ -230,8 +229,7 @@ export default class Form {
 	    .then(status)
 	    .then(json)
 	    .then(data => {
-	    	console.log(data);
-			this.success('success ',data);
+			this.success(data);
 			// this.reset();
 			this.disabled = false;
 	    })

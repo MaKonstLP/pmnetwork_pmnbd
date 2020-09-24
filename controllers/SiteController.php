@@ -10,6 +10,7 @@ use common\models\Slices;
 use frontend\modules\pmnbd\models\ElasticItems;
 use common\models\elastic\ItemsFilterElastic;
 use common\models\Pages;
+use common\models\Restaurants;
 use common\models\Seo;
 use common\models\Subdomen;
 use common\models\SubdomenPages;
@@ -47,9 +48,9 @@ class SiteController extends BaseFrontendController
             }
 
             if (!$resultSliceAlias || !($subdomen = Subdomen::findOne(['city_id' => $cityId]))) return;
-
+            $subdomenPart = $subdomen->city_id == 4400 ? '' : $subdomen->alias . '.';
             $redirect = \Yii::$app->params['siteProtocol'] . '://'
-                . $subdomen->alias . '.'
+                . $subdomenPart
                 . \Yii::$app->params['siteAddress']
                 . "/catalog/$resultSliceAlias/";
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -166,11 +167,10 @@ class SiteController extends BaseFrontendController
         /* foreach (SubdomenPages::find()->all() as $key => $value) {
             $value->delete();
         } */
-        Pages::createSiteObjects();
-        SubdomenPages::createSiteObjects();
+        // Pages::createSiteObjects();
+        // SubdomenPages::createSiteObjects();
+        Restaurants::createSiteObjects();
+
     }
 
-    public function actionTest()
-    {
-    }
 }

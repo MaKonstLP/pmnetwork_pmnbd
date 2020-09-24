@@ -75,7 +75,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                     'restaurant_alcohol'            => ['type' => 'integer'],
                     'restaurant_firework'           => ['type' => 'integer'],
                     'restaurant_name'               => ['type' => 'text'],
-                    'restaurant_slug'               => ['type' => 'text'],
+                    'restaurant_slug'               => ['type' => 'keyword'],
                     'restaurant_address'            => ['type' => 'text'],
                     'restaurant_cover_url'          => ['type' => 'text'],
                     'restaurant_latitude'           => ['type' => 'text'],

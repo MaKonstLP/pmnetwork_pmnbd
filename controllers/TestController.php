@@ -161,4 +161,8 @@ class TestController extends BaseFrontendController
         return $message->send();
 	}
 	
+	public function actionUp()
+	{
+		
+	}
 }
