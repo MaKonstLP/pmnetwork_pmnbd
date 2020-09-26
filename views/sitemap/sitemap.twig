@@ -3,6 +3,12 @@
 	<url>
 		<loc>{{host}}</loc>
 	</url>
+	{% if isMain %}
+		<url>
+		<loc>{{host}}/politika/</loc>
+	</url>
+	{% endif %}
+	
 	<url>
 		<loc>{{host}}/catalog/</loc>
 	</url>
@@ -13,14 +19,15 @@
 		</url>
 	{% endfor %}
 
-	<url>
-		<loc>{{host}}/privacy/</loc>
-	</url>
-
-	{% for item in items %}
+	{% for rest in rests %}
 		<url>
-			<loc>{{host}}/catalog/{{item.id}}/</loc>
+			<loc>{{host}}/catalog/restoran-{{rest.restaurant_slug}}/</loc>
 		</url>
+		{% for room in rest.rooms %}
+		<url>
+			<loc>{{host}}/catalog/restoran-{{rest.restaurant_slug}}/{{room.slug}}/</loc>
+		</url>
+		{% endfor %}
 	{% endfor %}
 
 </urlset>

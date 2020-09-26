@@ -10,11 +10,11 @@
 			заведен{{Declension.get_num_ending(count,['ие','ия','ий'])}}
 		</div>
 		<div class="main_search">
-			<div class="main_search_city">
-				<input class="main_search_city_input" type="text" placeholder="{{app.params.subdomen_name}}" data-selected-city-id="{{app.params.subdomen_id}}" data-selected-city-alias="{{app.params.subdomen_alias}}">
+			<div class="main_search_city" data-search-wrap>
+				<input class="main_search_city_input" type="text" placeholder="{{app.params.subdomen_name}}" data-selected-city-id="{{app.params.subdomen_id}}" data-selected-city-alias="{{app.params.subdomen_alias}}" data-search-input>
 				<div class="main_search_city_list">
 					{% for subdomenObject in subdomenObjects %}
-						<p data-city-id="{{subdomenObject.city_id}}" data-city-alias="{{subdomenObject.alias}}" >{{subdomenObject.name}}</p>
+						<p data-city-id="{{subdomenObject.city_id}}" data-city-alias="{{subdomenObject.alias}}" data-search-city>{{subdomenObject.name}}</p>
 					{% endfor %}
 				</div>
 			</div>
@@ -119,9 +119,11 @@
 				</div>
 			</div>
 		</div>
-		{{seo.text_2|raw}}
-		<div class="content_info_slider">
-			<img src="{{seo.media["advantages"]|first.src}}">
+		<div class="content_info_bottom">
+			{{seo.text_2|raw}}
+			<div class="content_info_slider">
+				<img src="{{seo.media["advantages"]|first.src}}">
+			</div>
 		</div>
 	</div>
 
@@ -147,7 +149,7 @@
 		</div>
 	</div>
 	{% endif %}
-	
+
 	{% if mainSlices %}
 	<div class="main_podborki">
 		<h3>Подборки заведений</h2>
@@ -156,7 +158,7 @@
 			<div class="restaurant_item">
 				<div class="restaurant_img">
 					<a href="/catalog/{{alias}}/">
-						<img src="/img/restaurants/restaurant_{{loop.index}}.jpg">
+						<img src="/img/restaurants/restaurant_{{alias}}.jpg">
 					</a>
 				</div>
 				<div class="restaurant_text">

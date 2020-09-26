@@ -8,7 +8,8 @@ export default class Widget{
 
 		//if($(window).width() <= 1650){
 			$('[data-widget-wrapper]').each(function(){
-				self.initSwiper($(this).find('[data-listing-wrapper]'));
+				let listing_wrap = $(this).find('[data-listing-wrapper]');
+				self.initSwiper(listing_wrap, listing_wrap.find('.swiper-slide').length);
 			});
 	//}
 
@@ -29,11 +30,12 @@ export default class Widget{
 		});
 	}
 
-	initSwiper($container){
+	initSwiper($container, $items){
+		console.log('items', $items);
 		let swiper = new Swiper($container, {
 	        slidesPerView: 4,
 	        spaceBetween: 30,
-	        loop: true,
+	        loop:  ($items < 4 ? false : true),
 	        navigation: {
               nextEl: '.listing_widget_arrow._next',
               prevEl: '.listing_widget_arrow._prev',
@@ -44,7 +46,8 @@ export default class Widget{
 		            },
 	        breakpoints: {
 	        	1000:{
-	        		slidesPerView: 3,
+	        		slidesPerView: 4,
+	        		loop:  ($items < 4 ? false : true),
 	        		pagination: {
 		              el: '.listing_widget_pagination',
 		              type: 'bullets',
@@ -52,11 +55,12 @@ export default class Widget{
 	        		navigation: false,
 	        	},
 	        	768:{
-	        		slidesPerView: 2.5,
-					
+	        		slidesPerView:2.5,
+					loop:  ($items < 3 ? false : true),
 	        	},
 	        	600:{
-	        		slidesPerView: 1.2,
+	        		slidesPerView: ($items < 2 ? $items : 1.2),
+	        		loop:  ($items < 2 ? false : true),
 	        	}
 	        }
 	    });

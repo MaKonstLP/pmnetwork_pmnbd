@@ -19,7 +19,7 @@
         }
 
         &._active{
-            max-height: initial;
+            max-height: initial !important;
 
             .seo_text_control{
                 display: none;

@@ -110,6 +110,47 @@ export default class Main {
 
         let searchInCityList = function($input){
             let word = $input.val();
+            let wrap = $input.closest('[data-search-wrap]');
+            wrap.find('[data-search-city]').each(function(){
+                let city_name = $(this).html().replace('<span>','').replace('</span>','');
+                let $substr = city_name.toLowerCase().search(word.toLowerCase());
+                let char_wrap = $(this).closest('[data-search-city_in_char_wrap]');
+                let char_cities = char_wrap.find('[data-search-city_in_char]');
+                if (word != '' && $substr == -1) {
+                    $(this).html(city_name);
+                    $(this).hide();
+                    if (char_cities.children(':visible').length < 1) char_wrap.hide();
+                } else {
+                    let $str1 = city_name.substring(0,$substr);
+                    let $str2 = city_name.substring($substr, $substr+word.length);
+                    let $str3 = city_name.substring($substr+word.length);
+                    $(this).html($str1+'<span>'+$str2+'</span>'+$str3);
+                    $(this).show();
+                    char_wrap.show();
+                }
+            })
+        }
+
+        $('[data-search-input]')
+            .on('focus', function () {
+                searchInCityList($(this));
+            })
+            .on('keyup', function(){
+                searchInCityList($(this));
+            });
+
+        $('.main_search_city_input')
+            .on('focus', function () {
+                $('.main_search_city_list').slideToggle('Fast');
+            })
+            .on('blur', function () {
+                setTimeout(function () {
+                    $('.main_search_city_list').slideToggle('Fast');
+                }, 100);
+            });
+
+        let searchInCityList1 = function($input){
+            let word = $input.val();
             $('.main_search_city_list p').each(function(){
                 let city_name = $(this).html().replace('<span>','').replace('</span>','');
                 let $substr = city_name.toLowerCase().search(word.toLowerCase());
@@ -126,19 +167,7 @@ export default class Main {
             })
         }
 
-        $('.main_search_city_input')
-            .on('focus', function () {
-                searchInCityList($(this));
-                $('.main_search_city_list').slideToggle('Fast');
-            })
-            .on('blur', function () {
-                setTimeout(function () {
-                    $('.main_search_city_list').slideToggle('Fast');
-                }, 100);
-            })
-            .on('keyup', function(){
-                searchInCityList($(this));
-            });
+
 
         $('.main_search_type_room_list  p').on('click', function () {
             $('.type_room_choose').html($(this).html());
@@ -148,7 +177,7 @@ export default class Main {
 
         $('.main_search_submit').on('click', (e) => {
             $.ajax({
-				url: '/',
+				url: '/site/filter-submit/',
                 data: {
                     city_id: $('[data-selected-city-id]').data(
                         'selected-city-id'

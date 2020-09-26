@@ -53,6 +53,7 @@ class ItemController extends BaseFrontendController
 			],
 		])->all();
 		shuffle($other_rests);
+		$other_rests = array_slice($other_rests, 0, 7);
 
 		if (!empty($roomSlug)) {
 			$same_objects = array_filter($rooms, function($room) use ($roomSlug){

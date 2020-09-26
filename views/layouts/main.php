@@ -17,8 +17,19 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="icon" type="image/png" href="/img/favicon_bd.ico">
+    <link type="image/x-icon" rel="shortcut icon" href="/img/bd/favicon.ico">
+    <link type="image/png" sizes="16x16" rel="icon" href="/img/bd/favicon-16x16.png">
+    <link type="image/png" sizes="32x32" rel="icon" href="/img/bd/favicon-32x32.png">
+    <link type="image/png" sizes="192x192" rel="icon" href="/img/bd/android-chrome-192x192.png">
+    <link rel="apple-touch-icon" href="/img/bd/apple-touch-icon.png">
+    <meta name="msapplication-square150x150logo" content="/img/bd/mstile-150x150.png">
+    <meta name="msapplication-config" content="/img/bd/browserconfig.xml">
+    <link rel="manifest" href="/img/bd/webmanifest.json">
+
     <title><?php echo $this->title ?></title>
+
     <?php $this->head() ?>
     <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
     <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
@@ -43,7 +54,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     <span class="city"><?= Yii::$app->params['subdomen_name'] ?></span>
                     <span class="choose"></span>
                 </div>
-                <div class="city_list_wrap">
+                <div class="city_list_wrap" data-search-wrap>
                     <div class="city_list_top">
                         <a href="/" class="header_logo">
                             <div class="header_logo_img"></div>
@@ -54,7 +65,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         <div class="city_list_close"></div>
                     </div>
                     <span class="city_list_title">Выберите город</span>
-                    <input type="text" name="city" placeholder="Название города">
+                    <input type="text" name="city" placeholder="Название города" data-search-input>
                     <div class="city_list">
                         <?php
                         $address = \Yii::$app->params['siteAddress'];
@@ -62,14 +73,14 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         $reduced = array_reduce($activeSubdomenRecords, function ($acc, $subdomen) use ($address) {
                             $firstLetter = mb_substr($subdomen->name, 0, 1);
                             $alias = $subdomen->city_id == 4400 ? '' : $subdomen->alias . '.';
-                            $link = "<a href='http://$alias$address'>$subdomen->name</a>\n";
+                            $link = "<a href='http://$alias$address' data-search-city>$subdomen->name</a>\n";
                             isset($acc[$firstLetter]) ? $acc[$firstLetter] .= $link : $acc[$firstLetter] = $link;
                             return $acc;
                         }, []);
                         foreach ($reduced as $letter => $links) : ?>
-                            <div class='city_list_item'>
+                            <div class='city_list_item' data-search-city_in_char_wrap>
                                 <div class='char'><?= $letter ?></div>
-                                <div class='city_in_char'>
+                                <div class='city_in_char' data-search-city_in_char>
                                     <?= $links ?>
                                 </div>
                             </div>
@@ -99,33 +110,31 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         </a>
                         <div class="footer_info">
                             <p class="footer_copy">© <?php echo date("Y"); ?> Мой день</p>
-                            <a href="#" class="footer_pc _link">Политика конфиденциальности</a>
+                            <a target="_blank" href="<?=Yii::$app->params['siteProtocol'].'://'. Yii::$app->params['siteAddress']?>/politika/" class="footer_pc _link">Политика конфиденциальности</a>
                         </div>
                         <div class="footer_nav">
                             <ul class="footer_nav_wrap">
                                 <li>
                                     <span>Типы заведения</span>
                                     <ul>
-                                        <?php $slices_arr = [
-                                            'restoran' => 'Рестораны',
-                                            'kafe' => 'Кафе',
-                                            'loft' => 'Лофты',
-                                            'veranda' => 'Веранды',
-                                            'otel' => 'Отели'
-                                        ]; ?>
-                                        <?php foreach ($slices_arr as $alias => $name) { ?>
-                                            <li><a href="/catalog/<?= $alias ?>/"><?= $name ?></a></li>
+                                        <?php
+                                        $kindArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                                            return $meta['type'] == 'kind';
+                                        });
+                                        foreach ($kindArr as $alias => $meta) { ?>
+                                            <li><a href="/catalog/<?= $alias ?>/"><?= $meta['name'] ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
                                 <li>
                                     <span>Особенности</span>
                                     <ul>
-                                        <?php foreach ([
-                                            'za-gorodom' => 'День рождения за городом',
-                                            'svoy-alko' => 'Со своим алкоголем'
-                                            ] as $type_alias => $type_name) { ?>
-                                            <li><a href="/catalog/<?php echo $type_alias; ?>/"><?php echo $type_name; ?></a></li>
+                                        <?php
+                                        $featureArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                                            return $meta['type'] == 'feature';
+                                        });
+                                        foreach ($featureArr as $type_alias => $meta) { ?>
+                                            <li><a href="/catalog/<?= $type_alias ?>/"><?= $meta['name'] ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>

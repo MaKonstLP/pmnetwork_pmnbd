@@ -6,7 +6,9 @@
 	display: none;
 	justify-content: center;
 	align-items: center;
-	overflow: auto;
+	&:not(.popup_phone_wrap){
+		overflow: auto;
+	}
 
 	&._active{
 		display: flex;

@@ -14,20 +14,26 @@ use common\models\Filter;
 use common\models\Seo;
 use common\models\Slices;
 use frontend\modules\pmnbd\models\ElasticItems;
+use yii\helpers\ArrayHelper;
 
 class ListingController extends BaseFrontendController
 {
-	protected $per_page = 300;
+	protected $per_page = 36;
+
+	public const BREADCRUMB_SOLO_PARAM_PRIORITY = ['mesto', 'vmestimost', 'chek', 'dopolnitelno'];
 
 	public $filter_model,
 		$slices_model;
 
 	public function beforeAction($action)
 	{
-		$this->filter_model = Filter::find()->with('items')->where(['active' => 1])->orderBy(['sort' => SORT_ASC])->all();
-		$this->slices_model = Slices::find()->all();
+		if (!parent::beforeAction($action)) {
+			return false;
+		}
+		$this->filter_model = Yii::$app->params['filter_model'];
+		$this->slices_model = Yii::$app->params['slices_model'];
 
-		return parent::beforeAction($action);
+		return true;
 	}
 
 	public function actionSlice($slice)
@@ -35,10 +41,9 @@ class ListingController extends BaseFrontendController
 		$slice_obj = new QueryFromSlice($slice);
 		if ($slice_obj->flag) {
 			$this->view->params['menu'] = $slice;
-			$params = $this->parseGetQuery($slice_obj->params, Filter::find()->with('items')->orderBy(['sort' => SORT_ASC])->all(), $this->slices_model);
+			$params = $this->parseGetQuery($slice_obj->params, $this->filter_model, $this->slices_model);
 			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
-
 			return $this->actionListing(
 				$page 			=	$params['page'],
 				$per_page		=	$this->per_page,
@@ -59,12 +64,14 @@ class ListingController extends BaseFrontendController
 		if (count($getQuery) > 0) {
 			$params = $this->parseGetQuery($getQuery, $this->filter_model, $this->slices_model);
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+			// print_r($params);die;
+
 
 			return $this->actionListing(
 				$page 			=	$params['page'],
 				$per_page		=	$this->per_page,
 				$params_filter	= 	$params['params_filter'],
-				$breadcrumbs 	=	Breadcrumbs::get_breadcrumbs(1),
+				$breadcrumbs 	=	isset($params['crumb_part']) ? Breadcrumbs::get_query_crumbs($params['crumb_part']) : Breadcrumbs::get_breadcrumbs(2),
 				$canonical 		= 	$canonical
 			);
 		} else {
@@ -74,7 +81,7 @@ class ListingController extends BaseFrontendController
 				$page 			=	1,
 				$per_page		=	$this->per_page,
 				$params_filter	= 	[],
-				$breadcrumbs 	= 	Breadcrumbs::get_breadcrumbs(1),
+				$breadcrumbs 	= 	[],
 				$canonical 		= 	$canonical
 			);
 		}
@@ -130,11 +137,15 @@ class ListingController extends BaseFrontendController
 			'current' => $params['page'],
 		]);
 
-		substr($params['listing_url'], 0, 1) == '?' ? $breadcrumbs = Breadcrumbs::get_breadcrumbs(1) : $breadcrumbs = Breadcrumbs::get_breadcrumbs(2);
-		$slice_url = ParamsFromQuery::isSlice(json_decode($_GET['filter'], true));
+		$slice_url = ParamsFromQuery::isSlice(json_decode($_GET['filter'], true), $this->slices_model);
 		$seo_type = $slice_url ? $slice_url : 'listing';
+
 		$seo = $this->getSeo($seo_type, $params['page'], $items->total);
-		$seo['breadcrumbs'] = $breadcrumbs;
+		
+		$seo['breadcrumbs'] = [];
+		if(!empty($params['params_filter'])) {
+			$seo['breadcrumbs'] = isset($params['crumb_part']) ? Breadcrumbs::get_query_crumbs($params['crumb_part']) : Breadcrumbs::get_breadcrumbs(2);
+		} 
 
 		$title = $this->renderPartial('//components/generic/title.twig', array(
 			'seo' => $seo,
@@ -184,12 +195,32 @@ class ListingController extends BaseFrontendController
 			$return['page'] = 1;
 		}
 
-		$temp_params = new ParamsFromQuery($getQuery, $filter_model, $this->slices_model);
-
+		$temp_params = new ParamsFromQuery($getQuery, $filter_model, $slices_model);
 		$return['params_api'] = $temp_params->params_api;
 		$return['params_filter'] = $temp_params->params_filter;
 		$return['listing_url'] = $temp_params->listing_url;
 		$return['canonical'] = $temp_params->canonical;
+
+		if (count($temp_params->params_filter) > 1) {
+			// print_r($temp_params->params_filter);die;
+			//если в фильтре есть один единичный параметр то делаем из него крошку согласну приоритета
+			foreach (self::BREADCRUMB_SOLO_PARAM_PRIORITY as $filterName) {
+				if ( //если в get query есть текущий параметр и его значение в одном экземпляре
+					($filterItemIds = $temp_params->params_filter[$filterName] ?? null)
+					&& (count($filterItemIds) == 1)
+					&& ($filterItemId = $filterItemIds[0])
+					//и если есть соответствующий Slice
+					&& ($sliceAlias = ParamsFromQuery::isSlice([$filterName => $filterItemId], $slices_model))
+					//и если есть нужный Filter
+					&& ($filterItems = ArrayHelper::map($filter_model, 'alias', 'items')[$filterName] ?? null)
+					//и если есть FilterItem соответствующий этому Slice
+					&& ($filterItemName = ArrayHelper::map($filterItems, 'value', 'text')[$filterItemId] ?? null)
+				) {
+					$return['crumb_part'] = [$sliceAlias => $filterItemName];
+					break;
+				}
+			}
+		}
 		return $return;
 	}
 
@@ -207,10 +238,10 @@ class ListingController extends BaseFrontendController
 		$isAnyFilterParamMultiple = count(array_filter($params_filter, function ($params) {
 			return count($params) > 1;
 		})) > 0;
-		if ($page != 1 || $isAnyFilterParamMultiple || count($params_filter) > 2) {
+		if ($page != 1 || $isAnyFilterParamMultiple || count($params_filter) > 1) {
 			$this->view->registerLinkTag(['rel' => 'canonical', 'href' => $canonical], 'canonical');
 		}
-		if ($count < 1 || $isAnyFilterParamMultiple) {
+		if ($count < 1 || $isAnyFilterParamMultiple || count($params_filter) > 1) {
 			$this->view->registerMetaTag(['name' => 'robots', 'content' => 'noindex, nofollow'], 'robots');
 		}
 		$this->view->params['kw'] = $seo['keywords'];

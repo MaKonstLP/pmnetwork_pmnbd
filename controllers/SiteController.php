@@ -18,12 +18,113 @@ use frontend\modules\pmnbd\models\MediaEnum;
 use yii\web\Response;
 use frontend\components\QueryFromSlice;
 use frontend\components\ParamsFromQuery;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends BaseFrontendController
 {
-    const MAIN_FILTERS = ['mesto'];
+    const MAIN_FILTERS = ['mesto']; //, 'dopolnitelno'];
+
+    public $filter_model,
+        $slices_model;
+
+    public function beforeAction($action)
+    {
+        if(!parent::beforeAction($action)) {
+			return false;
+		}
+        $this->filter_model = Yii::$app->params['filter_model'];
+        $this->slices_model = Yii::$app->params['slices_model'];
+
+        return true;
+    }
+
 
     public function actionIndex()
+    {
+        $aggs = ElasticItems::find()->limit(0)->query(
+            ['bool' => ['must' => ['match' => ['restaurant_city_id' => Yii::$app->params['subdomen_id']]]]]
+        )
+            ->addAggregate('types', [
+                'nested' => [
+                    'path' => 'restaurant_types',
+                ],
+                'aggs' => [
+                    'ids' => [
+                        'terms' => [
+                            'field' => 'restaurant_types.id',
+                            'size' => 10000,
+                        ]
+                    ]
+                ]
+            ])->search();
+
+        $mainRestTypesCounts = array_reduce($aggs['aggregations']['types']['ids']['buckets'], function ($acc, $item) {
+            $acc[$item['key']] = $item['doc_count'];
+            return $acc;
+        }, []);
+
+        $items = new ItemsFilterElastic([], 30, 1, false, 'restaurants', new ElasticItems());
+        $mainWidget = $this->renderPartial('//components/generic/listing.twig', [
+            'items' => $items->items
+        ]);
+
+        $filtersItemsForSelect = array_filter($this->filter_model, function ($filter) {
+            return in_array($filter->alias, self::MAIN_FILTERS);
+        });
+        #Фиксированные срезы на главной
+        $mainSlices = [
+            '1500-rub'    => ['name' => 'Недорогие рестораны', 'count' => 0],
+            'veranda'       => ['name' => 'Веранды', 'count' => 0],
+            'loft'          => ['name' => 'Лофты', 'count' => 0],
+            'shater'          => ['name' => 'Шатры', 'count' => 0],
+            'za-gorodom'     => ['name' => 'За городом', 'count' => 0],
+            '20-25-chelovek'  => ['name' => 'Банкет на 20 человек', 'count' => 0],
+            '30-chelovek'     => ['name' => 'Банкет на 30 человек', 'count' => 0],
+            'svoy-alko'     => ['name' => 'Рестораны со своим алкоголем', 'count' => 0],
+        ];
+        foreach ($mainSlices as $alias => $sliceTexts) {
+            $slice_obj = new QueryFromSlice($alias);
+            $temp_params = new ParamsFromQuery($slice_obj->params, $this->filter_model, $this->slices_model);
+            // $sliceItems = new ItemsFilterElastic($temp_params->params_filter, 1, 1, false, 'restaurants', new ElasticItems());
+            $mainSlices[$alias]['count'] = $temp_params->query_hits;
+        }
+        $mainSlices = array_filter($mainSlices, function ($slice) {
+            return $slice['count'] > 0;
+        });
+
+        $blogPosts = BlogPost::findWithMedia()
+            ->limit(5)->where(['published' => 1])
+            ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
+
+        $totalRests = $items->total;
+
+        $seo = $this->getSeo('index', 1,  $totalRests);
+        $this->setSeo($seo);
+
+        return $this->render('index.twig', [
+            'filters' => $filtersItemsForSelect,
+            'seo' => $seo,
+            'slider' =>  $mainWidget,
+            'count' => $totalRests,
+            'mainRestTypesCounts' => $mainRestTypesCounts,
+            'mainSlices' => $mainSlices,
+            'blogPosts' => $blogPosts,
+            'subdomenObjects' => Yii::$app->params['activeSubdomenRecords']
+        ]);
+    }
+
+    public function actionPage($page)
+    {
+        if(!($pageObj = Pages::findOne(['type' => $page]))) {
+            throw new NotFoundHttpException();
+        }
+        $seo = $this->getSeo($page);
+        $this->setSeo($seo);
+        
+        return $this->render('page.twig',['html' => $pageObj->seoObject->text1]);
+    }
+
+    public function actionFilterSubmit()
     {
         if (
             Yii::$app->request->isAjax
@@ -56,79 +157,8 @@ class SiteController extends BaseFrontendController
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ['redirect' => $redirect];
         }
+        return;
 
-        
-        $items = ElasticItems::find()->limit(30)->query(
-            ['bool' => ['must' => ['match' => ['restaurant_city_id' => Yii::$app->params['subdomen_id']]]]]
-        )
-        ->addAggregate('types', [
-            'nested' => [
-                'path' => 'restaurant_types',
-            ],
-            'aggs' => [
-                'ids' => [
-                    'terms' => [
-                        'field' => 'restaurant_types.id',
-                        'size' => 10000,
-                    ]
-                ]
-            ]
-        ])->search();
-
-        $mainRestTypesCounts = array_reduce($items['aggregations']['types']['ids']['buckets'], function ($acc, $item) {
-            $acc[$item['key']] = $item['doc_count'];
-            return $acc;
-        }, []);
-
-        $mainWidget = $this->renderPartial('//components/generic/listing.twig', [
-            'items' => $items['hits']['hits']
-        ]);
-        
-        $totalRests = $items['hits']['total'];
-        $seo = $this->getSeo('index', 1,  $totalRests);
-        $this->setSeo($seo);
-
-        $filter_model = Filter::find()->where(['active' => true])->with('items')->orderBy('sort')->all();
-        $slices_model = Slices::find()->all();
-         $filtersItemsForSelect = array_filter($filter_model, function ($filter) {
-            return in_array($filter->alias, self::MAIN_FILTERS);
-        });
-        #Фиксированные срезы на главной
-        $mainSlices = [
-            '1500-rub'    => ['name' => 'Недорогие рестораны', 'count' => 0],
-            'veranda'       => ['name' => 'Веранды', 'count' => 0],
-            'loft'          => ['name' => 'Лофты', 'count' => 0],
-            'shater'          => ['name' => 'Шатры', 'count' => 0],
-            '15-chelovek'     => ['name' => 'Банкет на 15 человек', 'count' => 0],
-            '20-25-chelovek'  => ['name' => 'Банкет на 20 человек', 'count' => 0],
-            '30-chelovek'     => ['name' => 'Банкет на 30 человек', 'count' => 0],
-            'svoy-alko'     => ['name' => 'Рестораны со своим алкоголем', 'count' => 0],
-        ];
-        foreach ($mainSlices as $alias => $sliceTexts) {
-            $slice_obj = new QueryFromSlice($alias);
-            $temp_params = new ParamsFromQuery($slice_obj->params, $filter_model, $slices_model);
-            $sliceItems = new ItemsFilterElastic($temp_params->params_filter, 1, 1, false, 'restaurants', new ElasticItems());
-            $mainSlices[$alias]['count'] = $sliceItems->total;
-        }
-        $mainSlices = array_filter($mainSlices, function($slice) {
-            return $slice['count'] > 0;
-        });
-
-        $blogPosts = BlogPost::findWithMedia()
-        ->limit(5)->where(['published' => 1])
-        ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
-
-
-        return $this->render('index.twig', [
-            'filters' => $filtersItemsForSelect,
-            'seo' => $seo,
-            'slider' =>  $mainWidget,
-            'count' => $totalRests,
-            'mainRestTypesCounts' => $mainRestTypesCounts,
-            'mainSlices' => $mainSlices,
-            'blogPosts' => $blogPosts,
-            'subdomenObjects' => Yii::$app->params['activeSubdomenRecords']
-        ]);
     }
 
     public function actionError()
@@ -160,17 +190,6 @@ class SiteController extends BaseFrontendController
         $this->view->title = $seo['title'];
         $this->view->params['desc'] = $seo['description'];
         $this->view->params['kw'] = $seo['keywords'];
-    }
-
-    public function actionUp()
-    {
-        /* foreach (SubdomenPages::find()->all() as $key => $value) {
-            $value->delete();
-        } */
-        // Pages::createSiteObjects();
-        // SubdomenPages::createSiteObjects();
-        Restaurants::createSiteObjects();
-
     }
 
 }

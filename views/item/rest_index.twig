@@ -72,7 +72,7 @@
                 {% for image in item.restaurant_images%}
                     <div class="object swiper-slide">
                         <div class="object_img">
-                            <img src="{{ image.realpath }}=w800-h600-l100" data-gallery-img-view/>
+                            <img src="{{ image.waterpath }}=w800-h600-l100" data-gallery-img-view/>
                         </div>
                     </div>
                 {% endfor %}
@@ -159,7 +159,7 @@
             <div class="rest_desc_text">
                 <div class="rest_desc_item seo_text" data-seo-text>
                     <p class="rest_desc_title">Описание</p>
-                    <p class="rest_desc_value">{{seo.text_1|striptags}}</p>
+                    <div class="rest_desc_value">{{seo.text_1|raw}}</div>
                     <div class="seo_text_control" data-seo-control>
                         <p class="_link">Показать полностью</p>
                     </div>
