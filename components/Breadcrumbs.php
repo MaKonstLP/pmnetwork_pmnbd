@@ -37,7 +37,7 @@ class Breadcrumbs
     public static function get_rooom_crumbs($rest)
     {
         return array_merge(
-            self::get_breadcrumbs(2),
+            self::get_restaurant_crumbs($rest),
             ["/catalog/restoran-$rest->restaurant_slug/" => "«{$rest->restaurant_name}»"]
         );
     }
@@ -70,8 +70,11 @@ class Breadcrumbs
     {
         $filter_model = Yii::$app->params['filter_model'];
         $restTypesSlicesCrumbs = array_reduce($rest->restaurant_types, function ($acc, $restTypeMeta) use ($filter_model) {
+            $restTypeId = $restTypeMeta['id'];
+            //если ресторанный комплекс, добавляем крошку на Рестораны
+            if($restTypeId == 8) $restTypeId = 1;
             if (
-                ($restTypeSlice = RestaurantTypeSlice::find()->with('slice')->with('restaurantType')->where(['restaurant_type_value' => $restTypeMeta['id']])->one())
+                ($restTypeSlice = RestaurantTypeSlice::find()->with('slice')->with('restaurantType')->where(['restaurant_type_value' => $restTypeId])->one())
                 && ($sliceObj = $restTypeSlice->slice)
                 && ($filterItemObj = $sliceObj->getFilterItem($filter_model))
             ) {

@@ -1,8 +1,13 @@
-<div class="breadcrumbs">
+<ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
 	{% for link,name in seo.breadcrumbs %}
-		<a class="breadcrumbs_item" href="{{link}}">{{name}}</a>
+		<li class="breadcrumbs_item"  itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
+			<a itemprop="item" typeof="WebPage" href="{{link}}">
+				<span itemprop="name">{{name}}</span>
+				<meta itemprop="position" content="{{loop.index}}">
+			</a>
+		</li>
 	{% endfor %}
-</div>
+</ul>
 <div class="title">
 	<h1>{{seo.h1}}</h1>
 	{# <!--div class="title_desc"><p>{{seo.desc}}</p></div--> #}
