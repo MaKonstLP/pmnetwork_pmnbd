@@ -3,9 +3,8 @@
     <div class="content_block" data-listing-title>
         {{ this.render('//components/generic/item_title.twig', {'seo':seo}) | raw }}
     </div>
-    <pre>
 
-</pre>
+    {% if item.images %}
     <div class="object_gallery_wrap">
         <div class="listing_widget_arrow _prev"></div>
         <div class="listing_widget_arrow _next"></div>
@@ -14,7 +13,7 @@
                 {% for image in item.images%}
                     <div class="object swiper-slide">
                         <div class="object_img">
-                           <img src="{{ image.waterpath }}=w746-h498-l95" data-gallery-img-view/>
+                           <img src="{{ Declension.get_image_src(image.waterpath~'=w746-h498-l95') }}" data-gallery-img-view/>
                        </div>
                     </div>
                 {% endfor %}
@@ -27,12 +26,13 @@
             <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                 {% for image in item.images%}
                     <div class="object swiper-slide">
-                       <img src="{{ image.realpath }}=w150-h90-l80"/>
+                       <img src="{{ Declension.get_image_src(image.realpath~'=w150-h90-l80') }}"/>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="content_block object_desc_wrap">
         <div class="object_desc">
@@ -71,7 +71,7 @@
                         <p class="object_book_phone object_meta_value">
                             <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
                         </p>
-                        <div class="object_book_hidden_button" data-popup-phone>Показать номер</div>
+                        <div class="object_book_hidden_button" data-popup-phone data-popup-phone data-target="{{app.params.subdomen != 'birthday-place' ? 'lid4_zal_gorod' : 'lid3_zal_msk'}}">Показать номер</div>
                         <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                             <div class="popup_phone">
                                 <div class="form_close" data-close-popup></div>
@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="object_form">
-                {{ this.render('//components/generic/form.twig',{'title': 'Хотите день рождения в этом зале?', 'type' : 'room'}) | raw }}
+                {{ this.render('//components/generic/form.twig',{'title': 'Хотите день рождения в этом зале?', 'type' : 'room', 'target': 'zal'}) | raw }}
             </div>
         </div>
     </div>
@@ -101,10 +101,10 @@
                 <div class="same_object">
                     <div class="same_object_img">
                         <div class="same_object_img_item">
-                            <img src="{{same_object.images[0].realpath ? same_object.images[0].realpath~'=w250-h170-l95' : same_object.cover_url}}">
+                            <img src="{{Declension.get_image_src(same_object.images[0].realpath ? same_object.images[0].realpath~'=w250-h170-l95' : same_object.cover_url) }}">
                         </div>
                         <div class="same_object_img_item">
-                            <img src="{{same_object.images[1].realpath ? same_object.images[1].realpath~'=w250-h170-l95' : same_object.cover_url}}">
+                            <img src="{{Declension.get_image_src(same_object.images[1].realpath ? same_object.images[1].realpath~'=w250-h170-l95' : same_object.cover_url) }}">
                         </div>
                     </div>
                     <div class="same_object_desc">
@@ -135,7 +135,7 @@
                         <div class="other_object swiper-slide">
                             <div class="other_object_img">
                                 <a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">
-                                    <img src="{{ other_room.cover_url|replace({'w445-h302-n-l95': 'w305-h200-s-l95'}) }}">
+                                    <img src="{{ Declension.get_image_src(other_room.cover_url|replace({'w445-h302-n-l95': 'w305-h200-s-l95'})) }}">
                                 </a>
                             </div>
                             <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>

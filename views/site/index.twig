@@ -1,4 +1,4 @@
-{% set  mainRestTypes = mainRestTypesCounts.1 * mainRestTypesCounts.3 * mainRestTypesCounts.4 * mainRestTypesCounts.36 * mainRestTypesCounts.30 %}
+{% set  mainRestTypes = mainRestTypesCounts|length %}
 <div data-page-type="index" {{mainRestTypes > 0 ? '' : 'class=" _short"'}}>
 	<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}">
 		<img src="{{seo.media["header-image"]|first.src}}" alt="{{seo.media['header-image']|first.alt}}">
@@ -22,67 +22,23 @@
 				<span class="type_room_choose">Тип площадки</span>
 				<span class="choose" data-selected-filter-item=""></span>
 				<div class="main_search_type_room_list">
-					{% for mainfilter in filters %}
-						{% for item in mainfilter.items %}
-							<p data-filter-item="{{item.filter_id}},{{item.value}}">{{item.text}}</p>
-						{% endfor %}
-					{% endfor %}
+					{{ this.render('//components/filter/homepage_rest-types_list.twig', { 'filters': filters }) | raw }}
 				</div>
 			</div>
-			<span class="main_search_submit">Подобрать</span>
+			<span class="main_search_submit" data-target="pdbor_2">Подобрать</span>
 		</div>
 
 		<div class="main_rectangle_wrap{{mainRestTypes > 0 ? '' : ' _short'}}">
-			{% if  mainRestTypesCounts.1 > 0 %}
-			<div class="main_rectangle">
-				<div class="main_rectangle_1"></div>
-				<div class="main_rectangle_2"></div>
-				<a href="/catalog/restoran/">
-					<div class="main_rectangle_count">{{mainRestTypesCounts.1}}</div>
-					<div class="main_rectangle_type">ресторан{{Declension.get_num_ending(mainRestTypesCounts.1,['','а','ов'])}}</div>
-				</a>
-			</div>
-			{% endif %}
-			{% if  mainRestTypesCounts.3 > 0 %}
-			<div class="main_rectangle">
-				<div class="main_rectangle_1"></div>
-				<div class="main_rectangle_2"></div>
-				<a href="/catalog/kafe/">
-					<div class="main_rectangle_count">{{mainRestTypesCounts.3}}</div>
-					<div class="main_rectangle_type">кафе</div>
-				</a>
-			</div>
-			{% endif %}
-			{% if  mainRestTypesCounts.4 > 0 %}
-			<div class="main_rectangle">
-				<div class="main_rectangle_1"></div>
-				<div class="main_rectangle_2"></div>
-				<a href="/catalog/bar/">
-					<div class="main_rectangle_count">{{mainRestTypesCounts.4}}</div>
-					<div class="main_rectangle_type">бар{{Declension.get_num_ending(mainRestTypesCounts.4,['','а','ов'])}}</div>
-				</a>
-			</div>
-			{% endif %}
-			{% if  mainRestTypesCounts.36 > 0 %}
-			<div class="main_rectangle">
-				<div class="main_rectangle_1"></div>
-				<div class="main_rectangle_2"></div>
-				<a href="/catalog/loft/">
-					<div class="main_rectangle_count">{{mainRestTypesCounts.36}}</div>
-					<div class="main_rectangle_type">лофт{{Declension.get_num_ending(mainRestTypesCounts.36,['','а','ов'])}}</div>
-				</a>
-			</div>
-			{% endif %}
-			{% if  mainRestTypesCounts.30 > 0 %}
-			<div class="main_rectangle">
-				<div class="main_rectangle_1"></div>
-				<div class="main_rectangle_2"></div>
-				<a href="/catalog/veranda/">
-					<div class="main_rectangle_count">{{mainRestTypesCounts.30}}</div>
-					<div class="main_rectangle_type">веранд{{Declension.get_num_ending(mainRestTypesCounts.30,['а','ы',''])}}</div>
-				</a>
-			</div>
-			{% endif %}
+			{% for item in mainRestTypesCounts %}
+				<div class="main_rectangle">
+					<div class="main_rectangle_1"></div>
+					<div class="main_rectangle_2"></div>
+					<a href="/catalog/{{item.alias}}/">
+						<div class="main_rectangle_count">{{item.count}}</div>
+						<div class="main_rectangle_type">{{item.plural}}</div>
+					</a>
+				</div>
+			{% endfor %}
 		</div>
 	</div>
 
@@ -103,7 +59,7 @@
 
 	<div class="content_info">
 		<div class="content_info_top">
-			<div class="content_info_block">		
+			<div class="content_info_block">
 				<img class="main_girl" src="/img/main_girl.png">
 				<img class="main_girl_mobile" src="/img/main_girl_mobile.png">
 				<div class="content_info_top_right">
@@ -128,47 +84,47 @@
 	</div>
 
 	{% if blogPosts %}
-	<div class="main_blog">
-		<h3>Последние записи блога</h2>
-		<a class="all_articles" href="/blog/">Все статьи</a>
-		<div class="content_block">
-			{% for key,post in blogPosts %}
-			<div class="blog_item blog_item_{{key + 1}}">
-				<div class="blog_img">
-					<a href="{{ post.getUrl() }}"><img src="{{ post.getFileData('image').src }}"></a>
-				</div>
-				<div class="blog_text">
-					<p class="blog_date">{{ post.published_at }}</p>
-					<a href="{{ post.getUrl() }}">
-						<p class="blog_title">{{ post.name }}</p>
-					</a>
-					<p class="blog_description">{{ post.short_intro }}</p>
-				</div>
+		<div class="main_blog">
+			<h3>Последние записи блога</h2>
+			<a class="all_articles" href="/blog/">Все статьи</a>
+			<div class="content_block">
+				{% for key,post in blogPosts %}
+					<div class="blog_item blog_item_{{key + 1}}">
+						<div class="blog_img">
+							<a href="{{ post.getUrl() }}"><img src="{{ post.getFileData('image').src }}"></a>
+						</div>
+						<div class="blog_text">
+							<p class="blog_date">{{ post.published_at }}</p>
+							<a href="{{ post.getUrl() }}">
+								<p class="blog_title">{{ post.name }}</p>
+							</a>
+							<p class="blog_description">{{ post.short_intro }}</p>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
-			{% endfor %}
 		</div>
-	</div>
 	{% endif %}
 
 	{% if mainSlices %}
-	<div class="main_podborki">
-		<h3>Подборки заведений</h2>
-		<div class="content_block">
-			{% for alias, slice in mainSlices %}
-			<div class="restaurant_item">
-				<div class="restaurant_img">
-					<a href="/catalog/{{alias}}/">
-						<img src="/img/restaurants/restaurant_{{alias}}.jpg">
-					</a>
-				</div>
-				<div class="restaurant_text">
-					<a href="/catalog/{{alias}}/">{{slice.name}}</a>
-					<span>{{slice.count}}</span>
-				</div>
+		<div class="main_podborki">
+			<h3>Подборки заведений</h2>
+			<div class="content_block">
+				{% for alias, slice in mainSlices %}
+					<div class="restaurant_item">
+						<div class="restaurant_img">
+							<a href="/catalog/{{alias}}/">
+								<img src="/img/restaurants/restaurant_{{alias}}.jpg">
+							</a>
+						</div>
+						<div class="restaurant_text">
+							<a href="/catalog/{{alias}}/">{{slice.name}}</a>
+							<span>{{slice.count}}</span>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
-			{% endfor %}
 		</div>
-	</div>
 	{% endif %}
 
 	<div class="bottom_block">
@@ -180,7 +136,7 @@
 		</div>
 	</div>
 
-	{{ this.render('//components/generic/form.twig',{'title': 'Поможем выбрать зал на день рождения'}) | raw }}
+	{{ this.render('//components/generic/form.twig',{'title': 'Поможем выбрать зал на день рождения', 'target': 'podval_gl'}) | raw }}
 
 
 </div>

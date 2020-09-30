@@ -20,8 +20,6 @@ class ListingController extends BaseFrontendController
 {
 	protected $per_page = 36;
 
-	public const BREADCRUMB_SOLO_PARAM_PRIORITY = ['mesto', 'vmestimost', 'chek', 'dopolnitelno'];
-
 	public $filter_model,
 		$slices_model;
 
@@ -66,12 +64,11 @@ class ListingController extends BaseFrontendController
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
 			// print_r($params);die;
 
-
 			return $this->actionListing(
 				$page 			=	$params['page'],
 				$per_page		=	$this->per_page,
 				$params_filter	= 	$params['params_filter'],
-				$breadcrumbs 	=	isset($params['crumb_part']) ? Breadcrumbs::get_query_crumbs($params['crumb_part']) : Breadcrumbs::get_breadcrumbs(2),
+				$breadcrumbs 	=	Breadcrumbs::get_query_crumbs($params['params_filter'], $this->filter_model, $this->slices_model),
 				$canonical 		= 	$canonical
 			);
 		} else {
@@ -144,7 +141,7 @@ class ListingController extends BaseFrontendController
 		
 		$seo['breadcrumbs'] = [];
 		if(!empty($params['params_filter'])) {
-			$seo['breadcrumbs'] = isset($params['crumb_part']) ? Breadcrumbs::get_query_crumbs($params['crumb_part']) : Breadcrumbs::get_breadcrumbs(2);
+			$seo['breadcrumbs'] = Breadcrumbs::get_query_crumbs($params['params_filter'], $this->filter_model, $this->slices_model);
 		} 
 
 		$title = $this->renderPartial('//components/generic/title.twig', array(
@@ -201,26 +198,6 @@ class ListingController extends BaseFrontendController
 		$return['listing_url'] = $temp_params->listing_url;
 		$return['canonical'] = $temp_params->canonical;
 
-		if (count($temp_params->params_filter) > 1) {
-			// print_r($temp_params->params_filter);die;
-			//если в фильтре есть один единичный параметр то делаем из него крошку согласну приоритета
-			foreach (self::BREADCRUMB_SOLO_PARAM_PRIORITY as $filterName) {
-				if ( //если в get query есть текущий параметр и его значение в одном экземпляре
-					($filterItemIds = $temp_params->params_filter[$filterName] ?? null)
-					&& (count($filterItemIds) == 1)
-					&& ($filterItemId = $filterItemIds[0])
-					//и если есть соответствующий Slice
-					&& ($sliceAlias = ParamsFromQuery::isSlice([$filterName => $filterItemId], $slices_model))
-					//и если есть нужный Filter
-					&& ($filterItems = ArrayHelper::map($filter_model, 'alias', 'items')[$filterName] ?? null)
-					//и если есть FilterItem соответствующий этому Slice
-					&& ($filterItemName = ArrayHelper::map($filterItems, 'value', 'text')[$filterItemId] ?? null)
-				) {
-					$return['crumb_part'] = [$sliceAlias => $filterItemName];
-					break;
-				}
-			}
-		}
 		return $return;
 	}
 

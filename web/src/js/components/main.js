@@ -26,9 +26,12 @@ export default class Main {
             $('.popup_wrap .popup_img').show();
             $('.popup_wrap').addClass('_active');
         });*/
-        
+
         $('body').on('click', '[data-popup-phone]', function () {
-            $('.popup_wrap .popup_phone').css({'top' : $(this).position().top, 'left' : $(this).position().left});
+            $('.popup_wrap .popup_phone').css({
+                top: $(this).position().top,
+                left: $(this).position().left,
+            });
             $('.popup_phone_wrap').addClass('_active');
         });
 
@@ -65,24 +68,23 @@ export default class Main {
             }
         });
 
-        $('[data-seo-text]').each(function(){
-            if ($(this).height()>200 && $(window).width()<600) {
+        $('[data-seo-text]').each(function () {
+            if ($(this).height() > 200 && $(window).width() < 600) {
                 $(this).addClass('_hidden');
             }
-        })
+        });
 
         //НЕ ПОКАЗЫВАТЬ ЕЩЕ ЕСЛИ НЕТ РЕСТОРАНОВ
-        if($('body').find('[data-page-increase="1"]').length == 0) {
+        if ($('body').find('[data-page-increase="1"]').length == 0) {
             $('[data-append-items]').hide();
         }
-        
 
         $(window).on('resize', function () {
-            $('[data-seo-text]').each(function(){
-                if ($(this).height()>200 && $(window).width()<600) {
+            $('[data-seo-text]').each(function () {
+                if ($(this).height() > 200 && $(window).width() < 600) {
                     $(this).addClass('_hidden');
                 }
-            })
+            });
             if ($(window).width() <= 768) {
                 $('.fast_filters').each(function () {
                     if (!$(this).hasClass('mCustomScrollbar')) {
@@ -102,40 +104,45 @@ export default class Main {
             }
         });
 
-        $('.main_search_city_list  p').on('click', function () {
-            $('.main_search_city_input').val($(this).html().replace('<span>','').replace('</span>',''));
-            $('[data-selected-city-id]').data('selected-city-id', $(this).data('city-id'));
-            //$(".main_search_city_list").hide();
-        });
-
-        let searchInCityList = function($input){
+        let searchInCityList = function ($input) {
             let word = $input.val();
             let wrap = $input.closest('[data-search-wrap]');
-            wrap.find('[data-search-city]').each(function(){
-                let city_name = $(this).html().replace('<span>','').replace('</span>','');
-                let $substr = city_name.toLowerCase().search(word.toLowerCase());
-                let char_wrap = $(this).closest('[data-search-city_in_char_wrap]');
+            wrap.find('[data-search-city]').each(function () {
+                let city_name = $(this)
+                    .html()
+                    .replace('<span>', '')
+                    .replace('</span>', '');
+                let $substr = city_name
+                    .toLowerCase()
+                    .search(word.toLowerCase());
+                let char_wrap = $(this).closest(
+                    '[data-search-city_in_char_wrap]'
+                );
                 let char_cities = char_wrap.find('[data-search-city_in_char]');
                 if (word != '' && $substr == -1) {
                     $(this).html(city_name);
                     $(this).hide();
-                    if (char_cities.children(':visible').length < 1) char_wrap.hide();
+                    if (char_cities.children(':visible').length < 1)
+                        char_wrap.hide();
                 } else {
-                    let $str1 = city_name.substring(0,$substr);
-                    let $str2 = city_name.substring($substr, $substr+word.length);
-                    let $str3 = city_name.substring($substr+word.length);
-                    $(this).html($str1+'<span>'+$str2+'</span>'+$str3);
+                    let $str1 = city_name.substring(0, $substr);
+                    let $str2 = city_name.substring(
+                        $substr,
+                        $substr + word.length
+                    );
+                    let $str3 = city_name.substring($substr + word.length);
+                    $(this).html($str1 + '<span>' + $str2 + '</span>' + $str3);
                     $(this).show();
                     char_wrap.show();
                 }
-            })
-        }
+            });
+        };
 
         $('[data-search-input]')
             .on('focus', function () {
                 searchInCityList($(this));
             })
-            .on('keyup', function(){
+            .on('keyup', function () {
                 searchInCityList($(this));
             });
 
@@ -149,35 +156,67 @@ export default class Main {
                 }, 100);
             });
 
-        let searchInCityList1 = function($input){
+        let searchInCityList1 = function ($input) {
             let word = $input.val();
-            $('.main_search_city_list p').each(function(){
-                let city_name = $(this).html().replace('<span>','').replace('</span>','');
-                let $substr = city_name.toLowerCase().search(word.toLowerCase());
+            $('.main_search_city_list p').each(function () {
+                let city_name = $(this)
+                    .html()
+                    .replace('<span>', '')
+                    .replace('</span>', '');
+                let $substr = city_name
+                    .toLowerCase()
+                    .search(word.toLowerCase());
                 if (word != '' && $substr == -1) {
                     $(this).html(city_name);
                     $(this).hide();
                 } else {
-                    let $str1 = city_name.substring(0,$substr);
-                    let $str2 = city_name.substring($substr, $substr+word.length);
-                    let $str3 = city_name.substring($substr+word.length);
-                    $(this).html($str1+'<span>'+$str2+'</span>'+$str3);
+                    let $str1 = city_name.substring(0, $substr);
+                    let $str2 = city_name.substring(
+                        $substr,
+                        $substr + word.length
+                    );
+                    let $str3 = city_name.substring($substr + word.length);
+                    $(this).html($str1 + '<span>' + $str2 + '</span>' + $str3);
                     $(this).show();
                 }
-            })
-        }
+            });
+        };
 
+        $('.main_search_city_list').on('click', 'p', function () {
+            const cityId = $(this).data('city-id');
+            const onSuccess = ({ selectsHtml = null }) => {
+                if (!selectsHtml) return;
+                $('.main_search_city_input').val(
+                    $(this).html().replace('<span>', '').replace('</span>', '')
+                );
+                $('[data-selected-city-id]').data('selected-city-id', cityId);
+                $('.main_search_type_room_list').html(selectsHtml);
+                /*  $('.main_search_type_room_list').mCustomScrollbar({
+                    theme: 'dark-thick',
+                }); */
+            };
+            const onError = (err) => {};
+            $.ajax({
+                url: '/site/filter-city/',
+                data: { cityId },
+                cache: false,
+                success: onSuccess,
+                error: onError,
+            });
+        });
 
-
-        $('.main_search_type_room_list  p').on('click', function () {
+        $('.main_search_type_room_list').on('click', 'p', function () {
             $('.type_room_choose').html($(this).html());
             $('.type_room_choose').css('color', '#000');
-            $('[data-selected-filter-item]').data('selected-filter-item', $(this).data('filter-item'));
+            $('[data-selected-filter-item]').data(
+                'selected-filter-item',
+                $(this).data('filter-item')
+            );
         });
 
         $('.main_search_submit').on('click', (e) => {
             $.ajax({
-				url: '/site/filter-submit/',
+                url: '/site/filter-submit/',
                 data: {
                     city_id: $('[data-selected-city-id]').data(
                         'selected-city-id'
@@ -185,12 +224,12 @@ export default class Main {
                     filter: $('[data-selected-filter-item]').data(
                         'selected-filter-item'
                     ),
-				},
-				cache: false,
-				success: (res, text, xhr) => {
-					if(!res.redirect) return;
-					window.location.href = res.redirect;
-				},
+                },
+                cache: false,
+                success: (res, text, xhr) => {
+                    if (!res.redirect) return;
+                    window.location.href = res.redirect;
+                },
             });
         });
 
@@ -209,10 +248,13 @@ export default class Main {
                     $(this).find('.choose').addClass('_expand');
                 }
             } else {
-                if ($('.city_list_wrap').hasClass('__visible') && $e_city_list.length < 1) {
+                if (
+                    $('.city_list_wrap').hasClass('__visible') &&
+                    $e_city_list.length < 1
+                ) {
                     $('.city_list_wrap').removeClass('__visible');
                     $(this).find('.choose').removeClass('_expand');
-                } 
+                }
             }
             if (
                 $el.is('.main_search_type_room') ||
@@ -265,23 +307,39 @@ export default class Main {
 
         $('.main_rectangle_1').hover(
             function () {
-                $(this).css('background-color','#FFC24A');
-                $(this).siblings('.main_rectangle_2').css('visibility', 'visible');
+                $(this).css('background-color', '#FFC24A');
+                $(this)
+                    .siblings('.main_rectangle_2')
+                    .css('visibility', 'visible');
             },
             function () {
-                $(this).css('background-color','#FFAD0F');
-                $(this).siblings('.main_rectangle_2').css('visibility', 'hidden');
+                $(this).css('background-color', '#FFAD0F');
+                $(this)
+                    .siblings('.main_rectangle_2')
+                    .css('visibility', 'hidden');
             }
         );
         $('.main_rectangle a').hover(
             function () {
-                $(this).siblings('.main_rectangle_1').css('background-color','#FFC24A');
-                $(this).siblings('.main_rectangle_2').css('visibility', 'visible');
+                $(this)
+                    .siblings('.main_rectangle_1')
+                    .css('background-color', '#FFC24A');
+                $(this)
+                    .siblings('.main_rectangle_2')
+                    .css('visibility', 'visible');
             },
             function () {
-                $(this).siblings('.main_rectangle_1').css('background-color','#FFAD0F');
-                $(this).siblings('.main_rectangle_2').css('visibility', 'hidden');
+                $(this)
+                    .siblings('.main_rectangle_1')
+                    .css('background-color', '#FFAD0F');
+                $(this)
+                    .siblings('.main_rectangle_2')
+                    .css('visibility', 'hidden');
             }
         );
+
+        $('body').on('click', '[data-target]', function(){
+            ym('67719148', 'reachGoal', $(this).data('target'));
+        });
     }
 }

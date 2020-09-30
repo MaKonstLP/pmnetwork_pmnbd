@@ -31,7 +31,7 @@ window.jQuery = $;
 	    	var widget = new Widget();
 	    }
 
-	    if ($('[data-gallery-main-swiper]').length > 0 || $('[data-gallery-blog-swiper]').length > 0) {
+	    if ($('[data-gallery-main-swiper]').length > 0 || $('[data-gallery-blog-swiper]').length > 0 || $('[data-other-objects-swiper]').length > 0 ) {
 	    	var slider = new Slider();
 	    }
 

@@ -15,6 +15,7 @@ export default class Form {
 		this.$formModal = this.$form.parents('body').find('.popup_wrap');
 		this.$formModalMain = this.$formModal.find('.form_main');
 		this.$formSuccess = this.$formModal.find('.form_success');
+		this.target = this.$form.data('form-target');
 		
 		let im_phone = new Inputmask('+7 (999) 999-99-99', {
 			clearIncomplete: true,
@@ -202,6 +203,7 @@ export default class Form {
 		this.$formSuccess.show();
 		this.$formModal.not('._active').addClass('_active');
 		this.reset();
+		ym('67719148', 'reachGoal', this.target);
 		// this.$submitButton.removeClass('button__pending');
 	}
 

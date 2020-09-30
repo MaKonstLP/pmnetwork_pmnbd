@@ -34,6 +34,40 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
     <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
     <?= Html::csrfMetaTags() ?>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m, e, t, r, i, k, a) {
+            m[i] = m[i] || function() {
+                (m[i].a = m[i].a || []).push(arguments)
+            };
+            m[i].l = 1 * new Date();
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(67719148, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/67719148" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179040293-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-179040293-1');
+    </script>
 </head>
 
 <body>
@@ -88,8 +122,8 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     </div>
                 </div>
                 <div class="header_phone">
-                    <a href="tel:+78462057845">8 (846) 205-78-45</a>
-                    <p data-open-popup-form class="_link">Подберите мне зал</p>
+                    <a href="tel:+79252380246" data-target="telefon_1">8 (925) 238-02-46</a>
+                    <p data-open-popup-form class="_link" data-target="podbor_1">Подберите мне зал</p>
                 </div>
             </div>
         </header>
@@ -110,7 +144,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         </a>
                         <div class="footer_info">
                             <p class="footer_copy">© <?php echo date("Y"); ?> Мой день</p>
-                            <a target="_blank" href="<?=Yii::$app->params['siteProtocol'].'://'. Yii::$app->params['siteAddress']?>/politika/" class="footer_pc _link">Политика конфиденциальности</a>
+                            <a target="_blank" href="<?= Yii::$app->params['siteProtocol'] . '://' . Yii::$app->params['siteAddress'] ?>/politika/" class="footer_pc _link">Политика конфиденциальности</a>
                         </div>
                         <div class="footer_nav">
                             <ul class="footer_nav_wrap">
@@ -143,7 +177,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     </div>
                     <div class="footer_block _right">
 
-                        <a class="footer_ph" href="tel:+78462057845">8 (846) 205-78-45</a>
+                        <a class="footer_ph" href="tel:+79252380246" data-target="telefon_2">8 (925) 238-02-46</a>
 
                     </div>
                 </div>
@@ -157,7 +191,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         <div class="popup_layout" data-close-popup></div>
 
         <div class="popup_form">
-            <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'header']) ?>
+            <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'header', 'target' => 'podbor_2']) ?>
         </div>
 
         <div class="popup_img">

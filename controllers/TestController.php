@@ -11,6 +11,7 @@ use common\components\AsyncRenewRestaurants;
 use common\models\FilterItems;
 use common\models\elastic\FilterQueryConstructor;
 use common\models\elastic\FilterQueryConstructorElastic;
+use common\models\Images;
 use common\models\Rooms;
 use frontend\modules\pmnbd\models\SubdomenFilteritem;
 use yii\helpers\ArrayHelper;
@@ -29,7 +30,7 @@ class TestController extends BaseFrontendController
 
 	public function actionIndex()
 	{
-		set_time_limit(600);
+		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		$subdomen_model = Subdomen::find()->all();
 
@@ -42,11 +43,6 @@ class TestController extends BaseFrontendController
 				]				
 			]);
 		}
-		foreach (Rooms::find()->where(['like', 'cover_url', 'no_photo'])->all() as $room) {
-			$room->cover_url = '/img/bd/no_photo_s.png';
-			$room->save();
-		}
-		
 		
 	}
 
@@ -114,10 +110,11 @@ class TestController extends BaseFrontendController
 
 	public function actionRenewelastic()
 	{
-		set_time_limit(300);
+		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		if(ElasticItems::refreshIndex() === true) {
-			// $this->actionSubdomencheck();
+			$this->actionSubdomencheck();
+			$this->actionImagePlaceholder();
 		}
 	}
 
@@ -295,8 +292,18 @@ class TestController extends BaseFrontendController
         return $message->send();
 	}
 	
-	public function actionUp()
+	public function actionImagePlaceholder()
 	{
-		
+		foreach (Rooms::find()->where(['like', 'cover_url', 'no_photo'])->all() as $room) {
+			$room->cover_url = '/img/bd/no_photo_s.png';
+			$room->save();
+		}
+	}
+
+	public function actionUpdate()
+	{
+		foreach (Images::find()->where(['type' => 'rooms'])->all() as $image) {
+			# code...
+		}
 	}
 }

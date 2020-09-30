@@ -30,6 +30,7 @@
 
         &:nth-child(4n+1){
             margin-left: 0;
+
         }
         &.__hide{
             display: none;
@@ -60,12 +61,21 @@
         }
         @media (max-width: 1200px) and (min-width: 768px) {
             width: calc((100% / 3) - 30px);
+            &:nth-child(4n+1){
+                margin: 15px 0 15px 40px;
+            }
+            &:nth-child(3n+1) {
+                margin-left: 0;
+            }
         }
         @media (max-width: 767px){
             width: calc((100% / 1) - 30px);
             margin: 15px auto;
             &:nth-child(4n+1){
-                margin: 15px auto;
+                margin: 15px 0 15px 40px;
+            }
+            &:nth-child(3n+1) {
+                margin-left: 0;
             }
         }
 

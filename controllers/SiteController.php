@@ -11,13 +11,16 @@ use frontend\modules\pmnbd\models\ElasticItems;
 use common\models\elastic\ItemsFilterElastic;
 use common\models\Pages;
 use common\models\Restaurants;
+use common\models\RestaurantsTypes;
 use common\models\Seo;
 use common\models\Subdomen;
 use common\models\SubdomenPages;
+use frontend\components\Declension;
 use frontend\modules\pmnbd\models\MediaEnum;
 use yii\web\Response;
 use frontend\components\QueryFromSlice;
 use frontend\components\ParamsFromQuery;
+use frontend\modules\pmnbd\models\RestaurantTypeSlice;
 use yii\web\NotFoundHttpException;
 
 class SiteController extends BaseFrontendController
@@ -29,9 +32,9 @@ class SiteController extends BaseFrontendController
 
     public function beforeAction($action)
     {
-        if(!parent::beforeAction($action)) {
-			return false;
-		}
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
         $this->filter_model = Yii::$app->params['filter_model'];
         $this->slices_model = Yii::$app->params['slices_model'];
 
@@ -59,9 +62,25 @@ class SiteController extends BaseFrontendController
             ])->search();
 
         $mainRestTypesCounts = array_reduce($aggs['aggregations']['types']['ids']['buckets'], function ($acc, $item) {
-            $acc[$item['key']] = $item['doc_count'];
+            if (
+                $item['doc_count'] > 3 && count($acc) < 5
+                && ($restTypeSlice = RestaurantTypeSlice::find()->with('slice')->with('restaurantType')->where(['restaurant_type_value' => intval($item['key'])])->one())
+                && ($sliceObj = $restTypeSlice->slice)
+                && ($typeObj = $restTypeSlice->restaurantType)
+            ) {
+                $acc[] = [
+                    'alias' => $sliceObj->alias,
+                    'plural' => Declension::get_num_ending($item['doc_count'], array_map('mb_strtolower', [$typeObj->text, $typeObj->plural_2, $typeObj->plural_5])),
+                    'count' => $item['doc_count']
+                ];
+            }
             return $acc;
         }, []);
+
+
+        $mainRestTypesCounts = count($mainRestTypesCounts) >= 3 ? $mainRestTypesCounts : [];
+
+        // print_r($mainRestTypesCounts);die;
 
         $items = new ItemsFilterElastic([], 30, 1, false, 'restaurants', new ElasticItems());
         $mainWidget = $this->renderPartial('//components/generic/listing.twig', [
@@ -115,50 +134,84 @@ class SiteController extends BaseFrontendController
 
     public function actionPage($page)
     {
-        if(!($pageObj = Pages::findOne(['type' => $page]))) {
+        if (!($pageObj = Pages::findOne(['type' => $page]))) {
             throw new NotFoundHttpException();
         }
         $seo = $this->getSeo($page);
         $this->setSeo($seo);
-        
-        return $this->render('page.twig',['html' => $pageObj->seoObject->text1]);
+
+        return $this->render('page.twig', ['html' => $pageObj->seoObject->text1]);
     }
 
     public function actionFilterSubmit()
     {
+        if (!Yii::$app->request->isAjax) throw new NotFoundHttpException();
+
         if (
-            Yii::$app->request->isAjax
-            && ($cityId = Yii::$app->request->get('city_id'))
-            && ($filter = Yii::$app->request->get('filter'))
-        ) {
-            //city_id 123213, filter "6,1" = Filter id,FilterItems value
-            if (
-                count($exploded = explode(',', $filter)) != 2
-                || !($filter = Filter::findOne($exploded[0]))
-            ) return;
+            !($cityId = Yii::$app->request->get('city_id'))
+            || !($filter = Yii::$app->request->get('filter'))
+        )  return ['error' => "invalid get query params"];
 
-            //params {"mesto":5}
-            $slices = Slices::find()->where(['like', 'params', $filter->alias])->all();
-            $resultSliceAlias = null;
-            foreach ($slices as $slice) {
-                $decoded = json_decode($slice->params, true);
-                if ($decoded[$filter->alias] == $exploded[1]) {
-                    $resultSliceAlias = $slice->alias;
-                    break;
-                }
+        //city_id 123213, filter "6,1" = Filter id,FilterItems value
+        if (
+            count($exploded = explode(',', $filter)) != 2
+            || !($filter = Filter::findOne($exploded[0]))
+        ) return ['error' => "unable to find filter"];
+
+        //params {"mesto":5}
+        $slices = Slices::find()->where(['like', 'params', $filter->alias])->all();
+        $resultSliceAlias = null;
+        foreach ($slices as $slice) {
+            $decoded = json_decode($slice->params, true);
+            if ($decoded[$filter->alias] == $exploded[1]) {
+                $resultSliceAlias = $slice->alias;
+                break;
             }
-
-            if (!$resultSliceAlias || !($subdomen = Subdomen::findOne(['city_id' => $cityId]))) return;
-            $subdomenPart = $subdomen->city_id == 4400 ? '' : $subdomen->alias . '.';
-            $redirect = \Yii::$app->params['siteProtocol'] . '://'
-                . $subdomenPart
-                . \Yii::$app->params['siteAddress']
-                . "/catalog/$resultSliceAlias/";
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['redirect' => $redirect];
         }
-        return;
 
+        if (!$resultSliceAlias || !($subdomen = Subdomen::findOne(['city_id' => $cityId]))) return;
+        $subdomenPart = $subdomen->city_id == 4400 ? '' : $subdomen->alias . '.';
+        $redirect = \Yii::$app->params['siteProtocol'] . '://'
+            . $subdomenPart
+            . \Yii::$app->params['siteAddress']
+            . "/catalog/$resultSliceAlias/";
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['redirect' => $redirect];
+    }
+
+    public function actionFilterCity()
+    {
+        if (!Yii::$app->request->isAjax) throw new NotFoundHttpException();
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if (
+            !($cityId = Yii::$app->request->get('cityId'))
+            || !($subdomen = Subdomen::findOne(['city_id' => $cityId]))
+        ) {
+            return ['error' => "unable to find subdomen with city_id $cityId"];
+        }
+
+        $cityFilterModel = Filter::find()
+            ->with(['items' => function ($query) use ($subdomen) {
+                $query->leftJoin(
+                    'subdomen_filteritem',
+                    "subdomen_filteritem.filter_items_id = filter_items.id AND subdomen_filteritem.subdomen_id = {$subdomen->id}"
+                )
+                    ->where("subdomen_filteritem.is_valid=0 OR (subdomen_filteritem.is_valid=1 AND subdomen_filteritem.hits>0)")
+                    ->select('*');
+            }])
+            ->where(['active' => 1])
+            ->orderBy(['sort' => SORT_ASC])
+            ->all();
+
+        $filters = array_filter($cityFilterModel, function ($filter) {
+            return in_array($filter->alias, self::MAIN_FILTERS);
+        });
+
+        return ['selectsHtml' => $this->renderPartial('//components/filter/homepage_rest-types_list.twig', [
+            'filters' => $filters
+        ])];
     }
 
     public function actionError()
@@ -169,13 +222,14 @@ class SiteController extends BaseFrontendController
     public function actionRobots()
     {
         header('Content-type: text/plain');
-        if (Yii::$app->params['subdomen_alias']) {
+
+        $subdomen_alias = '';
+        if (!empty(Yii::$app->params['subdomen_alias']) && Yii::$app->params['subdomen_id'] != 4400 ) {
             $subdomen_alias = Yii::$app->params['subdomen_alias'] . '.';
-        } else {
-            $subdomen_alias = '';
         }
-        // echo "User-agent: *\nSitemap: https://'.$subdomen_alias.'birthday-place.ru/sitemap/";
-        echo "User-agent: *\nDisallow: /";
+       
+        echo "User-agent: *\nSitemap: https://{$subdomen_alias}birthday-place.ru/sitemap/";
+        // echo "User-agent: *\nDisallow: /";
         exit;
     }
 
@@ -191,5 +245,4 @@ class SiteController extends BaseFrontendController
         $this->view->params['desc'] = $seo['description'];
         $this->view->params['kw'] = $seo['keywords'];
     }
-
 }

@@ -64,7 +64,7 @@ class ItemController extends BaseFrontendController
 				throw new NotFoundHttpException();
 			}
 			$seo = (new Seo('room', 1, 0, (object)$room, 'room', $rest_item))->seo;
-			$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(3, $rest_item);
+			$seo['breadcrumbs'] = Breadcrumbs::get_rooom_crumbs($rest_item);
 			$seo['address'] = $rest_item->restaurant_address;
 			$this->setSeo($seo);
 			$other_rooms = array_reduce($other_rests, function ($acc, $rest) {
@@ -81,7 +81,7 @@ class ItemController extends BaseFrontendController
 		}
 
 		$seo = (new Seo('item', 1, 0, $rest_item, 'rest'))->seo;
-		$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(2);
+		$seo['breadcrumbs'] = Breadcrumbs::get_restaurant_crumbs($rest_item);
 		$seo['address'] = $rest_item->restaurant_address;
 		if($restActiveRecord =  Restaurants::findWithSeo()->where(['id' => $rest_item->id])->one()) {
 			try { $seo['text_1'] = $restActiveRecord->seoObject->text1; } catch (\Throwable $th) {}

@@ -9,7 +9,7 @@
 			<p class="form_title_main">{{ title ? title : 'Поможем выбрать зал на день рождения'}}</p>
 		</div>
 
-		<form class="form_block" action="/ajax/form/">
+		<form class="form_block" action="/ajax/form/" data-form-target="{{target}}">
 			<input type="hidden" name="type" value="{{ type ? type : 'main'}}" />
 			<div class="form_inputs">
 				<div class="input_wrapper">

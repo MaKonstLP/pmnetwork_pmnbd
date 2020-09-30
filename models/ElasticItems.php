@@ -4,6 +4,7 @@ namespace frontend\modules\pmnbd\models;
 
 use common\models\Restaurants;
 use common\models\RestaurantsTypes;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
@@ -178,9 +179,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
     public static function refreshIndex()
     {
-        // $res = self::deleteIndex();
-        // $res = self::updateMapping();
-        // $res = self::createIndex();
+        $res = self::deleteIndex();
+        $res = self::updateMapping();
+        $res = self::createIndex();
         $restaurants = Restaurants::find()
             ->with('rooms')
             ->with('images')
@@ -325,12 +326,34 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             array_push($restaurant_location, $restaurant_location_arr);
         }
         $record->restaurant_location = $restaurant_location;
-        $record->restaurant_slug = self::getTransliterationForUrl($restaurant->name);
+
+        if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $restaurant->gorko_id])->one()) {
+            $record->restaurant_slug = $row['slug'];
+        } else {
+            $record->restaurant_slug = self::getTransliterationForUrl($restaurant->name);
+            \Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $restaurant->gorko_id, 'slug' =>  $record->restaurant_slug])->execute();
+        }
 
         //Св-ва залов
         $rooms = [];
-        foreach ($restaurant->rooms as $key => $room) {
+        
+        foreach ($restaurant->rooms as $idx => $room) {
+            
             $room_arr = [];
+            
+            if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $room->gorko_id])->one()) {
+                $room_arr['slug'] = $row['slug'];
+            } else {
+                $slug = self::getTransliterationForUrl($room->name);
+                $isSameSlug = count(array_filter($rooms, function ($prevRoom) use ($slug) {
+                    return $prevRoom['slug'] == $slug;
+                })) > 0;
+                $slugPostFix = $isSameSlug ? "-$idx" : "";
+                $slug .= $slugPostFix;
+                $room_arr['slug'] = $slug;
+                \Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $room->gorko_id, 'slug' =>  $room_arr['slug']])->execute();
+            }
+
             $room_arr['id'] = $room->id;
             $room_arr['gorko_id'] = $room->gorko_id;
             $room_arr['restaurant_id'] = $room->restaurant_id;
@@ -344,7 +367,6 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             $room_arr['separate_entrance'] = $room->separate_entrance;
             $room_arr['type_name'] = $room->type_name;
             $room_arr['name'] = $room->name;
-            $room_arr['slug'] = self::getTransliterationForUrl($room->name);
             $room_arr['restaurant_slug'] = $record->restaurant_slug;
             $room_arr['restaurant_name'] = $restaurant->name;
             $room_arr['restaurant_main_type'] = $record->restaurant_main_type;

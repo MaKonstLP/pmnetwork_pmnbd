@@ -2,10 +2,18 @@
 
 namespace frontend\modules\pmnbd\components;
 
+use common\models\Filter;
+use frontend\components\ParamsFromQuery;
+use frontend\modules\pmnbd\models\RestaurantTypeSlice;
+use RestaurantTypesMapping;
+use Yii;
+use yii\helpers\ArrayHelper;
 
 class Breadcrumbs
 {
-    public static function get_breadcrumbs($level, $rest = null)
+    const FILTER_SOLO_PARAM_PRIORITY = ['mesto', 'vmestimost', 'dopolnitelno', 'chek']; //приоритет для соло крошки
+
+    public static function get_breadcrumbs($level)
     {
         switch ($level) {
             case 1:
@@ -19,15 +27,6 @@ class Breadcrumbs
                     '/catalog/' => 'Каталог',
                 ];
                 break;
-            case 3:
-                $breadcrumbs = [
-                    '/' => 'Главная',
-                    '/catalog/' => 'Каталог',
-                ];
-                if ($rest) {
-                    $breadcrumbs["/catalog/restoran-$rest->restaurant_slug/"] = $rest->restaurant_name;
-                }
-                break;
             default:
                 $breadcrumbs = [];
                 break;
@@ -35,11 +34,54 @@ class Breadcrumbs
         return $breadcrumbs;
     }
 
-    public static function get_query_crumbs($lastPart)
+    public static function get_rooom_crumbs($rest)
     {
         return array_merge(
             self::get_breadcrumbs(2),
-            ['/catalog/' . array_key_first($lastPart) . '/' => $lastPart[array_key_first($lastPart)]]
+            ["/catalog/restoran-$rest->restaurant_slug/" => "«{$rest->restaurant_name}»"]
+        );
+    }
+
+    public static function get_query_crumbs($params_filter, $filter_model, $slices_model)
+    {
+        if (count($params_filter) > 1) {
+            // print_r($temp_params->params_filter);die;
+            //если в фильтре есть один единичный параметр то делаем из него крошку согласну приоритета
+            foreach (self::FILTER_SOLO_PARAM_PRIORITY as $filterName) {
+                if ( //если в get query есть текущий параметр и его значение в одном экземпляре
+                    ($filterItemIds = $params_filter[$filterName] ?? null)
+                    && (count($filterItemIds) == 1)
+                    && ($filterItemId = $filterItemIds[0])
+                    //и если есть соответствующий Slice
+                    && ($slice = ParamsFromQuery::getSlice([$filterName => $filterItemId], $slices_model))
+                    && ($filterItem = $slice->getFilterItem($filter_model))
+                ) {
+                    return array_merge(
+                        self::get_breadcrumbs(2),
+                        ["/catalog/{$slice->alias}/" => $filterItem->text]
+                    );
+                }
+            }
+        }
+        return self::get_breadcrumbs(2);
+    }
+
+    public static function get_restaurant_crumbs($rest)
+    {
+        $filter_model = Yii::$app->params['filter_model'];
+        $restTypesSlicesCrumbs = array_reduce($rest->restaurant_types, function ($acc, $restTypeMeta) use ($filter_model) {
+            if (
+                ($restTypeSlice = RestaurantTypeSlice::find()->with('slice')->with('restaurantType')->where(['restaurant_type_value' => $restTypeMeta['id']])->one())
+                && ($sliceObj = $restTypeSlice->slice)
+                && ($filterItemObj = $sliceObj->getFilterItem($filter_model))
+            ) {
+                $acc["/catalog/{$sliceObj->alias}/"] = $filterItemObj->text;
+            }
+            return $acc;
+        }, []);
+        return array_merge(
+            self::get_breadcrumbs(2),
+            $restTypesSlicesCrumbs
         );
     }
 }

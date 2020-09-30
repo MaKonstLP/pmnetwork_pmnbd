@@ -72,4 +72,14 @@ class Declension {
     public static function csrfToken(){
     	return Yii::$app->request->getCsrfToken();
     }
+
+    /**
+     * Функция возвращает ссылку на изображение, подменяя no_image на картинку ДР
+     * @param  $img_src String Ссылка на изображение
+     * @return String
+     */
+    public static function get_image_src($img_src)
+    {
+        return strrpos($img_src, 'no_photo.png') === false ? $img_src : '/img/no_photo_cover.png';
+    }
 }

@@ -19,7 +19,7 @@
                                 <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
                                 <!--a href="tel:{{item.restaurant_phone}}" class="object_real_phone">{{item.restaurant_phone}}</a-->
                             </p>
-                            <div class="object_book_hidden_button" data-popup-phone>Показать номер</div>
+                            <div class="object_book_hidden_button" data-popup-phone data-target="{{app.params.subdomen != 'birthday-place' ? 'lid2_rest_gorod' : 'lid1_rest_msk'}}">Показать номер</div>
                             <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                                 <div class="popup_phone">
                                     <div class="form_close" data-close-popup></div>
@@ -57,13 +57,14 @@
                 <div class="object_meta">
                     <div class="object_meta_item">
                         <p class="object_meta_title">Адрес:</p>
-                        <a class="item_address" href="#map">{{item.restaurant_address|raw}}</a>
+                        <a class="item_address" href="#map" data-target="karta">{{item.restaurant_address|raw}}</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
+    {% if item.restaurant_images %}
     <div class="object_gallery_wrap _rest">
         <div class="listing_widget_arrow _prev"></div>
         <div class="listing_widget_arrow _next"></div>
@@ -72,7 +73,7 @@
                 {% for image in item.restaurant_images%}
                     <div class="object swiper-slide">
                         <div class="object_img">
-                            <img src="{{ image.waterpath }}=w800-h600-l100" data-gallery-img-view/>
+                            <img src="{{ Declension.get_image_src(image.waterpath~'=w800-h600-l100') }}" data-gallery-img-view/>
                         </div>
                     </div>
                 {% endfor %}
@@ -86,13 +87,14 @@
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                     {% for image in item.restaurant_images%}
                         <div class="object swiper-slide">
-                           <img src="{{ image.realpath }}=w150-h90-l80"/>
+                           <img src="{{ Declension.get_image_src(image.realpath~'=w150-h90-l80') }}"/>
                         </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="rest_desc_wrap">
         <div class="content_block">
@@ -177,10 +179,10 @@
                     <div class="same_object">
                         <div class="same_object_img">
                             <div class="same_object_img_item">
-                               <img src="{{same_object.images[0].realpath ? same_object.images[0].realpath : same_object.cover_url}}"> 
+                               <img src="{{ Declension.get_image_src(same_object.images[1].realpath ? same_object.images[0].realpath : same_object.cover_url) }}"> 
                             </div>
                             <div class="same_object_img_item">
-                               <img src="{{same_object.images[1].realpath ? same_object.images[1].realpath : same_object.cover_url}}"> 
+                               <img src="{{ Declension.get_image_src(same_object.images[1].realpath ? same_object.images[1].realpath : same_object.cover_url) }}"> 
                             </div>
                         </div>
                         <div class="same_object_desc">
@@ -206,7 +208,7 @@
         <div class="map_data_wrap">
             <div class="map_data">
                 <div class="map_img_wrap">
-                    <img class="map_img" src="{{ item.restaurant_cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'}) }}">
+                    <img class="map_img" src="{{ Declension.get_image_src(item.restaurant_cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'})) }}">
                 </div>
                 
                 <a href="/catalog/restoran-{{item.restaurant_slug}}/" class="map_rest_name">{{ item.restaurant_name }}</a>
@@ -238,4 +240,4 @@
         </div>
     </div>
     {% endif %}
-{{ this.render('//components/generic/form.twig', {'title': 'Поможем выбрать зал на день рождения'}) | raw }}
+{{ this.render('//components/generic/form.twig', {'title': 'Поможем выбрать зал на день рождения', 'target': 'podval_rest'}) | raw }}

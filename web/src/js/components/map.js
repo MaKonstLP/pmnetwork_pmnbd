@@ -8,7 +8,8 @@ export default class YaMap{
             	$('.map #map').data('mapdotx'),
             	$('.map #map').data('mapdoty'),
             ],
-            zoom: 15
+            zoom: 15,
+            behaviors: ["drag", "dblClickZoom", "rightMouseButtonMagnifier", "multiTouch"]
         }),
 
         myPlacemark = new ymaps.Placemark(myMap.getCenter(), {

@@ -7,9 +7,9 @@ export default class Slider{
 		this.swiperArr = [];
 
 		//if($(window).width() <= 1650){
-		self.initSwiperItem($('[data-gallery-main-swiper]'), $('[data-gallery-thumb-swiper]'));	
-		self.initSwiperSameItem($('[data-other-objects-swiper]'));	
-		self.initSwiperTitleBlog($('[data-gallery-blog-swiper]'));	
+		if ($('[data-gallery-main-swiper]').length >0) self.initSwiperItem($('[data-gallery-main-swiper]'), $('[data-gallery-thumb-swiper]'));	
+		if ($('[data-other-objects-swiper]').length >0) self.initSwiperSameItem($('[data-other-objects-swiper]'));	
+		if ($('[data-gallery-blog-swiper]').length >0) self.initSwiperTitleBlog($('[data-gallery-blog-swiper]'));	
 		//self.initSwiper1($('[data-gallery-main-swiper] [data-gallery-list]'));
 		
 	//}
@@ -114,6 +114,7 @@ export default class Slider{
 	}
 
 	initSwiperSameItem($container){
+		console.log('111111111111111');
 		let swiper = new Swiper($container, {
 	        slidesPerView: 3,
 	        //spaceBetween: 30,
@@ -149,7 +150,6 @@ export default class Slider{
 	    });
 
 	    let swiper_var = $container.swiper;
-		this.swiperArr.push(swiper);
 	}
 
 	initSwiperTitleBlog($container){

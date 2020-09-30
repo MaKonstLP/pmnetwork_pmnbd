@@ -8,7 +8,7 @@ abstract class BaseFrontendController extends Controller
 {
     public function beforeAction($action)
     {
-        if (\Yii::$app->request->cookies->get('basic_auth')) {
+        /* if (\Yii::$app->request->cookies->get('basic_auth')) {
             return parent::beforeAction($action);
         }
 
@@ -28,7 +28,7 @@ abstract class BaseFrontendController extends Controller
             'value' => 'auth',
             'expire' => time() + 86400 * 30,
             'domain' => '.' . explode(":", \Yii::$app->params['siteAddress'])[0]
-        ]));
+        ])); */
         
         return parent::beforeAction($action);
     }

@@ -1,0 +1,5 @@
+{% for mainfilter in filters %}
+	{% for item in mainfilter.items %}
+		<p data-filter-item="{{item.filter_id}},{{item.value}}">{{item.text}}</p>
+	{% endfor %}
+{% endfor %}

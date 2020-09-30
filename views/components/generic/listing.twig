@@ -3,7 +3,7 @@
         <img class="item_present" src="\img\bron.png" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
         <a href="/catalog/restoran-{{item.restaurant_slug}}/">
             <div class="item_img">
-                <img src="{{item.restaurant_cover_url}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+                <img src="{{ Declension.get_image_src(item.restaurant_cover_url) }}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
             </div>
         </a>
             <div class="item_info">
