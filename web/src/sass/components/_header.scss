@@ -395,7 +395,7 @@ header{
         width: 200px;
 
         @include for-phone{
-            width: 95%;
+            width: 92%;
             margin: 12px 12px 12px 12px;
         }
     }
@@ -430,7 +430,7 @@ header{
     position: absolute;
     transform: rotate(45deg);
     top: 16px;
-    right: 5px;
+    right: 10px;
     width: 28px;
     height: 28px;
     &:before{
