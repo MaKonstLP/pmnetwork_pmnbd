@@ -18,13 +18,25 @@ class Breadcrumbs
         switch ($level) {
             case 1:
                 $breadcrumbs = [
-                    '/' => 'Главная',
+                    [
+                        'type' => 'single',
+                        'link' => '/',
+                        'name' => 'Главная'
+                    ]
                 ];
                 break;
             case 2:
                 $breadcrumbs = [
-                    '/' => 'Главная',
-                    '/catalog/' => 'Каталог',
+                    [
+                        'type' => 'single',
+                        'link' => '/',
+                        'name' => 'Главная'
+                    ],
+                    [
+                        'type' => 'single',
+                        'link' => '/catalog/',
+                        'name' => 'Каталог'
+                    ]
                 ];
                 break;
             default:
@@ -38,7 +50,11 @@ class Breadcrumbs
     {
         return array_merge(
             self::get_restaurant_crumbs($rest),
-            ["/catalog/restoran-$rest->restaurant_slug/" => "«{$rest->restaurant_name}»"]
+            [[
+                'type' => 'single',
+                'link' => "/catalog/restoran-$rest->restaurant_slug/",
+                'name' => "«{$rest->restaurant_name}»"
+            ]]
         );
     }
 
@@ -58,7 +74,11 @@ class Breadcrumbs
                 ) {
                     return array_merge(
                         self::get_breadcrumbs(2),
-                        ["/catalog/{$slice->alias}/" => $filterItem->text]
+                        [[
+                            'type' => 'single',
+                            'link' => "/catalog/{$slice->alias}/",
+                            'name' => $filterItem->text
+                        ]]
                     );
                 }
             }
@@ -72,16 +92,21 @@ class Breadcrumbs
         $restTypesSlicesCrumbs = array_reduce($rest->restaurant_types, function ($acc, $restTypeMeta) use ($filter_model) {
             $restTypeId = $restTypeMeta['id'];
             //если ресторанный комплекс, добавляем крошку на Рестораны
-            if($restTypeId == 8) $restTypeId = 1;
+            if ($restTypeId == 8) $restTypeId = 1;
             if (
                 ($restTypeSlice = RestaurantTypeSlice::find()->with('slice')->with('restaurantType')->where(['restaurant_type_value' => $restTypeId])->one())
                 && ($sliceObj = $restTypeSlice->slice)
                 && ($filterItemObj = $sliceObj->getFilterItem($filter_model))
             ) {
-                $acc["/catalog/{$sliceObj->alias}/"] = $filterItemObj->text;
+                $acc[] = [
+                    'type' => 'multiple',
+                    'link' => "/catalog/{$sliceObj->alias}/",
+                    'name' => $filterItemObj->text
+                ];
             }
             return $acc;
         }, []);
+        $restTypesSlicesCrumbs[count($restTypesSlicesCrumbs) - 1]['type'] = 'single';
         return array_merge(
             self::get_breadcrumbs(2),
             $restTypesSlicesCrumbs

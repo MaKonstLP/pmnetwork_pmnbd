@@ -491,6 +491,12 @@ h3{
         &:last-child:after{
             display: none;
         }
+        &_multiple {
+            margin-right: 2px;
+            &:after{
+                content: ',';
+            }
+        }
     }
 }
 

@@ -1,9 +1,13 @@
 <ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
-	{% for link,name in seo.breadcrumbs %}
-		<li class="breadcrumbs_item"  itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
-			<a itemprop="item" typeof="WebPage" href="{{link}}">
-				<span itemprop="name">{{name}}</span>
-				<meta itemprop="position" content="{{loop.index}}">
+	{% set multipleIdx = 0 %}
+	{% for crumb in seo.breadcrumbs %}
+		{% if crumb.type == 'multiple' and multipleIdx == 0 %}
+			{% set multipleIdx = loop.index %}
+		{% endif %}
+		<li class="breadcrumbs_item breadcrumbs_item_{{crumb.type}}"  itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
+			<a itemprop="item" typeof="WebPage" href="{{crumb.link}}">
+				<span itemprop="name">{{crumb.name}}</span>
+				<meta itemprop="position" content="{{crumb.type == 'multiple' ? multipleIdx : loop.index - multipleIdx }}">
 			</a>
 		</li>
 	{% endfor %}
