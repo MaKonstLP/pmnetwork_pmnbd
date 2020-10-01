@@ -106,7 +106,6 @@ class Breadcrumbs
             }
             return $acc;
         }, []);
-        $restTypesSlicesCrumbs[count($restTypesSlicesCrumbs) - 1]['type'] = 'single';
         return array_merge(
             self::get_breadcrumbs(2),
             $restTypesSlicesCrumbs

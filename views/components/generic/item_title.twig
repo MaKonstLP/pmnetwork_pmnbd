@@ -1,13 +1,23 @@
 <ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+	{% set singleIdx = 0 %}
 	{% set multipleIdx = 0 %}
 	{% for crumb in seo.breadcrumbs %}
 		{% if crumb.type == 'multiple' and multipleIdx == 0 %}
-			{% set multipleIdx = loop.index %}
+			{% set singleIdx = singleIdx + 1 %}
+			{% set multipleIdx = singleIdx %}
 		{% endif %}
-		<li class="breadcrumbs_item breadcrumbs_item_{{crumb.type}}"  itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
+		{% if crumb.type == 'single' %}
+			{% set singleIdx = singleIdx + 1 %}
+		{% endif %}
+		{% if crumb.type == 'multiple' and (seo.breadcrumbs[loop.index].type != 'single') %}
+			{% set item_class = 'breadcrumbs_item_multiple' %}
+		{% else %}
+			{% set item_class = 'breadcrumbs_item_single' %}
+		{% endif %}
+		<li class="breadcrumbs_item {{item_class}}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
 			<a itemprop="item" typeof="WebPage" href="{{crumb.link}}">
 				<span itemprop="name">{{crumb.name}}</span>
-				<meta itemprop="position" content="{{crumb.type == 'multiple' ? multipleIdx : loop.index - multipleIdx }}">
+				<meta itemprop="position" content="{{crumb.type == 'multiple' ? multipleIdx : singleIdx }}">
 			</a>
 		</li>
 	{% endfor %}
