@@ -203,6 +203,7 @@ export default class Form {
 		this.$formSuccess.show();
 		this.$formModal.not('._active').addClass('_active');
 		this.reset();
+		console.log('reachGoal', this.target);
 		ym('67719148', 'reachGoal', this.target);
 		// this.$submitButton.removeClass('button__pending');
 	}
