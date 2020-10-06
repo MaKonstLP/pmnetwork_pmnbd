@@ -1,3 +1,8 @@
+{{this.registerMetaTag({'property':'og:title','content':seo.h1|raw})}}
+{{this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)})}}
+{{this.registerMetaTag({'property':'og:type','content':'website'})}}
+{{this.registerMetaTag({'property':'og:url','content':'https://birthday-place.ru/catalog/restoran-'~item.restaurant_slug~'/'~item.slug~'/'})}}
+{{this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.cover_url)})}}
 <div data-page-type="item">
 
     <div class="content_block" data-listing-title>
