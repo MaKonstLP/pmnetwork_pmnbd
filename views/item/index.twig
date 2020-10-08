@@ -118,10 +118,12 @@
                            <p class="object_desc_title">Вместимость:</p>
                            <p class="object_desc_value">{{same_object.capacity}} человек</p>
                         </div>
-                        <div class="object_desc_item">
-                           <p class="object_desc_title">Стоимость аренды без еды:</p>
-                           <p class="object_desc_value">{{same_object.price}} ₽</p>
-                        </div>
+                        {% if same_object.price %}
+                            <div class="object_desc_item">
+                               <p class="object_desc_title">Стоимость аренды без еды:</p>
+                               <p class="object_desc_value">{{same_object.price}} ₽</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

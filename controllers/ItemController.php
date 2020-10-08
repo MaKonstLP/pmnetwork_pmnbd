@@ -90,7 +90,7 @@ class ItemController extends BaseFrontendController
 		
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
-			'min_price' => min(array_filter($rooms_price_arr)),
+			'min_price' => ($filtered = array_filter($rooms_price_arr)) ? min($filtered) : 0,
 			'rooms_capacity' => $rooms_capacity_arr,
 			'seo' => $seo,
 			'same_objects' => $rooms,
