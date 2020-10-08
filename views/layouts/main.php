@@ -177,7 +177,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     </div>
                     <div class="footer_block _right">
 
-                        <a class="footer_ph" href="tel:+79252380246" data-target="telefon_2">8 (925) 238-02-46</a>
+                        <a class="footer_ph" href="tel:+79252380246" data-target="telefon_1">8 (925) 238-02-46</a>
 
                     </div>
                 </div>
