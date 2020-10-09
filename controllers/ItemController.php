@@ -24,9 +24,6 @@ class ItemController extends BaseFrontendController
 		])->one();
 		
 		if(empty($rest_item)) {
-			echo var_dump($restSlug);
-			echo var_dump(\Yii::$app->params['subdomen_id']);
-			die;
 			throw new NotFoundHttpException();
 		}
 		$rooms = $rest_item['rooms'];
