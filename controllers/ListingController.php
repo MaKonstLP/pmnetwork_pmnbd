@@ -18,6 +18,17 @@ use yii\helpers\ArrayHelper;
 
 class ListingController extends BaseFrontendController
 {
+	//порядок и количество вывода для блока тэгов. Filter->alias => количество кнопок
+	const FAST_FILTERS = [
+		//для одиночного среза, по типу его фильтра
+		'mesto' => ['mesto' => 15, 'vmestimost' => 2, 'dopolnitelno' => 1, 'chek' => 1],
+		'vmestimost' => ['vmestimost' => 5, 'mesto' => 3, 'dopolnitelno' => 1, 'chek' => 1],
+		'dopolnitelno' => ['dopolnitelno' => 10, 'chek' => 2, 'mesto' => 3, 'vmestimost' => 2],
+		'chek' => ['chek' => 10, 'mesto' => 3, 'dopolnitelno' => 2, 'vmestimost' => 2],
+		//для множественных
+		'any' => ['dopolnitelno' => 2, 'mesto' => 3, 'vmestimost' => 2, 'chek' => 2]
+	];
+
 	protected $per_page = 36;
 
 	public $filter_model,
@@ -48,7 +59,8 @@ class ListingController extends BaseFrontendController
 				$params_filter	= 	$params['params_filter'],
 				$breadcrumbs 	=	Breadcrumbs::get_breadcrumbs(2),
 				$canonical 		= 	$canonical,
-				$type 			=	$slice
+				$type 			=	$slice,
+				$fastFilters	=	$params['fast_filters']
 			);
 		} else {
 			return $this->goHome();
@@ -69,7 +81,9 @@ class ListingController extends BaseFrontendController
 				$per_page		=	$this->per_page,
 				$params_filter	= 	$params['params_filter'],
 				$breadcrumbs 	=	Breadcrumbs::get_query_crumbs($params['params_filter'], $this->filter_model, $this->slices_model),
-				$canonical 		= 	$canonical
+				$canonical 		= 	$canonical,
+				$type = false,
+				$fastFilters	=	$params['fast_filters']
 			);
 		} else {
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
@@ -84,7 +98,7 @@ class ListingController extends BaseFrontendController
 		}
 	}
 
-	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false)
+	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [])
 	{
 		$elastic_model = new ElasticItems;
 		$items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
@@ -118,7 +132,8 @@ class ListingController extends BaseFrontendController
 			'seo' => $seo,
 			'count' => $items->total,
 			'menu' => $type,
-			'main_flag' => $main_flag
+			'main_flag' => $main_flag,
+			'fastFilters' => $fastFilters
 		));
 	}
 
@@ -138,11 +153,11 @@ class ListingController extends BaseFrontendController
 		$seo_type = $slice_url ? $slice_url : 'listing';
 
 		$seo = $this->getSeo($seo_type, $params['page'], $items->total);
-		
+
 		$seo['breadcrumbs'] = [];
-		if(!empty($params['params_filter'])) {
+		if (!empty($params['params_filter'])) {
 			$seo['breadcrumbs'] = Breadcrumbs::get_query_crumbs($params['params_filter'], $this->filter_model, $this->slices_model);
-		} 
+		}
 
 		$title = $this->renderPartial('//components/generic/title.twig', array(
 			'seo' => $seo,
@@ -197,6 +212,51 @@ class ListingController extends BaseFrontendController
 		$return['params_filter'] = $temp_params->params_filter;
 		$return['listing_url'] = $temp_params->listing_url;
 		$return['canonical'] = $temp_params->canonical;
+
+		//получаем ссылки для блока тэгов
+		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
+			$temp_params->listing_url . Yii::$app->params['subdomen_id'],
+			function () use ($temp_params, $filter_model, $slices_model, $return) {
+				if (empty($return['params_filter'])) return [];
+				//если единичный срез, берем тип его фильтра
+				$filterName = $temp_params->slice_alias ? array_key_first($return['params_filter']) : 'any';
+				//получаем массив по названию этого фильтра
+				$fastFilters = self::FAST_FILTERS[$filterName] ?? [];
+				$collectedSlices = array_reduce($slices_model, function ($acc, $slice) use ($fastFilters, $filter_model) {
+					$sliceFilterParams = $slice->getFilterParams();
+					$temp_params = new ParamsFromQuery($sliceFilterParams, $this->filter_model, $this->slices_model);
+					//если в срезе есть ресты
+					if ($temp_params->query_hits) {
+						//и если его основной тип фильтра есть в массиве $fastFilters
+						$filterAlias = array_key_first($sliceFilterParams);
+						if (!empty($fastFilters[$filterAlias])) {
+							if ($sliceFilterItem = $slice->getFilterItem($filter_model)) {
+								//добавляем его в результирующий массив к другим позициям этого же типа фильтра
+								$acc[$filterAlias][] = [
+									'name' => $sliceFilterItem->text,
+									'alias' => $slice->alias,
+									'count' => $temp_params->query_hits
+								];
+							}
+						}
+					}
+					return $acc;
+				}, array_fill_keys(array_keys($fastFilters), []));
+
+				return array_reduce(array_keys($collectedSlices), function ($acc, $filterName) use ($collectedSlices, $fastFilters) {
+					$slicesToAdd = $collectedSlices[$filterName];
+					//если в результирующем массиве для типа фильтра больше позиций чем предопределено в $fastFilters,
+					//то рандомим и обрезаем до нужного кол-ва
+					if (count($slicesToAdd) > $fastFilters[$filterName]) {
+						shuffle($slicesToAdd);
+						$slicesToAdd = array_slice($slicesToAdd, 0, $fastFilters[$filterName]);
+					}
+					//выпрямляем массив
+					return array_merge($acc, $slicesToAdd);
+				}, []);
+			},
+			1
+		);
 
 		return $return;
 	}
