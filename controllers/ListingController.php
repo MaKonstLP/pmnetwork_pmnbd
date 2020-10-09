@@ -255,7 +255,7 @@ class ListingController extends BaseFrontendController
 					return array_merge($acc, $slicesToAdd);
 				}, []);
 			},
-			1
+			360
 		);
 
 		return $return;
