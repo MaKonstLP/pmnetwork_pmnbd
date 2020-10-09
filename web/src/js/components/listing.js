@@ -63,6 +63,7 @@ export default class Listing{
 				$('[data-listing-text-top]').html(response.text_top);
 				$('[data-listing-text-bottom]').html(response.text_bottom);
 				$('[data-pagination-wrapper]').html(response.pagination);
+				$('[data-listing-fast-filters]').html(response.fast_filters);
 				self.block.removeClass('_loading');
 				$('html,body').animate({scrollTop:0}, 400);
 				history.pushState({}, '', '/catalog/'+response.url);

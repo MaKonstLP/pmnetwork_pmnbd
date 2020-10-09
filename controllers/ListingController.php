@@ -87,13 +87,15 @@ class ListingController extends BaseFrontendController
 			);
 		} else {
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
-
+			$params = $this->parseGetQuery($getQuery, $this->filter_model, $this->slices_model);
 			return $this->actionListing(
 				$page 			=	1,
 				$per_page		=	$this->per_page,
 				$params_filter	= 	[],
 				$breadcrumbs 	= 	[],
-				$canonical 		= 	$canonical
+				$canonical 		= 	$canonical,
+				$type = false,
+				$fastFilters	=	$params['fast_filters']
 			);
 		}
 	}
@@ -182,6 +184,9 @@ class ListingController extends BaseFrontendController
 				'items' => $items->items,
 				'img_alt' => $seo['img_alt'],
 			)),
+			'fast_filters' => $this->renderPartial('//components/generic/listing_tags.twig', array(
+				'fastFilters' => $params['fast_filters'],
+			)),
 			'pagination' => $pagination,
 			'url' => $params['listing_url'],
 			'title' => $title,
@@ -217,12 +222,13 @@ class ListingController extends BaseFrontendController
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
 			$temp_params->listing_url . Yii::$app->params['subdomen_id'],
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
-				if (empty($return['params_filter'])) return [];
 				//если единичный срез, берем тип его фильтра
 				$filterName = $temp_params->slice_alias ? array_key_first($return['params_filter']) : 'any';
+				if (empty($return['params_filter'])) $filterName = 'mesto'; //для /catalog/
 				//получаем массив по названию этого фильтра
 				$fastFilters = self::FAST_FILTERS[$filterName] ?? [];
-				$collectedSlices = array_reduce($slices_model, function ($acc, $slice) use ($fastFilters, $filter_model) {
+				$collectedSlices = array_reduce($slices_model, function ($acc, $slice) use ($fastFilters, $filter_model, $temp_params) {
+					if($slice->alias == $temp_params->slice_alias) return $acc;
 					$sliceFilterParams = $slice->getFilterParams();
 					$temp_params = new ParamsFromQuery($sliceFilterParams, $this->filter_model, $this->slices_model);
 					//если в срезе есть ресты

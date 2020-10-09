@@ -12,13 +12,9 @@
 	</div>
 
 	<div class="content_block">
-		{% if fastFilters %}
-			<div class="fast_filters">
-				{% for fastFilter in fastFilters %}
-					<a href="/catalog/{{fastFilter.alias}}/">{{fastFilter.name}}<span>{{fastFilter.count}}</span></a>
-				{% endfor %}
-			</div>
-		{% endif %}
+		<div data-listing-fast-filters>
+			{{ this.render('//components/generic/listing_tags.twig', {'fastFilters':fastFilters}) | raw }}			
+		</div>
 		<div class="seo_text before_filter" data-seo-text>
 			<div data-listing-text-top>{{seo.text_top | raw }}</div>
 			<div class="seo_text_control" data-seo-control>
