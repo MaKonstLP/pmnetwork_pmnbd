@@ -9,7 +9,7 @@
         {{ this.render('//components/generic/item_title.twig', {'seo':seo}) | raw }}
     </div>
 
-    <div class="rest_top_wrap">
+    <div class="rest_top_wrap" itemscope itemtype="https://schema.org/Restaurant"> 
         <div class="content_block">
             <div class="rest_top_left">
                 <div class="object_meta">
@@ -28,13 +28,18 @@
                             <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                                 <div class="popup_phone">
                                     <div class="form_close" data-close-popup></div>
-                                    <p class="popup_phone_title">Ресторан {{item.restaurant_name}}</p>
+                                    <p class="popup_phone_title">Ресторан <span itemprop="name">{{item.restaurant_name}}</span></p>
                                     <div class="popup_phone_present">
                                         <img src="/img/present.svg">
                                         <p>Забронируй зал и получи подарок!</p>
                                     </div>
-                                    <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone">{{item.restaurant_phone}}</a>
-                                    <p class="popup_phone_address">{{item.restaurant_address|raw}}</p>
+                                    <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone"><span itemprop="telephone">{{item.restaurant_phone}}</span></a>
+                                    <p class="popup_phone_address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                                        {{item.restaurant_address|raw}}
+                                        <meta content="{{app.params.subdomen_name}}" itemprop="addressLocality">
+                                        <meta content="{{item.restaurant_address|split(', ')[1:]|join(', ')}}" itemprop="addressLocality">
+                                    </p>
+                                    <link href="{{ Declension.get_image_src(item.restaurant_cover_url) }}" itemprop="image">
                                 </div>
                             </div>
                         </div>
