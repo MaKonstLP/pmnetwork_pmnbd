@@ -37,7 +37,7 @@
                                     <p class="popup_phone_address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
                                         {{item.restaurant_address|raw}}
                                         <meta content="{{app.params.subdomen_name}}" itemprop="addressLocality">
-                                        <meta content="{{item.restaurant_address|split(', ')[1:]|join(', ')}}" itemprop="addressLocality">
+                                        <meta content="{{item.restaurant_address|split(', ')[1:]|join(', ')}}" itemprop="streetAddress">
                                     </p>
                                     <link href="{{ Declension.get_image_src(item.restaurant_cover_url) }}" itemprop="image">
                                 </div>
