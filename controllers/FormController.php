@@ -11,7 +11,7 @@ class FormController extends Controller
 
     public function actionSend()
     {
-        $to  = ['kornilov@liderpoiska.ru', 'birthday-place@yandex.ru'];
+        $to  = ['kornilov@liderpoiska.ru', 'birthday-place@yandex.ru', 'sites@plusmedia.ru'];
         $messages = [
             'successTitle' => 'Заявка успешно отправлена',
             'errorTitle' => 'К сожалению, не удалось обработать заявку',
