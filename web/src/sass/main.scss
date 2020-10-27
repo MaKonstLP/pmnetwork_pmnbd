@@ -215,7 +215,8 @@ li {
         }
     }
     &[data-page-type="index"]{
-        margin-top: 480px;
+        margin-top: 0;
+        /*margin-top: 480px;
         @media (max-width: 767px) {
             margin-top: 560px; 
             &._short{
@@ -226,15 +227,15 @@ li {
             &._short{
                 //margin-top: 430px; 
             }
-        }
+        }*/
     }
-    &[data-page-type="item"]{
+    /*&[data-page-type="item"]{
         .breadcrumbs{
             top: -43px;
             bottom: auto;
             flex-wrap: wrap;
         }
-    }
+    }*/
 }
 
 *{
@@ -469,6 +470,9 @@ h3{
     justify-content: center;
     width: 100%;
     font-weight: 500;
+    top: -43px;
+    bottom: auto;
+    flex-wrap: wrap;
 
     .breadcrumbs_item{
         position: relative;

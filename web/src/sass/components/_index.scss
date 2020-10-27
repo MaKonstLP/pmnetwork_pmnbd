@@ -253,19 +253,21 @@
 }
 .main_rectangle_wrap{
     display: flex; 
-    position: absolute;
-    top: 255px;
+    //position: absolute;
+    //top: 255px;
+    position: relative;
+    top: auto;
     width: 100%;
     justify-content: center;
     &:not(.content_info_adv){
         @include for-mobile{
-            top: 325px;
+            //top: 325px;
         }
     }
 
     &:not(.content_info_adv){
         @include for-phone{
-            top: 356px;
+            //top: 356px;
             overflow: hidden;
             width: 320px;
             height: 190px;
@@ -994,13 +996,15 @@
     }
 }
 .main_top_slider{
-    position: absolute;
+    //position: absolute;
+    position: relative;
     top: 0;
-    height: 480px;
+    //height: 480px;
+    height: auto;
     overflow: hidden;
     width: 100%;
 
-    @include for-mobile{
+  /*  @include for-mobile{
         &._short{
             height: 400px; 
         }
@@ -1011,7 +1015,7 @@
         &._short{
             height: 430px; 
         }
-    }
+    }*/
 
     img{
         height: 100%;
