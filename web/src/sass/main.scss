@@ -371,7 +371,7 @@ h3{
     display: flex;
     justify-content: center;
     //align-items: baseline;
-    margin-top: 55px;
+    //margin-top: 55px;
     flex-wrap: wrap;
     text-align: center;
     flex-direction: column;
@@ -381,16 +381,16 @@ h3{
         align-items: center;
     }
 
-    @include for-small-desktop{
-        margin-top: 50px;
-    }
+/*    @include for-small-desktop{
+        margin-bottom: 50px;
+    }*/
 
     @include for-pad{
-        margin-top: 50px;
+        margin-bottom: 50px;
     }
 
     @include for-mobile{
-        margin-top: 20px;
+        margin-bottom: 50px;
     }
 
     h1{
@@ -463,7 +463,7 @@ h3{
     list-style: none;
     padding: 0;
     margin: 0;
-    position: absolute;
+    position: relative;
     bottom: calc(100% + 20px);
     display: flex;
     justify-content: center;

@@ -61,6 +61,8 @@ export default class Main {
                 $(this).mCustomScrollbar({
                     theme: 'dark-thick',
                     axis: 'x',
+                    documentTouchScroll: true,
+                    contentTouchScroll: 2,
                     advanced: {
                         autoExpandHorizontalScroll: true, //optional (remove or set to false for non-dynamic/static elements)
                     },

@@ -4,7 +4,7 @@
   background-color: $clrBackground;
 
   @include for-mobile{
-    height: 200px; 
+    //height: 200px; 
     margin-top: 0;   
   }
 
@@ -87,18 +87,13 @@
         width: 100%;
       }
   }
+  
   .object{
     display: flex;
     align-items: flex-end;
     //cursor: pointer;
     
-    .object_img{
-      height: 360px;
-      width: 100%;
-      overflow: hidden;
-      cursor: pointer;
-      //max-height: 500px;
-    }
+    
     img{
       //width: 100%;
       vertical-align: bottom;
@@ -107,6 +102,25 @@
       min-width: 100%;
     }
   }
+  .object_img{
+      height: 360px;
+      width: 100%;
+      overflow: hidden;
+      cursor: pointer;
+      //max-height: 500px;
+      position: relative;
+      @include for-mobile{
+        height: 200px; 
+        img{
+          width: 100%;
+          position: absolute;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+        }
+      }
+
+    }
 }
 [data-gallery-main-swiper] {
   max-height: 360px;

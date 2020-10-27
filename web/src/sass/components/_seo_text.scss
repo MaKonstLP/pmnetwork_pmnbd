@@ -13,6 +13,9 @@
 
         &._hidden{
             max-height: 183px;
+            &.text_bottom{
+               max-height: 240px; 
+            }
             .seo_text_control{
                 display: flex;
             }
