@@ -71,9 +71,28 @@ gulp.task('styles', function(done) {
   done();
 });
 
+gulp.task('styles-main', function(done) {
+  sassStream = gulp
+    .src(sourcesPath + '/sass-main/**/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(bulkSass())
+    .pipe(sass().on('error', sass.logError))
+    // cssStream = gulp.src(sourcesPath + '/css/**/*.css');
+    // return merge(sassStream, cssStream)
+    .pipe(concat('app-main.css'))
+    .pipe(autoprefixer())
+
+    .pipe(cleanCSS())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(assetsPath)).pipe(touch());
+  done();
+});
+
 gulp.task('watch', function(done) {
   gulp.watch(sourcesPath + '/js/**/*.js', gulp.series('scripts'));
   gulp.watch(sourcesPath + '/sass/**/*.scss', gulp.series('styles'));
+  gulp.watch(sourcesPath + '/sass-main/**/*.scss', gulp.series('styles-main'));
   gulp.watch(sourcesPath + '/css/**/*.css', gulp.series('styles'));
   done();
 });
