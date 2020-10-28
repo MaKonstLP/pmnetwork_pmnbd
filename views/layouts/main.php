@@ -36,6 +36,39 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
+        var fired = false;
+
+
+window.addEventListener('click', () => {
+        if (fired === false) {
+            fired = true;
+            load_other();
+      }
+    });
+ 
+    window.addEventListener('scroll', () => {
+        if (fired === false) {
+            fired = true;
+            load_other();
+      }
+    });
+
+    window.addEventListener('mousemove', () => {
+        if (fired === false) {
+            fired = true;
+            load_other();
+      }
+    });
+
+    window.addEventListener('touchmove', () => {
+        if (fired === false) {
+            fired = true;
+            load_other();
+      }
+    });
+ 
+function load_other() { 
+        setTimeout(() => {
         (function(m, e, t, r, i, k, a) {
             m[i] = m[i] || function() {
                 (m[i].a = m[i].a || []).push(arguments)
@@ -51,6 +84,8 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
             accurateTrackBounce: true,
             webvisor: true
         });
+    },500);
+    }
     </script>
     <noscript>
         <div><img src="https://mc.yandex.ru/watch/67719148" style="position:absolute; left:-9999px;" alt="" /></div>
@@ -68,6 +103,13 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 
         gtag('config', 'UA-179040293-1');
     </script>
+    <style>
+    <?php 
+        if (file_exists(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css'))) {
+            print_r(file_get_contents(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css')));
+        }
+    ?>
+    </style>
 </head>
 
 <body>
