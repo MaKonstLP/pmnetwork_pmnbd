@@ -255,11 +255,17 @@
     display: flex; 
     //position: absolute;
     //top: 255px;
-    position: relative;
+    //position: relative;
     top: auto;
     width: 100%;
     justify-content: center;
-    bottom: -60px;
+    //bottom: -60px;
+    bottom: -15px; 
+    position: absolute;
+    left: 0;
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto;
     &:not(.content_info_adv){
         @include for-mobile{
             //top: 325px;
@@ -272,6 +278,10 @@
             overflow: hidden;
             width: 320px;
             height: 190px;
+            bottom: -35px; 
+            &.__short_3{
+                bottom: -113px;
+            }
         }
     }
 
@@ -447,9 +457,13 @@
     overflow: hidden;
     width: 100%;
 
-  /*  @include for-mobile{
+    @include for-mobile{
+        height: 350px;
         &._short{
             height: 400px; 
+        }
+        &.__shotr_3{
+            height: 450px;
         }
     }
 
@@ -458,7 +472,10 @@
         &._short{
             height: 430px; 
         }
-    }*/
+        &.__short_3{
+            height: 450px;
+        }
+    }
 
     img{
         height: 100%;

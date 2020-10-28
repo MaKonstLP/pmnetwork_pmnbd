@@ -5,9 +5,24 @@
 {{this.registerMetaTag({'property':'og:image','content':'https://birthday-place.ru/img/bd/mstile-150x150.png'})}}
 {% set  mainRestTypes = mainRestTypesCounts|length %}
 <div data-page-type="index" {{mainRestTypes > 0 ? '' : 'class=" _short"'}}>
-	<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}">
-		<img src="{{seo.media["header-image"]|first.src}}" alt="{{seo.media['header-image']|first.alt}}">
+	<div class="main_top_image" style="position: relative;">
+		<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 4 ? ' __short_3' : ''}}">
+			<img loading="lazy" src="{{seo.media["header-image"]|first.src}}" alt="{{seo.media['header-image']|first.alt}}">
+		</div>
+		<div class="main_rectangle_wrap{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 4 ? ' __short_3' : ''}}">
+			{% for item in mainRestTypesCounts %}
+				<div class="main_rectangle">
+					<div class="main_rectangle_1"></div>
+					<div class="main_rectangle_2"></div>
+					<a href="/catalog/{{item.alias}}/">
+						<div class="main_rectangle_count">{{item.count}}</div>
+						<div class="main_rectangle_type">{{item.plural}}</div>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
 	</div>
+	
 	<div class="main_top">
 		<h1>{{seo.h1|raw}}</h1>
 		<div class="main_top_desc">
@@ -33,19 +48,9 @@
 			<span class="main_search_submit" data-target="pdbor_2">Подобрать</span>
 		</div>
 
-		<div class="main_rectangle_wrap{{mainRestTypes > 0 ? '' : ' _short'}}">
-			{% for item in mainRestTypesCounts %}
-				<div class="main_rectangle">
-					<div class="main_rectangle_1"></div>
-					<div class="main_rectangle_2"></div>
-					<a href="/catalog/{{item.alias}}/">
-						<div class="main_rectangle_count">{{item.count}}</div>
-						<div class="main_rectangle_type">{{item.plural}}</div>
-					</a>
-				</div>
-			{% endfor %}
-		</div>
+		
 	</div>
+
 
 	<div class="listing_wrap" style="/*height: 550px;*/background: #F8F8F8;">
 		<div class="content_block" data-widget-wrapper>
@@ -65,8 +70,8 @@
 	<div class="content_info">
 		<div class="content_info_top">
 			<div class="content_info_block">
-				<img class="main_girl" src="/img/main_girl.png">
-				<img class="main_girl_mobile" src="/img/main_girl_mobile.png">
+				<img loading="lazy" class="main_girl" src="/img/main_girl.png">
+				<img loading="lazy" class="main_girl_mobile" src="/img/main_girl_mobile.png">
 				<div class="content_info_top_right">
 					<div class="content_info_rectangle_wrap">
 						<div class="content_info_rectangle"></div>
@@ -83,7 +88,7 @@
 		<div class="content_info_bottom">
 			{{seo.text_2|raw}}
 			<div class="content_info_slider">
-				<img src="{{seo.media["advantages"]|first.src}}">
+				<img loading="lazy" src="{{seo.media["advantages"]|first.src}}">
 			</div>
 		</div>
 	</div>
@@ -96,7 +101,7 @@
 				{% for key,post in blogPosts %}
 					<div class="blog_item blog_item_{{key + 1}}">
 						<div class="blog_img">
-							<a href="{{ post.getUrl() }}"><img src="{{ post.getFileData('image').src }}"></a>
+							<a href="{{ post.getUrl() }}"><img loading="lazy" src="{{ post.getFileData('image').src }}"></a>
 						</div>
 						<div class="blog_text">
 							<p class="blog_date">{{ post.published_at }}</p>
@@ -119,7 +124,7 @@
 					<div class="restaurant_item">
 						<div class="restaurant_img">
 							<a href="/catalog/{{alias}}/">
-								<img src="/img/restaurants/restaurant_{{alias}}.jpg">
+								<img loading="lazy" src="/img/restaurants/restaurant_{{alias}}.jpg">
 							</a>
 						</div>
 						<div class="restaurant_text">
