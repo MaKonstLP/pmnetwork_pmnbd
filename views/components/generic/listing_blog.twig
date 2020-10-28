@@ -2,7 +2,7 @@
     <div class="item swiper-slide {{type}}">
         <a href="/catalog/{{item.id}}/">
             <div class="item_img">
-                <img src="{{Declension.get_image_src(item.restaurant_cover_url)}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+                <img loading="lazy" src="{{Declension.get_image_src(item.restaurant_cover_url)}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
             </div>
         </a>
             <div class="item_info">

@@ -2,11 +2,26 @@
 
 export default class YaMap{
 	constructor(){
-		ymaps.ready(function () {
-	    var myMap = new ymaps.Map('map', {
-	        center: [
-            	$('.map #map').data('mapdotx'),
-            	$('.map #map').data('mapdoty'),
+        if (typeof ymaps == 'undefined') {
+            $(document).ready(() => {
+                setTimeout(()=>{
+                   $.getScript('https://api-maps.yandex.ru/2.1/?lang=ru_RU').done(() => {
+                    this.mapInit();
+                  }); 
+                }, 1500);
+            });
+        } else {
+            this.mapInit();
+        }
+		
+	}
+
+    mapInit(){
+        ymaps.ready(function () {
+        var myMap = new ymaps.Map('map', {
+            center: [
+                $('.map #map').data('mapdotx'),
+                $('.map #map').data('mapdoty'),
             ],
             zoom: 15,
             behaviors: ["drag", "dblClickZoom", "rightMouseButtonMagnifier", "multiTouch"]
@@ -32,11 +47,11 @@ export default class YaMap{
             balloonOffset: [0,-37],
         });
 
-	    myMap.geoObjects.add(myPlacemark); 
+        myMap.geoObjects.add(myPlacemark); 
         
         if($(window).width() > 600){
             myPlacemark.balloon.open();
         }
-		});
-	}
+        });
+    }
 }

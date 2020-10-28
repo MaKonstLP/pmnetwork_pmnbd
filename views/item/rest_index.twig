@@ -30,7 +30,7 @@
                                     <div class="form_close" data-close-popup></div>
                                     <p class="popup_phone_title">Ресторан <span itemprop="name">{{item.restaurant_name}}</span></p>
                                     <div class="popup_phone_present">
-                                        <img src="/img/present.svg">
+                                        <img loading="lazy" src="/img/present.svg">
                                         <p>Забронируй зал и получи подарок!</p>
                                     </div>
                                     <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone"><span itemprop="telephone">{{item.restaurant_phone}}</span></a>
@@ -83,7 +83,7 @@
                 {% for image in item.restaurant_images%}
                     <div class="object swiper-slide">
                         <div class="object_img">
-                            <img src="{{ Declension.get_image_src(image.waterpath~'=w800-h600-l100') }}" data-gallery-img-view/>
+                            <img loading="lazy" src="{{ Declension.get_image_src(image.waterpath~'=w800-h600-l100') }}" data-gallery-img-view/>
                         </div>
                     </div>
                 {% endfor %}
@@ -97,7 +97,7 @@
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                     {% for image in item.restaurant_images%}
                         <div class="object swiper-slide">
-                           <img src="{{ Declension.get_image_src(image.realpath~'=w150-h90-l80') }}"/>
+                           <img loading="lazy" src="{{ Declension.get_image_src(image.realpath~'=w150-h90-l80') }}"/>
                         </div>
                     {% endfor %}
                 </div>
@@ -189,10 +189,10 @@
                     <div class="same_object">
                         <div class="same_object_img">
                             <div class="same_object_img_item">
-                               <img src="{{ Declension.get_image_src(same_object.images[1].realpath ? same_object.images[0].realpath : same_object.cover_url) }}"> 
+                               <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].realpath ? (same_object.images[0].realpath~'=w250-h170-l90') : same_object.cover_url|replace({'w445-h302-n-l95':'w250-h170-l90'})) }}">
                             </div>
                             <div class="same_object_img_item">
-                               <img src="{{ Declension.get_image_src(same_object.images[1].realpath ? same_object.images[1].realpath : same_object.cover_url) }}"> 
+                               <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[1].realpath ? (same_object.images[1].realpath~'=w250-h170-l90') : same_object.cover_url|replace({'w445-h302-n-l95':'w250-h170-l90'})) }}">
                             </div>
                         </div>
                         <div class="same_object_desc">
@@ -218,7 +218,7 @@
         <div class="map_data_wrap">
             <div class="map_data">
                 <div class="map_img_wrap">
-                    <img class="map_img" src="{{ Declension.get_image_src(item.restaurant_cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'})) }}">
+                    <img loading="lazy" class="map_img" src="{{ Declension.get_image_src(item.restaurant_cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'})) }}">
                 </div>
                 
                 <a href="/catalog/restoran-{{item.restaurant_slug}}/" class="map_rest_name">{{ item.restaurant_name }}</a>
@@ -230,8 +230,6 @@
 
         </div>
     </div>
-
-    <script defer src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
     {% if other_rests %}
     <div class="listing_wrap other_rests_wrap">

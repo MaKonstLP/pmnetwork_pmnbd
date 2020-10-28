@@ -1,9 +1,9 @@
 {% for item in items %}
     <div class="item swiper-slide {{type}}">
-        <img class="item_present" src="\img\bron.png" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
+        <img loading="lazy" class="item_present" src="\img\bron.png" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
         <a href="/catalog/restoran-{{item.restaurant_slug}}/">
             <div class="item_img">
-                <img src="{{ Declension.get_image_src(item.restaurant_cover_url) }}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+                <img loading="lazy" src="{{ Declension.get_image_src(item.restaurant_cover_url) }}=w300-h180-l90" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
             </div>
         </a>
             <div class="item_info">
@@ -21,43 +21,40 @@
                         <div class="item_meta_items">
                         {% if item.rooms %}
                             <div class="item_meta_item">
-                                <span class="item_meta_label">Вместимость: </span>
-                                <span class="item_meta_text">
+                                Вместимость: 
                                     {% set min_price = 100000000 %}
                                     {% for room in item.rooms %}
                                         {{room.capacity}}{{loop.last ? '' : ','}}
                                         {% set min_price = room.price and (min_price > room.price) ? room.price : min_price %}
                                     {% endfor %}
-                                </span>
+                              
                             </div>
                         {% endif %}
                         {% if item.rooms %}  
                             <div class="item_meta_item">
-                                <span class="item_meta_label">Залов: </span><span class="item_meta_text">{{item.rooms|length}}</span>
+                                Залов: {{item.rooms|length}}
                             </div>
                         {% endif %}
                         </div>
                         <div class="item_meta_items">
                         {% if item.restaurant_alcohol in [1,2] %}
                             <div class="item_meta_item">
-                                <span class="item_meta_label">Свой алкоголь: </span><span class="item_meta_text">да</span>
+                                Свой алкоголь: да
                             </div>
                         {% endif %}    
                             <div class="item_meta_item">
-                                <span class="item_meta_label">Парковка: </span>
-                                <span class="item_meta_text">
+                                Парковка: 
                                     {% if item.restaurant_parking %}  
                                         на {{item.restaurant_parking}} авто
                                     {% else %}
                                         нет
                                     {% endif %} 
-                            </span>
                             </div>
                         </div>    
                     </div>
                     {% if min_price and min_price != 100000000 %}
                         <div class="item_price">
-                            <span class="item_meta_text">от {{min_price}} ₽/чел.</span>
+                            от {{min_price}} ₽/чел.
                         </div>
                     {% endif %}
                 
