@@ -343,6 +343,7 @@ export default class Main {
         $('body').on('click', '[data-target]', function(){
             console.log('reachGoal',$(this).data('target'));
             ym('67719148', 'reachGoal', $(this).data('target'));
+            gtag('event', $(this).data('target'), {'event_category': 'click'});
         });
     }
 }

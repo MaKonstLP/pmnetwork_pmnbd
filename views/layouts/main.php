@@ -34,6 +34,17 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
     <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
     <?= Html::csrfMetaTags() ?>
+    
+    <style>
+    <?php 
+        if (file_exists(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css'))) {
+            print_r(file_get_contents(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css')));
+        }
+    ?>
+    </style>
+</head>
+
+<body>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         var fired = false;
@@ -83,24 +94,19 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                 googletagmanager_js.src = 'https://www.googletagmanager.com/gtag/js?id=UA-179040293-1';
                 document.body.appendChild(googletagmanager_js); 
 
-                window.dataLayer = window.dataLayer || [];
-
-                function gtag() {
-                    dataLayer.push(arguments);
-                }
-                gtag('js', new Date());
-
-                gtag('config', 'UA-179040293-1');
-
             },500);
         }
+
+        setTimeout(() => {
+            gtag('event', 'read', {'event_category': '15 seconds'});
+        }, 15000);
     </script>
     <noscript>
         <div><img src="https://mc.yandex.ru/watch/67719148" style="position:absolute; left:-9999px;" alt="" /></div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-   <?php /* <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179040293-1"></script>
+ <?php /*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-179040293-1"></script> */?>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -110,17 +116,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         gtag('js', new Date());
 
         gtag('config', 'UA-179040293-1');
-    </script> */?>
-    <style>
-    <?php 
-        if (file_exists(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css'))) {
-            print_r(file_get_contents(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css')));
-        }
-    ?>
-    </style>
-</head>
-
-<body>
+    </script>
     <?php $this->beginBody() ?>
 
     <div class="main_wrap">

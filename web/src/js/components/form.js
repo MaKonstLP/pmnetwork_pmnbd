@@ -205,6 +205,7 @@ export default class Form {
 		this.reset();
 		console.log('reachGoal', this.target);
 		ym('67719148', 'reachGoal', this.target);
+		gtag('event', $(this).data('target'), {'event_category': 'click'});
 		// this.$submitButton.removeClass('button__pending');
 	}
 
