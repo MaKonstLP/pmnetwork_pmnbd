@@ -114,6 +114,7 @@
         font-size: 15px;
         line-height: 24px;
         padding: 14px 12px;
+        cursor: pointer;
         @include placeholder {
           color: #848484;
         }
@@ -260,7 +261,7 @@
     width: 100%;
     justify-content: center;
     //bottom: -60px;
-    bottom: -15px; 
+    bottom: -36px; 
     position: absolute;
     left: 0;
     right: 0; 

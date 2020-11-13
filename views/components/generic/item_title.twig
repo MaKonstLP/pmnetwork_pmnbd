@@ -1,4 +1,4 @@
-<ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+<ul class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
 	{% set singleIdx = 0 %}
 	{% set multipleIdx = 0 %}
 	{% for crumb in seo.breadcrumbs %}
@@ -14,7 +14,7 @@
 		{% else %}
 			{% set item_class = 'breadcrumbs_item_single' %}
 		{% endif %}
-		<li class="breadcrumbs_item {{item_class}}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
+		<li class="breadcrumbs_item {{item_class}}" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
 			<a itemprop="item" typeof="WebPage" href="{{crumb.link}}">
 				<span itemprop="name">{{crumb.name}}</span>
 				<meta itemprop="position" content="{{crumb.type == 'multiple' ? multipleIdx : singleIdx }}">

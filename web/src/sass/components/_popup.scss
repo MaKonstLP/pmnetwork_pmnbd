@@ -156,6 +156,12 @@
     	justify-content: center;
     	
     }
+
+    .slider_arrow {
+	    z-index: 5;
+	    filter: invert(1);
+	    cursor: pointer;
+	}
     
 
     @include for-pad{

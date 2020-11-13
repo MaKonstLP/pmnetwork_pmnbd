@@ -166,6 +166,7 @@
     background: url(/img/arrow.svg) no-repeat;
     position: absolute;
     top: 180px;
+    cursor: pointer;
     @include for-pad{
     	display: none;
     }

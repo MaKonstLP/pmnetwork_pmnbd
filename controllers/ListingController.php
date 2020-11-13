@@ -237,9 +237,20 @@ class ListingController extends BaseFrontendController
 						$filterAlias = array_key_first($sliceFilterParams);
 						if (!empty($fastFilters[$filterAlias])) {
 							if ($sliceFilterItem = $slice->getFilterItem($filter_model)) {
+								switch ($slice->alias) {
+									case '1000-rub':
+										$slice_name = 'Недорогие';
+										break;
+									case '3000-rub':
+										$slice_name = 'Дорогие';
+										break;
+									default:
+										$slice_name = str_replace('/', ' / ', $sliceFilterItem->text);
+										break;
+								}
 								//добавляем его в результирующий массив к другим позициям этого же типа фильтра
 								$acc[$filterAlias][] = [
-									'name' => $sliceFilterItem->text,
+									'name' => $slice_name,
 									'alias' => $slice->alias,
 									'count' => $temp_params->query_hits
 								];

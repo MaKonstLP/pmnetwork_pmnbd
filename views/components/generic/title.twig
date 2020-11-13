@@ -1,6 +1,6 @@
-<ul class="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+<ul class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
 	{% for crumb in seo.breadcrumbs %}
-		<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" typeof="ListItem">
+		<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
 			<a itemprop="item" typeof="WebPage" href="{{crumb.link}}">
 				<span itemprop="name">{{crumb.name}}</span>
 				<meta itemprop="position"  content="{{loop.index}}">
