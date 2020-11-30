@@ -77,7 +77,7 @@ class Breadcrumbs
                         [[
                             'type' => 'single',
                             'link' => "/catalog/{$slice->alias}/",
-                            'name' => $filterItem->text
+                            'name' => str_replace('/', ' / ', $filterItem->text)
                         ]]
                     );
                 }
@@ -101,7 +101,7 @@ class Breadcrumbs
                 $acc[] = [
                     'type' => 'multiple',
                     'link' => "/catalog/{$sliceObj->alias}/",
-                    'name' => $filterItemObj->text
+                    'name' => str_replace('/', ' / ', $filterItemObj->text)
                 ];
             }
             return $acc;
