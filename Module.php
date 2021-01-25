@@ -30,7 +30,7 @@ class Module extends \yii\base\Module
 
         $currentSubdomenAlias = explode('.', $_SERVER['HTTP_HOST'])[0];
         $siteName = explode(".", \Yii::$app->params['siteAddress'])[0];
-
+        Yii::$app->params['domen'] = $_SERVER['HTTP_HOST'];
         $subdomens = Yii::$app->params['activeSubdomenRecords'] = Subdomen::find()
             ->where(['active' => 1])
             ->orderBy(['name' => SORT_ASC])
