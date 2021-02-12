@@ -372,7 +372,7 @@ header{
     &:before{
         content: ''; 
         position: absolute;
-        border: 8px solid transparent;
+        border: 8px solid rgba(255,255,255,0);
         border-bottom: 8px solid white;
         top: -16px;
         left: 25px;
