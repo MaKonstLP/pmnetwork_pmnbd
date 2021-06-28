@@ -228,7 +228,7 @@ class SiteController extends BaseFrontendController
             $subdomen_alias = Yii::$app->params['subdomen_alias'] . '.';
         }
        
-        echo "User-agent: *\nSitemap: https://{$subdomen_alias}birthday-place.ru/sitemap/";
+        echo "User-agent: *\nDisallow: *utm*\nDisallow: *from=*\nDisallow: *baobab_event_id*\nSitemap: https://{$subdomen_alias}birthday-place.ru/sitemap/";
         // echo "User-agent: *\nDisallow: /";
         exit;
     }
