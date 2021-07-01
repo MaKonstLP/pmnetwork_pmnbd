@@ -5,13 +5,40 @@
 {{this.registerMetaTag({'property':'og:image','content':'https://birthday-place.ru/img/bd/mstile-150x150.png'})}}
 {% set  mainRestTypes = mainRestTypesCounts|length %}
 <div data-page-type="index" {{mainRestTypes > 0 ? '' : 'class=" _short"'}}>
-	<div class="main_top_image" style="position: relative;">
-		<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 4 ? ' __short_3' : ''}}">
-			<img loading="lazy" src="{{seo.media["header-image"]|first.src}}" alt="{{seo.media['header-image']|first.alt}}">
+	<div class="main_top_image" style="position: relative;background: url({{seo.media["header-image"]|first.src}}) center no-repeat;background-size: cover;">
+		{#<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 4 ? ' __short_3' : ''}}">
+			<img loading="lazy" src="" alt="{{seo.media['header-image']|first.alt}}">
+		</div>#}
+		<div class="main_top {{mainRestTypes < 5 ? ' __short_3' : ''}}">
+			<h1>{{seo.h1|raw}}</h1>
+			<div class="main_top_desc">
+				{{count}}
+				заведен{{Declension.get_num_ending(count,['ие','ия','ий'])}}
+			</div>
+			<div class="main_search">
+				<div class="main_search_city" data-search-wrap>
+					<input class="main_search_city_input" type="text" placeholder="{{app.params.subdomen_name}}" data-selected-city-id="{{app.params.subdomen_id}}" data-selected-city-alias="{{app.params.subdomen_alias}}" data-search-input>
+					<div class="main_search_city_list">
+						{% for subdomenObject in subdomenObjects %}
+							<p data-city-id="{{subdomenObject.city_id}}" data-city-alias="{{subdomenObject.alias}}" data-search-city>{{subdomenObject.name}}</p>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="main_search_type_room">
+					<span class="type_room_choose">Тип площадки</span>
+					<span class="choose" data-selected-filter-item=""></span>
+					<div class="main_search_type_room_list">
+						{{ this.render('//components/filter/homepage_rest-types_list.twig', { 'filters': filters }) | raw }}
+					</div>
+				</div>
+				<span class="main_search_submit" data-target="pdbor_2">Подобрать</span>
+			</div>
 		</div>
-		<div class="main_rectangle_wrap{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 4 ? ' __short_3' : ''}}">
+		<div class="main_rectangle_wrap{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 5 ? ' __short_3' : ''}}">
+			{%set counter = 0%}
 			{% for item in mainRestTypesCounts %}
-				<div class="main_rectangle">
+				{% set counter = (mainRestTypes == 4 and loop.index == 4) ?  counter : (counter + 1) %}
+				<div class="main_rectangle main_rectangle_count_{{item.nomobile ? 'x' : counter}}">
 					<div class="main_rectangle_1"></div>
 					<div class="main_rectangle_2"></div>
 					<a href="/catalog/{{item.alias}}/">
@@ -21,34 +48,6 @@
 				</div>
 			{% endfor %}
 		</div>
-	</div>
-	
-	<div class="main_top">
-		<h1>{{seo.h1|raw}}</h1>
-		<div class="main_top_desc">
-			{{count}}
-			заведен{{Declension.get_num_ending(count,['ие','ия','ий'])}}
-		</div>
-		<div class="main_search">
-			<div class="main_search_city" data-search-wrap>
-				<input class="main_search_city_input" type="text" placeholder="{{app.params.subdomen_name}}" data-selected-city-id="{{app.params.subdomen_id}}" data-selected-city-alias="{{app.params.subdomen_alias}}" data-search-input>
-				<div class="main_search_city_list">
-					{% for subdomenObject in subdomenObjects %}
-						<p data-city-id="{{subdomenObject.city_id}}" data-city-alias="{{subdomenObject.alias}}" data-search-city>{{subdomenObject.name}}</p>
-					{% endfor %}
-				</div>
-			</div>
-			<div class="main_search_type_room">
-				<span class="type_room_choose">Тип площадки</span>
-				<span class="choose" data-selected-filter-item=""></span>
-				<div class="main_search_type_room_list">
-					{{ this.render('//components/filter/homepage_rest-types_list.twig', { 'filters': filters }) | raw }}
-				</div>
-			</div>
-			<span class="main_search_submit" data-target="pdbor_2">Подобрать</span>
-		</div>
-
-		
 	</div>
 
 
@@ -93,7 +92,7 @@
 		</div>
 	</div>
 
-	{% if blogPosts %}
+	{#% if blogPosts %}
 		<div class="main_blog">
 			<h3>Последние записи блога</h2>
 			<a class="all_articles" href="/blog/">Все статьи</a>
@@ -114,7 +113,7 @@
 				{% endfor %}
 			</div>
 		</div>
-	{% endif %}
+	{% endif %#}
 
 	{% if mainSlices %}
 		<div class="main_podborki">
