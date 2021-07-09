@@ -36,10 +36,30 @@
             display: none;
         }
 
-        .item_present{
+        .item_present_wrapper{
             position: absolute;
-            top: 8px;
+            width: 115px;
+            height: 22px;
+            display: flex;
+            background: #fff;
+            justify-content: space-between;
+            padding: 5px 5px;
+            align-items: center;
+            border-radius: 3px;
             right: 8px;
+            top: 8px;
+        }
+
+        .item_present{
+            //position: absolute;
+            //top: 8px;
+            //right: 8px;
+            width: 15px;
+        }
+
+        .item_present_text{
+            font-size: 11px;
+            font-weight: 600;
         }
 
         &.other{
@@ -94,8 +114,8 @@
             height: 176px;
             background-color: #c5c5c5;
             img{
-                width: 100%;
-                height: 100%;
+                //width: 100%;
+                min-height: 100%;
                 object-fit: cover;
             }
         }

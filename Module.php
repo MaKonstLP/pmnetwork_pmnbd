@@ -52,6 +52,13 @@ class Module extends \yii\base\Module
             Yii::$app->params['subdomen_name'] = $subdomen_model->name;
             Yii::$app->params['subdomen_dec'] = $subdomen_model->name_dec;
             Yii::$app->params['subdomen_rod'] = $subdomen_model->name_rod;
+            Yii::$app->params['subdomen_phone'] = $subdomen_model->phone;
+            $subdomen_phone_pretty = null;
+            if(  preg_match( '/^\+\d(\d{3})(\d{3})(\d{2})(\d{2})$/', $subdomen_model->phone,  $matches ) )
+            {
+                $subdomen_phone_pretty = '+7 ('.$matches[1].') '.$matches[2].'-'. $matches[3].'-'. $matches[4];
+            }
+            Yii::$app->params['subdomen_phone_pretty'] = $subdomen_phone_pretty;
 
             $subdomenCookie = \Yii::$app->request->cookies->get('subdomen');
             if (empty($subdomenCookie) || $subdomenCookie != $currentSubdomenAlias) {
@@ -82,6 +89,13 @@ class Module extends \yii\base\Module
             Yii::$app->params['subdomen_name'] = $subdomen_model->name;
             Yii::$app->params['subdomen_dec'] = $subdomen_model->name_dec;
             Yii::$app->params['subdomen_rod'] = $subdomen_model->name_rod;
+            Yii::$app->params['subdomen_phone'] = $subdomen_model->phone;
+            $subdomen_phone_pretty = null;
+            if(  preg_match( '/^\+\d(\d{3})(\d{3})(\d{2})(\d{2})$/', $subdomen_model->phone,  $matches ) )
+            {
+                $subdomen_phone_pretty = '+7 ('.$matches[1].') '.$matches[2].'-'. $matches[3].'-'. $matches[4];
+            }
+            Yii::$app->params['subdomen_phone_pretty'] = $subdomen_phone_pretty;
         }
 
         $subdomenId = Yii::$app->params['subdomen_baseid'];

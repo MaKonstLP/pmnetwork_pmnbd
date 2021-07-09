@@ -11,7 +11,7 @@ class FormController extends Controller
 
     public function actionSend()
     {
-        $to  = ['kornilov@liderpoiska.ru', 'birthday-place@yandex.ru', 'sites@plusmedia.ru'];
+        //$to  = ['kornilov@liderpoiska.ru', 'birthday-place@yandex.ru', 'sites@plusmedia.ru'];
         $messages = [
             'successTitle' => 'Заявка успешно отправлена',
             'errorTitle' => 'К сожалению, не удалось обработать заявку',
@@ -19,7 +19,7 @@ class FormController extends Controller
             'errorBody' => 'Попробуйте, пожалуйста, позднее или свяжитесь с нами по телефону.',
         ];
 
-        if ($_POST['type'] == 'main' || $_POST['type'] == 'header') {
+        /*if ($_POST['type'] == 'main' || $_POST['type'] == 'header') {
             $subj = "Заявка на подбор зала.";
         } else {
             $subj = "Заявка на бронирование зала.";
@@ -56,7 +56,32 @@ class FormController extends Controller
                 'title' => $messages['errorTitle'],
                 'body' => $messages['errorBody'],
             ];
+        }*/
+
+        $messageApi = $this->sendApi($_POST);
+
+        $log = file_get_contents('/var/www/pmnetwork/log/manual.log');
+        $log .= json_encode($messageApi);
+        file_put_contents('/var/www/pmnetwork/log/manual.log', $log);
+
+        if ($messageApi) {
+            $resp = [
+                'error' => 0,
+                'title' => $messages['successTitle'],
+                'body' => $messages['successBody'],
+                'name' => isset($_POST['name']) ? $_POST['name'] : '',
+                'phone' => $_POST['phone'],
+                'messageApi' => $messageApi
+            ];
+        } else {
+            $resp = [
+                'error' => 1,
+                'title' => $messages['errorTitle'],
+                'body' => $messages['errorBody'],
+            ];
         }
+
+
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return $resp;
@@ -79,38 +104,59 @@ class FormController extends Controller
         return $message->send();
     }
 
-    public function sendApi($name, $phone, $date, $count)
-    {
+    public function sendApi($post) {
+        $post_data = json_decode(json_encode($_POST), true);
+
+        //$log = file_get_contents('/var/www/pmnetwork/pmnetwork/log/manual.log');
+        //$log .= json_encode($post_data);
+        //file_put_contents('/var/www/pmnetwork/pmnetwork/log/manual.log', $log);
+
+        $payload = [];
+
+        $payload['city_id'] = Yii::$app->params['subdomen_id'];
+        $payload['event_type'] = "Birthday";
+
+        foreach ($post_data as $key => $value) {
+            switch ($key) {
+                case 'date':
+                    if($value)    
+                        $payload['date'] = $newDate = date("Y.m.d", strtotime($value));
+                    break;
+                case 'name':
+                    $payload['name'] = $value;
+                    break;
+                case 'phone':
+                    $payload['phone'] = $value;
+                    break;
+                case 'venue_id':
+                    $payload['venue_id'] = $value;
+                    break;
+                case 'comment':
+                    $payload['details'] = $value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //return $payload;
+
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://api.gorko.ru/api/v2/venues/all/request?model_type=restaurants&model_id=1&city_id=4400');
-        $payload = json_encode([
-            "name"      => $name,
-            "phone"     => $phone,
-            "date"      => $date,
-            "guests"    => $count,
-            'budget' => null,
-            'details' => null,
-            'drinks' => null,
-            'event_type' => "1",
-            'food' => null,
-            'line' => null,
-            'page_type' => null,
-            'telegram' => null,
-            'viaLine' => null,
-            'viaPhone' => 1,
-            'viaTelegram' => null,
-            'viaViber' => null,
-            'viaWhatsApp' => null,
-            'viber' => null,
-            'whatsapp' => null,
-        ]);
+        curl_setopt($curl, CURLOPT_URL, 'https://v.gorko.ru/api/birthday-place/inquiry/put');
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl, CURLOPT_ENCODING, '');
-        $response = json_decode(curl_exec($curl), true);
+        $response = curl_exec($curl);
+        $info = curl_getinfo($curl);
         curl_close($curl);
-        return $response;
+
+
+
+        return json_encode([
+            'response' => $response,
+            'info' => $info,
+            'payload' => $payload,
+        ]);
     }
 }

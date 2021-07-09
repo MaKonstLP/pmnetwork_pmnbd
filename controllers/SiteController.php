@@ -110,10 +110,12 @@ class SiteController extends BaseFrontendController
         $mainSlices = array_filter($mainSlices, function ($slice) {
             return $slice['count'] > 0;
         });
-
-        $blogPosts = BlogPost::findWithMedia()
-            ->limit(5)->where(['published' => 1])
-            ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
+        $blogPosts = [];
+        if (\Yii::$app->params['subdomen_alias'] == 'msk') {
+            $blogPosts = BlogPost::findWithMedia()
+                ->limit(5)->where(['published' => 1])
+                ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
+        }
 
         $totalRests = $items->total;
 

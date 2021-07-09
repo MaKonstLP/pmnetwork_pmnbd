@@ -13,7 +13,7 @@
     <div class="object_gallery_wrap">
         <div class="listing_widget_arrow _prev"></div>
         <div class="listing_widget_arrow _next"></div>
-        <div class="object_gallery_container swiper-container" data-gallery-main-swiper>
+        <div class="object_gallery_container swiper-container" data-gallery-main-swiper data-gallery-swiper>
             <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                 {% for image in item.images%}
                     <div class="object swiper-slide">
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div class="object_form">
-                {{ this.render('//components/generic/form.twig',{'title': 'Хотите день рождения в этом зале?', 'type' : 'room', 'target': 'zal'}) | raw }}
+                {{ this.render('//components/generic/form.twig',{'title': 'Хотите день рождения в этом зале?', 'type' : 'room', 'target': 'zal', 'venue_id': rest_item.restaurant_gorko_id}) | raw }}
             </div>
         </div>
     </div>

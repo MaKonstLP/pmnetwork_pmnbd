@@ -16,7 +16,7 @@
 					<input type="text" name="name" data-required placeholder="Как Вас зовут?" class="not_check_approove"/>
 				</div>
 				<div class="input_wrapper">
-					<input type="text" name="phone" data-required placeholder="Номер телефона" />
+					<input type="text" name="phone" data-required placeholder="Номер телефона" autocomplete="off"/>
 				</div>
 				<div class="input_wrapper">
 					<input type="text" name="email" data-required placeholder="Электронная почта" />
@@ -31,6 +31,10 @@
 					<input type="text" name="comment" data-required placeholder="Комментарий" />
 				</div>
 			</div>
+
+			{% if target == 'zal' %}
+				<input type="hidden" name="venue_id" value="{{venue_id}}" />
+			{% endif %}
 
 			<div class="form_submit">
 				<button class="_button">Отправить</button>

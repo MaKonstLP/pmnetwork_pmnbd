@@ -18,7 +18,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="icon" type="image/png" href="/img/favicon_bd.ico">
+    <link rel="icon" href="/img/bd/favicon.ico">
     <link type="image/x-icon" rel="shortcut icon" href="/img/bd/favicon.ico">
     <link type="image/png" sizes="16x16" rel="icon" href="/img/bd/favicon-16x16.png">
     <link type="image/png" sizes="32x32" rel="icon" href="/img/bd/favicon-32x32.png">
@@ -122,14 +122,14 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <div class="main_wrap">
 
         <header>
-            <div class="header_wrap<?php echo (Yii::$app->request->url == '/') ? ' home' : ''; ?>">
+            <div class="header_wrap<?=(Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : '';?>">
                 <a href="/" class="header_logo">
                     <div class="header_logo_img"></div>
                 </a>
                 <a href="/" class="header_logo header_logo_2">
                     <div class="header_logo_text">МОЙ ДЕНЬ</div>
                 </a>
-                <div class="header_city <?php echo (Yii::$app->request->url == '/') ? ' home' : ''; ?>">
+                <div class="header_city<?=(Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : '';?>">
                     <img src="/img/geo_label.png" />
                     <span class="city"><?= Yii::$app->params['subdomen_name'] ?></span>
                     <span class="choose"></span>
@@ -168,7 +168,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     </div>
                 </div>
                 <div class="header_phone">
-                    <a href="tel:+79252380246" data-target="telefon_1">8 (925) 238-02-46</a>
+                    <a href="tel:<?= Yii::$app->params['subdomen_phone'] ?>" data-target="telefon_1"><?= Yii::$app->params['subdomen_phone_pretty'] ?></a>
                     <p data-open-popup-form class="_link" data-target="podbor_1">Подберите мне зал</p>
                 </div>
             </div>
@@ -178,7 +178,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
             <?= $content ?>
         </div>
 
-        <footer>
+        <footer<?=Yii::$app->controller->action->id == 'post' ? ' class="__bgWhite"' : '';?>>
             <div class="footer_wrap">
                 <div class="footer_row">
                     <div class="footer_block _left">
@@ -218,12 +218,15 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                         <?php } ?>
                                     </ul>
                                 </li>
+                                <li>
+                                    <a href="https://birthday-place.ru//blog/"><span>Блог</span></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
                     <div class="footer_block _right">
 
-                        <a class="footer_ph" href="tel:+79252380246" data-target="telefon_1">8 (925) 238-02-46</a>
+                        <a class="footer_ph" href="tel:<?= Yii::$app->params['subdomen_phone'] ?>" data-target="telefon_1"><?= Yii::$app->params['subdomen_phone_pretty'] ?></a>
 
                     </div>
                 </div>

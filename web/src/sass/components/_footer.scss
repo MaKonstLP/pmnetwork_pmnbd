@@ -5,7 +5,9 @@ footer{
     z-index: 10;
     //margin: 0px 35px;
     background-color: $clrBackground;
-
+    &.__bgWhite{
+        background: #fff;
+    }
     @include for-small-desktop{
         margin: 0;
     }
@@ -123,6 +125,12 @@ footer{
                     text-transform: uppercase;
                     font-family: 'Proxima Nova Thin', sans-serif;
                     color: #000;
+                    @include for-pad{
+                        width: 120px;
+                    }
+                    @include for-mobile{
+                        width: 120px;
+                    }
                 }
 
                 .footer_info{
@@ -209,10 +217,10 @@ footer{
             margin-left: 60px;
         }
         @include for-pad{
-            margin-left: 185px;
+            margin-left: 100px;
         }
         @include for-mobile{
-            margin-left: 185px;
+            margin-left: 100px;
         }
         @include for-phone{
             margin-left: 0;
@@ -231,6 +239,15 @@ footer{
 
             li{
                 margin-bottom: 12px;
+                margin-right: 10px;
+                @include for-pad{
+                    margin-right: 0;
+                }
+                @include for-mobile{
+                    margin-right: 0;
+                }
+            }
+            li:first-child{
                 margin-right: 50px;
                 @include for-small-desktop{
                     margin-right: 37px;

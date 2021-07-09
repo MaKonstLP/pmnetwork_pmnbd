@@ -1,27 +1,33 @@
 .main_top{
     width: 100%;
-    margin: 61px auto 50px;
+    //margin: 61px auto 50px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: absolute;
+    //position: absolute;
     top: 60px;
+    position: relative;
+    margin: 0 auto;
+    padding: 5px 0 230px;
 
     @include for-notdesc{
         flex-direction: column;
-        padding: 0px 15px;
+        //padding: 0px 15px;
     }
 
     @include for-small-desktop{
-        margin: 42px auto 35px;
+       // margin: 42px auto 35px;
     }
 
     @include for-pad{
-        margin: 42px auto 35px;
+        //margin: 42px auto 35px;
     }
 
     @include for-mobile{
-        margin: 0 auto 20px;
+        &.__short_3{
+            padding: 5px 0 170px;
+        }
+       // margin: 0 auto 20px;
     }
 
     h1{
@@ -91,6 +97,7 @@
     text-align: center;
     position: relative;
     display: flex;
+    padding: 0 12px;
 
     @include for-phone{
         display: block;
@@ -314,27 +321,30 @@
         height: 105px;
         margin: 0 10px;
 
-        &:nth-child(1){
+        &.main_rectangle_count_x{
+            display: none;
+        }
+        &.main_rectangle_count_1{
             position: absolute;
             top: -10px;
             left: 0;
         }
-        &:nth-child(2){
+        &.main_rectangle_count_2{
             position: absolute;
             top: -10px;
             left: 111px;
         }
-        &:nth-child(3){
+        &.main_rectangle_count_3{
             position: absolute;
             top: -10px;
             left: 221px;
         }
-        &:nth-child(4){
+        &.main_rectangle_count_4{
             position: absolute;
             top: 67px;
             left: 54px;
         }
-        &:nth-child(5){
+        &.main_rectangle_count_5{
             position: absolute;
             top: 67px;
             left: 160px;

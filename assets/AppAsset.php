@@ -3,6 +3,7 @@
 namespace frontend\modules\pmnbd\assets;
 
 use yii\web\AssetBundle;
+use yii\web\View;
 
 /**
  * Main frontend application asset bundle.
@@ -19,7 +20,7 @@ class AppAsset extends AssetBundle
         'js/app.min.js',
     ];
     public $depends = [
-        //'yii\web\YiiAsset',
+        // 'yii\web\YiiAsset',
         //'yii\bootstrap\BootstrapAsset',
     ];
     public $publishOptions = [
@@ -30,6 +31,7 @@ class AppAsset extends AssetBundle
         $this->css = $this->getVersionedFiles($this->css);
         $this->js = $this->getVersionedFiles($this->js);
         parent::init();
+        $this->jsOptions['position'] = View::POS_END;
         // resetting BootstrapAsset to not load own css files
         \Yii::$app->assetManager->bundles['yii\\bootstrap\\BootstrapAsset'] = [
             'css' => [],

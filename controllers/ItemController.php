@@ -80,9 +80,6 @@ class ItemController extends BaseFrontendController
 		$seo = (new Seo('item', 1, 0, $rest_item, 'rest'))->seo;
 		$seo['breadcrumbs'] = Breadcrumbs::get_restaurant_crumbs($rest_item);
 		$seo['address'] = $rest_item->restaurant_address;
-		if($restActiveRecord =  Restaurants::findWithSeo()->where(['id' => $rest_item->id])->one()) {
-			try { $seo['text_1'] = $restActiveRecord->seoObject->text1; } catch (\Throwable $th) {}
-		}
 		$this->setSeo($seo);
 		
 		return $this->render('rest_index.twig', array(

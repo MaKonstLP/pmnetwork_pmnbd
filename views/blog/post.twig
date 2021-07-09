@@ -1,14 +1,73 @@
-<div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
-		<div class="object swiper-slide">
-			<img src="{{ post.getFileData('image').src }}" data-gallery-img-view/>
-			<div class="fscreen_blog_wrap">
-				<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
-				<div class="fscreen_blog_title">{{ post.name }}</div>
-				<div class="fscreen_blog_date">{{ post.published_at }}</div>
+{% set mnths = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'] %}
+
+
+<div class="post-blog" data-page-type="index">
+	<div class="fscreen_blog_top_image">
+		<div class="fscreen_blog_top_slider">
+			<img loading="lazy" src="{{ post.getFileData('image').src }}" alt="{{seo.media['header-image']|first.alt}}">
+		</div>
+		<div class="fscreen_blog_wrap">
+			<div class="fscreen_blog_link">
+				<a href="/blog/">Статьи блога</a>
+			</div>
+			{%if post.blogPostTags %}
+			<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
+			{%endif%}
+			<div class="fscreen_blog_breadcrumbs">
+				<ul class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+					<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
+						<a itemprop="item" typeof="WebPage" href="/">
+							<span itemprop="name">Главная</span>
+							<meta itemprop="position"  content="1">
+						</a>
+					</li>
+					<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
+						<a itemprop="item" typeof="WebPage" href="/blog/">
+							<span itemprop="name">Блог</span>
+							<meta itemprop="position"  content="2">
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="fscreen_blog_title">{{ post.name }}</div>
+			<div class="fscreen_blog_date">{{ post.published_at|date("j") }}
+				{{ mnths[post.published_at|date("n")] }}
+				{{ post.published_at|date("Y") }}</div>
+		</div>
+	</div>
+
+	<div class="content_block">
+		{{ preview ? post.getBodyHtml()|raw : post.getHtml()|raw }}
+	</div>
+	{% if similarPosts %}
+		<div class="other_objects same_blogs_wrap">
+			<h2>Похожие статьи</h2>
+			<div class="content_block">
+				<div class="listing_widget_arrow _prev"></div>
+				<div class="listing_widget_arrow _next"></div>
+				<div class="swiper-container" data-other-blogs-swiper>
+					<div class="swiper-wrapper" data-other-blogs-list>
+						{% for similarPost in similarPosts %}
+							<div class="blog_item swiper-slide">
+								<div class="blog_img">
+									<a href="{{ similarPost.getUrl() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
+								</div>
+								<div class="blog_text">
+									<p class="blog_date">{{similarPost.getRusDate()}}</p>
+									<a href="{{ similarPost.getUrl() }}">
+										<p class="blog_title">{{ similarPost.name }}</p>
+									</a>
+									<p class="blog_description">{{ similarPost.short_intro }}</p>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					<div class="listing_widget_controll">
+						<div class="listing_widget_pagination"></div>
+					</div>
+				</div>
 			</div>
 		</div>
-</div>
-<div class="content_block" data-listing-title>
-{{ post.getHtml() }}
-</div>
+	{% endif %}
 
+</div>

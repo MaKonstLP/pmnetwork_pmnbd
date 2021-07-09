@@ -24,12 +24,17 @@
 		<div class="object_gallery_container swiper-container" data-gallery-blog-swiper>
 			<div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
 				{% for post in topPosts %}
-					<div class="object swiper-slide">
-						<img src="{{ post.getFileData('image').src }}" data-gallery-img-view/>
+					<div class="swiper-slide fscreen_blog_top_image">
+						<div class="fscreen_blog_top_slider">
+							<img loading="lazy" src="{{ post.getFileData('image').src }}" alt="{{seo.media['header-image']|first.alt}}">
+						</div>
+
 						<div class="fscreen_blog_wrap">
+							{%if post.blogPostTags %}
 							<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
-							<div class="fscreen_blog_title">{{ post.name }}</div>
-							<div class="fscreen_blog_date">{{ post.published_at }}</div>
+							{%endif%}
+							<a href="{{ post.getUrl() }}"><div class="fscreen_blog_title" {%if not post.blogPostTags %} style="margin-top:48px"{%endif%}>{{ post.name }}</div></a>
+							<div class="fscreen_blog_date">{{ post.published_at|date("Y-m-d") }}</div>
 							<a class="fscreen_blog_href" href="{{ post.getUrl() }}">Читать статью</a>
 						</div>
 					</div>

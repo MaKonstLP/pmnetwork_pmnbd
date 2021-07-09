@@ -1,26 +1,34 @@
 <div class="filter" data-filter-wrapper>
-	{% for label,filter_item in filters %}
-		{% if filter_item.type == 'select' %}
-			{{ this.render('filter_select.twig', {
-				'filter_item':filter_item,
-				'label':label,
-				'filter_active': filter_active
-			}) | raw }}
-		{% else %}
-			{{ this.render('filter_checkbox.twig', {
-				'filter_item':filter_item,
-				'label':label,
-				'filter_active': filter_active
-			}) | raw }}
-		{% endif %}
-	{% endfor %}
-	<div class="filter_submit">
-	    <div class="filter_submit_button _button" data-filter-button data-target="pdbor_2">Подобрать</div>
-	</div>
-	<div class="filter_reset" data-filter-reset>
-		<a href="/catalog/">Сбросить фильтр</a>
-	</div>
-	<div class="filter_mobile" data-filter-mobile>
-		<div class="_button" data-filter-mobile-button><p>Фильтр площадок</p></div>
-	</div>
+  {% for label,filter_item in filters %} {% if filter_item.type == 'select' %}
+  {{
+    this.render("filter_select.twig", {
+      filter_item: filter_item,
+      label: label,
+      filter_active: filter_active
+    }) | raw
+  }}
+  {% else %}
+  {{
+    this.render("filter_checkbox.twig", {
+      filter_item: filter_item,
+      label: label,
+      filter_active: filter_active
+    }) | raw
+  }}
+  {% endif %} {% endfor %}
+  <div class="filter_submit">
+    <div
+      class="filter_submit_button _button"
+      data-filter-button
+      data-target="pdbor_2"
+    >
+      Подобрать
+    </div>
+  </div>
+  <div class="filter_reset" data-filter-reset>
+    <a href="/catalog/">Сбросить фильтр</a>
+  </div>
+  <div class="filter_mobile" data-filter-mobile>
+    <div class="_button" data-filter-mobile-button><p>Фильтр площадок</p></div>
+  </div>
 </div>
