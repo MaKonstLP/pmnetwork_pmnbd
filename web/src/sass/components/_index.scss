@@ -327,11 +327,18 @@
         width: 36%;
         overflow: hidden;
         position: relative;
+        a{
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+        }
         img{
             height: 100%;
             position: absolute;
-            right: 0;
-            bottom: 0;
+            //right: 0;
+            //bottom: 0;
         }
     }
     .blog_text{
@@ -394,7 +401,7 @@
                 width: 100%;
                 height: 136px;
                 img{
-                    height: auto;
+                    //height: auto;
                     width: 100%;
                     object-fit: cover;
                 }
@@ -425,7 +432,7 @@
                 width: 100%;
                 height: 136px;
                 img{
-                    height: auto;
+                    //height: auto;
                     width: 100%;
                     object-fit: cover;
                 }
@@ -440,29 +447,31 @@
             justify-content: center;
         }
 
-        .blog_item_1,.blog_item_2, .blog_item_3{
-            width: 100%;
+        .blog_item_1{
+            width: 78%;
         }
         .blog_item_4, .blog_item_5{
             display: none;
         }
-        /*.blog_item_2, .blog_item_3{
-            width: 350px;
+        .blog_item_2, .blog_item_3, .blog_item_0{
+            width: 38%;
             height: auto;
             flex-direction: column;
-            margin: 13px auto 0;
+            margin: 27px 13px 0;
 
             .blog_img{
                 width: 100%;
                 height: 136px;
                 img{
-                    height: 136px;
+                    //height: auto;
+                    width: 100%;
+                    object-fit: cover;
                 }
             }
             .blog_text{
                 width: 100%;
             }
-        }*/
+        }
     }
     @include for-phone{
        .blog_item_1, .blog_item_2, .blog_item_3, .blog_item_0 {

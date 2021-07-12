@@ -5,8 +5,16 @@
 	</url>
 	{% if isMain %}
 		<url>
-		<loc>{{host}}/politika/</loc>
-	</url>
+			<loc>{{host}}/politika/</loc>
+		</url>
+		<url>
+			<loc>{{host}}/blog/</loc>
+		</url>
+		{% for post in posts %}
+			<url>
+				<loc>{{host}}/blog/{{post.alias}}/</loc>
+			</url>
+		{% endfor %}
 	{% endif %}
 	
 	<url>

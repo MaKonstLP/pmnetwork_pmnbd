@@ -322,6 +322,12 @@
 			background-color: $clrBlue;
 		}
 	}
+	&_gray{
+		.wrapper{
+			padding: 24px 32px;
+			background-color: $clrExtraLightGrey;
+		}
+	}
 }
 .post-block{
 	p, a, li{
@@ -380,6 +386,11 @@
 	}
 	ul li::marker{
 		color: #FCDD70;
+	}
+}
+.post-block_color_yellow{
+	ul li::marker{
+		color: #fda800;
 	}
 }
 .post-block-img2{

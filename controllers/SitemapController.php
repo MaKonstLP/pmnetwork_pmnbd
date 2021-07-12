@@ -13,6 +13,7 @@ use common\models\Filter;
 use frontend\components\ParamsFromQuery;
 use frontend\components\QueryFromSlice;
 use frontend\modules\pmnbd\models\ElasticItems;
+use common\models\blog\BlogPost;
 
 class SitemapController extends Controller
 {
@@ -47,11 +48,19 @@ class SitemapController extends Controller
 		$elastic_model = new ElasticItems;
 		$rests = new ItemsFilterElastic([], 9999, 1, false, 'restaurants', $elastic_model);
 
+		$blogPosts = [];
+        if (\Yii::$app->params['subdomen_alias'] == 'msk') {
+            $blogPosts = BlogPost::findWithMedia()
+                ->where(['published' => 1])
+                ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
+        }
+
 		return $this->renderPartial('sitemap.twig', [
 			'isMain' => Yii::$app->params['subdomen_id'] == 4400,
 			'host' => $host,
 			'slices' => $slices,
-			'rests' => $rests->items
+			'rests' => $rests->items,
+			'posts' => $blogPosts
 		]);
 	}
 }

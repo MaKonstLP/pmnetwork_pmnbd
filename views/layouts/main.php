@@ -219,7 +219,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="https://birthday-place.ru//blog/"><span>Блог</span></a>
+                                    <a href="https://birthday-place.ru/blog/"><span>Блог</span></a>
                                 </li>
                             </ul>
                         </div>

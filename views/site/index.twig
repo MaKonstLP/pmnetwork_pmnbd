@@ -107,7 +107,7 @@
 							<a href="{{ post.getUrl() }}"><img loading="lazy" src="{{ post.getFileData('image').src }}"></a>
 						</div>
 						<div class="blog_text">
-							<p class="blog_date">{{ post.published_at }}</p>
+							<p class="blog_date">{{ post.published_at|date("Y-m-d") }}</p>
 							<a href="{{ post.getUrl() }}">
 								<p class="blog_title">{{ post.name }}</p>
 							</a>
