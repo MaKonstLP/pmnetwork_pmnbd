@@ -1,12 +1,12 @@
 {% for item in items %}
     <div class="item swiper-slide {{type}}">
         <div class="item_present_wrapper">
-            <img loading="lazy" class="item_present" src="\img\Gift_icon.svg" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
+            <img loading="lazy" class="item_present" src="/upload/img/Gift_icon.svg" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
             <p class="item_present_text">за бронирование</p>
         </div>
         <a href="/catalog/restoran-{{item.restaurant_slug}}/">
             <div class="item_img">
-                <img loading="lazy" src="{{ Declension.get_image_src(item.restaurant_cover_url) }}=w360-l100" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+                <img loading="lazy" src="{{item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100') : '/upload/img/bd/no_photo.png'}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
             </div>
         </a>
             <div class="item_info">

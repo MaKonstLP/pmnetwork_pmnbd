@@ -14,6 +14,15 @@ class ItemController extends BaseFrontendController
 	public function actionIndex($restSlug, $roomSlug = null)
 	{
 
+		$model = ElasticItems::find()->query([
+			'bool' => [
+				'must' => [
+					['match' => ['restaurant_gorko_id' =>452629]],
+					//['match' => ['restaurant_city_id' => \Yii::$app->params['subdomen_id']]],
+				],
+			]
+		])->one();
+		//var_dump($model);exit;
 		$rest_item = ElasticItems::find()->query([
 			'bool' => [
 				'must' => [

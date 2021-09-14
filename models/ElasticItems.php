@@ -2,10 +2,19 @@
 
 namespace frontend\modules\pmnbd\models;
 
+use Yii;
 use common\models\Restaurants;
+use common\models\RestaurantsModule;
 use common\models\RestaurantsTypes;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use common\models\ImagesModule;
+use common\components\AsyncRenewImages;
+use frontend\modules\pmnbd\models\SubdomenFilteritem;
+use common\models\Subdomen;
+use common\models\FilterItems;
+use common\models\Rooms;
+use common\models\elastic\FilterQueryConstructorElastic;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
 {
@@ -177,13 +186,21 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $command->deleteIndex(static::index(), static::type());
     }
 
-    public static function refreshIndex()
-    {
+    public static function refreshIndex($params) {
         $res = self::deleteIndex();
         $res = self::updateMapping();
         $res = self::createIndex();
+        $res = self::updateIndex($params);
+    }
+
+    public static function updateIndex($params) {
+        $connection_core = new \yii\db\Connection($params['main_connection_config']);
+        $connection_core->open();
+        Yii::$app->set('db', $connection_core);
+
         $restaurants = Restaurants::find()
             ->with('rooms')
+            ->with('rooms.images')
             ->with('images')
             ->with('subdomen')
             ->where(['active' => 1])
@@ -195,15 +212,34 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->limit(100000)
             ->asArray()
             ->all();
-        //$subdomens = Subdomen::find()->all();
         $restaurants_types = ArrayHelper::index($restaurants_types, 'value');
-        //echo '<pre>';
-        //print_r($restaurants_types);
+
+        $connection_sat = new \yii\db\Connection($params['site_connection_config']);
+        $connection_sat->open();
+        Yii::$app->set('db', $connection_sat);
+
+        $images_module = ImagesModule::find()
+            ->limit(100000)
+            ->asArray()
+            ->all();
+        $images_module = ArrayHelper::index($images_module, 'gorko_id');
+
+        $restaurants_module = RestaurantsModule::find()
+            ->limit(100000)
+            ->asArray()
+            ->all();
+        $restaurants_module = ArrayHelper::index($restaurants_module, 'gorko_id');
+
+        //print_r($images_module[21256309]);
         //exit;
+
         foreach ($restaurants as $restaurant) {
-            $res = self::addRecord($restaurant, $restaurants_types);
+            $res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params);
             $all_res .= $res . ' | ';
         }
+
+        self::subdomenCheck($connection_core);
+
         echo 'Обновление индекса ' . self::index() . ' ' . self::type() . ' завершено<br>' . $all_res;
         return true;
     }
@@ -228,9 +264,19 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         );
     }
 
-    public static function addRecord($restaurant, $restaurants_types)
+    public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params)
     {
         $isExist = false;
+
+        $restaurant_spec_white_list = [9];
+        $restaurant_spec_rest = explode(',', $restaurant->restaurants_spec);
+        if (count(array_intersect($restaurant_spec_white_list, $restaurant_spec_rest)) === 0) {
+            return 'Неподходящий тип мероприятия';
+        }
+
+        if(!$restaurant->commission){
+            return 'Не платный';
+        }
 
         try {
             $record = self::get($restaurant->id);
@@ -245,13 +291,6 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             $record->setPrimaryKey($restaurant->id);
         }
 
-        if (!$restaurant->commission) {
-            return 'Не платный';
-        }
-
-        if (!$restaurant->subdomen->active) {
-            return 'Мало ресторанов';
-        }
 
         //Св-ва ресторана
         $record->id = $restaurant->id;
@@ -282,12 +321,25 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $images = [];
         foreach ($restaurant->images as $key => $image) {
             $image_arr = [];
-            $image_arr['id'] = $image->id;
+            $image_arr['id'] = $image->gorko_id;
             $image_arr['sort'] = $image->sort;
             $image_arr['realpath'] = $image->realpath;
-            $image_arr['subpath'] = $image->subpath ? $image->subpath : $image->realpath;
-            $image_arr['waterpath'] = $image->waterpath ? $image->waterpath : $image->realpath;
-            $image_arr['timestamp'] = $image->timestamp;
+            if(isset($images_module[$image->gorko_id])){
+                $image_arr['subpath']   = $images_module[$image->gorko_id]['subpath'];
+                $image_arr['waterpath'] = $images_module[$image->gorko_id]['waterpath'];
+                $image_arr['timestamp'] = $images_module[$image->gorko_id]['timestamp'];
+            }
+            else{
+                $queue_id = Yii::$app->queue->push(new AsyncRenewImages([
+                    'gorko_id'      => $image->gorko_id,
+                    'params'        => $params,
+                    'rest_flag'     => true,
+                    'rest_gorko_id' => $restaurant->gorko_id,
+                    'room_gorko_id' => false,
+                    'elastic_index' => static::index(),
+                    'elastic_type'  => 'rest',
+                ]));
+            }                
             array_push($images, $image_arr);
         }
         $record->restaurant_images = $images;
@@ -377,12 +429,25 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             $images = [];
             foreach ($room->images as $key => $image) {
                 $image_arr = [];
-                $image_arr['id'] = $image->id;
+                $image_arr['id'] = $image->gorko_id;
                 $image_arr['sort'] = $image->sort;
                 $image_arr['realpath'] = $image->realpath;
-                $image_arr['subpath'] = $image->subpath ? $image->subpath : $image->realpath;
-                $image_arr['waterpath'] = $image->waterpath ? $image->waterpath : $image->realpath;
-                $image_arr['timestamp'] = $image->timestamp;
+                if(isset($images_module[$image->gorko_id])){
+                    $image_arr['subpath']   = $images_module[$image->gorko_id]['subpath'];
+                    $image_arr['waterpath'] = $images_module[$image->gorko_id]['waterpath'];
+                    $image_arr['timestamp'] = $images_module[$image->gorko_id]['timestamp'];
+                }
+                else{
+                    $queue_id = Yii::$app->queue->push(new AsyncRenewImages([
+                        'gorko_id'      => $image->gorko_id,
+                        'params'        => $params,
+                        'rest_flag'     => false,
+                        'rest_gorko_id' => $restaurant->gorko_id,
+                        'room_gorko_id' => $room->gorko_id,
+                        'elastic_index' => static::index(),
+                        'elastic_type'  => 'rest',
+                    ]));
+                }                
                 array_push($images, $image_arr);
             }
             $room_arr['images'] = $images;
@@ -403,5 +468,146 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         }
 
         return $result;
+    }
+
+    public static function subdomenCheck($connection_core)
+    {
+        SubdomenFilteritem::deactivate();
+        $counterActive = 0;
+        $counterInactive = 0;
+        foreach (Subdomen::find()->all() as $key => $subdomen) {
+            $rest_total = self::find()
+                ->limit(0)
+                ->query(
+                    ['bool' => ['must' => ['match' => ['restaurant_city_id' => $subdomen->city_id]]]]
+                )
+                ->search();
+            $isActive = $rest_total['hits']['total'] > 9;
+            $subdomen->active = $isActive;
+            $subdomen->save();
+            if ($subdomen->active) {
+                foreach (FilterItems::find()->all() as $filterItem) {
+                    $hits = self::getFilterItemsHitsForCity($filterItem, $subdomen->city_id);
+                    $where = ['subdomen_id' => $subdomen->id, 'filter_items_id' => $filterItem->id];
+                    $subdomenFilterItem = SubdomenFilteritem::find()->where($where)->one() ?? new SubdomenFilteritem($where);
+                    $subdomenFilterItem->hits = $hits;
+                    $subdomenFilterItem->is_valid = 1;
+                    $subdomenFilterItem->save();
+                    $hits > 0 ? $counterActive++ : $counterInactive++;
+                }
+            }
+        }
+        echo "active=$counterActive; inactive=$counterInactive";              
+        
+        return 1;
+    }
+
+    public static function getFilterItemsHitsForCity($filterItem, $city_id)
+    {
+        $filter_item_arr = json_decode($filterItem->api_arr, true);
+        $main_table = 'restaurants';
+        $simple_query = [];
+        $nested_query = [];
+        $type_query = [];
+        $location_query = [];
+        foreach ($filter_item_arr as $filter_data) {
+
+            $filter_query = new FilterQueryConstructorElastic($filter_data, $main_table);
+
+            if ($filter_query->nested) {
+                if (!isset($nested_query[$filter_query->query_type])) {
+                    $nested_query[$filter_query->query_type] = [];
+                }
+            } elseif ($filter_query->type) {
+                if (!isset($type_query[$filter_query->query_type])) {
+                    $type_query[$filter_query->query_type] = [];
+                }
+            } elseif ($filter_query->location) {
+                if (!isset($location_query[$filter_query->query_type])) {
+                    $location_query[$filter_query->query_type] = [];
+                }
+            } else {
+                if (!isset($simple_query[$filter_query->query_type])) {
+                    $simple_query[$filter_query->query_type] = [];
+                }
+            }
+
+            foreach ($filter_query->query_arr as $filter_value) {
+                if ($filter_query->nested) {
+                    array_push($nested_query[$filter_query->query_type], $filter_value);
+                } elseif ($filter_query->type) {
+                    array_push($type_query[$filter_query->query_type], $filter_value);
+                } elseif ($filter_query->location) {
+                    array_push($location_query[$filter_query->query_type], $filter_value);
+                } else {
+                    array_push($simple_query[$filter_query->query_type], $filter_value);
+                }
+            }
+        }
+        $final_query = [
+            'bool' => [
+                'must' => [],
+            ]
+        ];
+        array_push($final_query['bool']['must'], ['match' => ['restaurant_city_id' => $city_id]]);
+        foreach ($simple_query as $type => $arr_filter) {
+            $temp_type_arr = [];
+            foreach ($arr_filter as $key => $value) {
+                array_push($temp_type_arr, $value);
+            }
+            array_push($final_query['bool']['must'], ['bool' => ['should' => $temp_type_arr]]);
+        }
+
+        foreach ($nested_query as $type => $arr_filter) {
+            $temp_type_arr = [];
+            foreach ($arr_filter as $key => $value) {
+                array_push($temp_type_arr, $value);
+            }
+            if ($main_table == 'rooms') {
+                array_push($final_query['bool']['must'], ['bool' => ['should' => $temp_type_arr]]);
+            } else {
+                array_push($final_query['bool']['must'], ['nested' => ["path" => "rooms", "query" => ['bool' => ['must' => ['bool' => ['should' => $temp_type_arr]]]]]]);
+            }
+        }
+
+        foreach ($type_query as $type => $arr_filter) {
+            $temp_type_arr = [];
+            foreach ($arr_filter as $key => $value) {
+                array_push($temp_type_arr, $value);
+            }
+            if ($main_table == 'rooms') {
+                array_push($final_query['bool']['must'], ['bool' => ['should' => $temp_type_arr]]);
+            } else {
+                array_push($final_query['bool']['must'], ['nested' => ["path" => "restaurant_types", "query" => ['bool' => ['must' => ['bool' => ['should' => $temp_type_arr]]]]]]);
+            }
+        }
+
+        foreach ($location_query as $type => $arr_filter) {
+            $temp_type_arr = [];
+            foreach ($arr_filter as $key => $value) {
+                array_push($temp_type_arr, $value);
+            }
+            if ($main_table == 'rooms') {
+                array_push($final_query['bool']['must'], ['bool' => ['should' => $temp_type_arr]]);
+            } else {
+                array_push($final_query['bool']['must'], ['nested' => ["path" => "restaurant_location", "query" => ['bool' => ['must' => ['bool' => ['should' => $temp_type_arr]]]]]]);
+            }
+        }
+        $final_query = [
+            "function_score" => [
+                "query" => $final_query,
+                "functions" => [
+                    [
+                        "filter" => ["match" => ["restaurant_commission" => "2"]],
+                        "random_score" => [],
+                        "weight" => 100
+                    ],
+                ]
+            ]
+        ];
+
+        $query = self::find()->query($final_query)->limit(0);
+
+        return $query->search()['hits']['total'];
     }
 }

@@ -2,11 +2,11 @@
 {{this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)})}}
 {{this.registerMetaTag({'property':'og:type','content':'website'})}}
 {{this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'})}}
-{{this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.restaurant_cover_url)})}}
+{{this.registerMetaTag({'property':'og:image','content':(item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath) : '/upload/img/bd/no_photo.png')})}}
 <div data-page-type="item">
 
     <div class="content_block" data-listing-title>
-        {{ this.render('//components/generic/item_title.twig', {'seo':seo}) | raw }}
+        {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'item':item}) | raw }}
     </div>
 
     <div class="rest_top_wrap" itemscope itemtype="https://schema.org/Restaurant"> 
@@ -30,7 +30,7 @@
                                     <div class="form_close" data-close-popup></div>
                                     <p class="popup_phone_title">Ресторан <span itemprop="name">{{item.restaurant_name}}</span></p>
                                     <div class="popup_phone_present">
-                                        <img loading="lazy" src="/img/present.svg">
+                                        <img loading="lazy" src="/upload/img/present.svg">
                                         <p>Забронируй зал и получи подарок!</p>
                                     </div>
                                     <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone"><span itemprop="telephone">{{item.restaurant_phone}}</span></a>
@@ -39,7 +39,7 @@
                                         <meta content="{{app.params.subdomen_name}}" itemprop="addressLocality">
                                         <meta content="{{item.restaurant_address|split(', ')[1:]|join(', ')}}" itemprop="streetAddress">
                                     </p>
-                                    <link href="{{ Declension.get_image_src(item.restaurant_cover_url) }}" itemprop="image">
+                                    <link href="{{ item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath) : '/upload/img/bd/no_photo.png'}}" itemprop="image">
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                     {% for image in item.restaurant_images%}
                         <div class="object swiper-slide">
-                           <img loading="lazy" src="{{ Declension.get_image_src(image.realpath~'=w150-h90-l80') }}"/>
+                           <img loading="lazy" src="{{ Declension.get_image_src(image.subpath~'=w150-h90-l80') }}"/>
                         </div>
                     {% endfor %}
                 </div>
@@ -189,10 +189,11 @@
                     <div class="same_object">
                         <div class="same_object_img">
                             <div class="same_object_img_item">
-                               <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].realpath ? (same_object.images[0].realpath~'=w250-h170-l90') : same_object.cover_url|replace({'w445-h302-n-l95':'w250-h170-l90'})) }}">
+                               {#<img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}">#}
+                               <img loading="lazy" src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
                             </div>
                             <div class="same_object_img_item">
-                               <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[1].realpath ? (same_object.images[1].realpath~'=w250-h170-l90') : same_object.cover_url|replace({'w445-h302-n-l95':'w250-h170-l90'})) }}">
+                               <img loading="lazy" src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png')}}">
                             </div>
                         </div>
                         <div class="same_object_desc">
@@ -218,7 +219,7 @@
         <div class="map_data_wrap">
             <div class="map_data">
                 <div class="map_img_wrap">
-                    <img loading="lazy" class="map_img" src="{{ Declension.get_image_src(item.restaurant_cover_url|replace({'w445-h302-n-l95': 'w710-h472-n-l95'})) }}">
+                    <img loading="lazy" class="map_img" src="{{ Declension.get_image_src(item.restaurant_images[0].subpath~'=w710-h472-n-l95') }}">
                 </div>
                 
                 <a href="/catalog/restoran-{{item.restaurant_slug}}/" class="map_rest_name">{{ item.restaurant_name }}</a>

@@ -71,7 +71,7 @@
 	.listing_widget_link_img{
 		width: 122px;
 		height: 135px;
-		background-image: url(/img/widget_link_img.svg);
+		background-image: url(/upload/img/widget_link_img.svg);
 		margin: -74px 0px -12px;
 	}
 
@@ -86,7 +86,7 @@
 	.listing_widget_link_arrow{
 		width: 118px;
 		height: 24px;
-		background-image: url(/img/widget_link_arrow.svg);
+		background-image: url(/upload/img/widget_link_arrow.svg);
 		margin-top: 5px;
 	}
 }
@@ -130,11 +130,11 @@
 		    }
 
 		    &._prev{
-		    	background-image: url(/img/widget_arrow_prev.svg);
+		    	background-image: url(/upload/img/widget_arrow_prev.svg);
 		    }
 
 		    &._next{
-		    	background-image: url(/img/widget_arrow_next.svg);
+		    	background-image: url(/upload/img/widget_arrow_next.svg);
 		    }
 		}
 
@@ -163,7 +163,7 @@
 .listing_widget_arrow, .slider_arrow{
 	width: 24px;
     height: 48px;
-    background: url(/img/arrow.svg) no-repeat;
+    background: url(/upload/img/arrow.svg) no-repeat;
     position: absolute;
     top: 180px;
     cursor: pointer;

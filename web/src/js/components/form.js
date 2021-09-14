@@ -226,6 +226,7 @@ export default class Form {
 		formData.append($('[name="csrf-param"]').attr('content'), $('[name="csrf-token"]').attr('content'));
 		var formUrl = window.location.href;
 	    formData.append('url', formUrl);
+	    formData.append('check', '1');
 	    fetch(this.to,{
 			method: 'POST',
 			body: formData

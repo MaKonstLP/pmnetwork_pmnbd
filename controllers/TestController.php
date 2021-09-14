@@ -5,10 +5,13 @@ use Yii;
 use common\models\GorkoApiTest;
 use common\models\Subdomen;
 use common\models\Restaurants;
+use common\models\RestaurantsModule;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
 use common\components\AsyncRenewRestaurants;
 use common\models\FilterItems;
+use common\models\siteobject\SiteObject;
+use common\models\siteobject\SiteObjectSeo;
 use common\models\elastic\FilterQueryConstructor;
 use common\models\elastic\FilterQueryConstructorElastic;
 use common\models\Images;
@@ -30,20 +33,23 @@ class TestController extends BaseFrontendController
 
 	public function actionIndex()
 	{
-		set_time_limit(0);
-		ini_set('memory_limit', '-1');
-		$subdomen_model = Subdomen::find()->all();
+		$rests = RestaurantsModule::find()->all();
+		foreach ($rests as $key => $rest) {
+			$rest_item = ElasticItems::find()->query([
+				'bool' => [
+					'must' => [
+						['match' => ['restaurant_gorko_id' => $rest->id]],
+					],
+				]
+			])->one();
 
-		foreach ($subdomen_model as $key => $subdomen) {
-			GorkoApiTest::renewAllData([
-				[
-					'params' => 'city_id='.$subdomen->city_id.'&type_id=1&event=9',
-					'watermark' => '/var/www/pmnetwork/frontend/web/img/watermark.png',
-					'imageHash' => 'birthdaypmn'
-				]				
-			]);
+			if(isset($rest_item->restaurant_name)){
+				$rest->name = $rest_item->restaurant_name;
+				$rest->address = $rest_item->restaurant_address;
+				$rest->save();
+			}
+			
 		}
-		
 	}
 
 	public function actionAll()

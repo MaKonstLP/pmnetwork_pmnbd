@@ -18,15 +18,15 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="icon" href="/img/bd/favicon.ico">
-    <link type="image/x-icon" rel="shortcut icon" href="/img/bd/favicon.ico">
-    <link type="image/png" sizes="16x16" rel="icon" href="/img/bd/favicon-16x16.png">
-    <link type="image/png" sizes="32x32" rel="icon" href="/img/bd/favicon-32x32.png">
-    <link type="image/png" sizes="192x192" rel="icon" href="/img/bd/android-chrome-192x192.png">
-    <link rel="apple-touch-icon" href="/img/bd/apple-touch-icon.png">
-    <meta name="msapplication-square150x150logo" content="/img/bd/mstile-150x150.png">
-    <meta name="msapplication-config" content="/img/bd/browserconfig.xml">
-    <link rel="manifest" href="/img/bd/webmanifest.json">
+    <link rel="icon" href="/upload/img/bd/favicon.ico">
+    <link type="image/x-icon" rel="shortcut icon" href="/upload/img/bd/favicon.ico">
+    <link type="image/png" sizes="16x16" rel="icon" href="/upload/img/bd/favicon-16x16.png">
+    <link type="image/png" sizes="32x32" rel="icon" href="/upload/img/bd/favicon-32x32.png">
+    <link type="image/png" sizes="192x192" rel="icon" href="/upload/img/bd/android-chrome-192x192.png">
+    <link rel="apple-touch-icon" href="/upload/img/bd/apple-touch-icon.png">
+    <meta name="msapplication-square150x150logo" content="/upload/img/bd/mstile-150x150.png">
+    <meta name="msapplication-config" content="/upload/img/bd/browserconfig.xml">
+    <link rel="manifest" href="/upload/img/bd/webmanifest.json">
 
     <title><?php echo $this->title ?></title>
 
@@ -130,7 +130,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     <div class="header_logo_text">МОЙ ДЕНЬ</div>
                 </a>
                 <div class="header_city<?=(Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : '';?>">
-                    <img src="/img/geo_label.png" />
+                    <img src="/upload/img/geo_label.png" />
                     <span class="city"><?= Yii::$app->params['subdomen_name'] ?></span>
                     <span class="choose"></span>
                 </div>

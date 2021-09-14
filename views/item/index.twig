@@ -2,7 +2,7 @@
 {{this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)})}}
 {{this.registerMetaTag({'property':'og:type','content':'website'})}}
 {{this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'~item.slug~'/'})}}
-{{this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.cover_url)})}}
+{{this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.images[0].subpath)})}}
 <div data-page-type="item">
 
     <div class="content_block" data-listing-title>
@@ -16,7 +16,7 @@
         <div class="object_gallery_container swiper-container" data-gallery-main-swiper data-gallery-swiper>
             <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                 {% for image in item.images%}
-                    <div class="object swiper-slide">
+                    <div class="object swiper-slide" 11111>
                         <div class="object_img">
                            <img loading="lazy" src="{{ Declension.get_image_src(image.waterpath~'=w746-h498-l95') }}" data-gallery-img-view/>
                        </div>
@@ -30,8 +30,8 @@
         <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
             <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                 {% for image in item.images%}
-                    <div class="object swiper-slide">
-                       <img loading="lazy" src="{{ Declension.get_image_src(image.realpath~'=w150-h90-l80') }}"/>
+                    <div class="object swiper-slide"222222>
+                       <img loading="lazy" src="{{ Declension.get_image_src(image.subpath~'=w150-h90-l80') }}"/>
                     </div>
                 {% endfor %}
             </div>
@@ -82,7 +82,7 @@
                                 <div class="form_close" data-close-popup></div>
                                 <p class="popup_phone_title">{{seo.h1}}</p>
                                 <div class="popup_phone_present">
-                                    <img loading="lazy" src="/img/present.svg">
+                                    <img loading="lazy" src="/upload/img/present.svg">
                                     <p>Забронируй зал и получи подарок!</p>
                                 </div>
                                 <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone">{{rest_item.restaurant_phone}}</a>
@@ -106,10 +106,11 @@
                 <div class="same_object">
                     <div class="same_object_img">
                         <div class="same_object_img_item">
-                            <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].realpath ? (same_object.images[0].realpath~'=w250-h170-l90') : same_object.cover_url|replace({'w445-h302-n-l95':'w250-h170-l90'})) }}">
+                            {#<img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}">#}
+                            <img loading="lazy" src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
                         </div>
                         <div class="same_object_img_item">
-                            <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[1].realpath ? (same_object.images[1].realpath~'=w250-h170-l90') : same_object.cover_url|replace({'w445-h302-n-l95':'w250-h170-l90'})) }}">
+                            <img loading="lazy" src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png')}}">
                         </div>
                     </div>
                     <div class="same_object_desc">
@@ -142,7 +143,7 @@
                         <div class="other_object swiper-slide">
                             <div class="other_object_img">
                                 <a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">
-                                    <img loading="lazy" src="{{ Declension.get_image_src(other_room.cover_url|replace({'w445-h302-n-l95': 'w305-h200-s-l95'})) }}">
+                                    <img loading="lazy" src="{{ Declension.get_image_src(other_room.images[0].subpath~'=w305-h200-s-l95')}}">
                                 </a>
                             </div>
                             <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>
