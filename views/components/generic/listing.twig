@@ -6,7 +6,15 @@
         </div>
         <a href="/catalog/restoran-{{item.restaurant_slug}}/">
             <div class="item_img">
-                <img loading="lazy" src="{{item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100') : '/upload/img/bd/no_photo.png'}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+                {% if item.restaurant_images %}
+                    <picture>
+                        <source srcset="{{Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100-rw')}}" type="image/webp">
+                        <source srcset="{{Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100')}}" type="image/jpeg"> 
+                        <img alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}" src="{{Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100')}}">
+                    </picture>
+                {% else %}
+                    <img loading="lazy" src="/upload/img/bd/no_photo.png" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+                {% endif %}                
             </div>
         </a>
             <div class="item_info">
