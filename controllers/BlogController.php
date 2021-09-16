@@ -65,7 +65,7 @@ class BlogController extends BaseFrontendController
 	{
 		$post = BlogPost::findWithMedia()->with('blogPostTags')->where(['published' => true, 'alias' => $alias])->one();
 		if (empty($post)) {
-			return new NotFoundHttpException();
+			throw new NotFoundHttpException();
 		}
 		$seo = ArrayHelper::toArray($post->seoObject);
 		$this->setSeo($seo);
@@ -79,7 +79,7 @@ class BlogController extends BaseFrontendController
 	{
 		$post = BlogPost::findWithMedia()->with('blogPostTags')->where(['id' => $id])->one();
 		if (empty($post)) {
-			return new NotFoundHttpException();
+			throw new NotFoundHttpException();
 		}
 		$seo = ArrayHelper::toArray($post->seoObject);
 		$this->setSeo($seo);
@@ -95,7 +95,7 @@ class BlogController extends BaseFrontendController
 	{
 		$tag = BlogTag::findWithMedia()->with('blogPosts')->where(['alias' => $alias])->one();
 		if (empty($tag)) {
-			return new NotFoundHttpException();
+			throw new NotFoundHttpException();
 		}
 		$seo = ArrayHelper::toArray($tag->seoObject);
 		$this->setSeo($seo);

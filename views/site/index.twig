@@ -50,8 +50,7 @@
 		</div>
 	</div>
 
-
-	<div class="listing_wrap" style="/*height: 550px;*/background: #F8F8F8;">
+	{# <div class="listing_wrap" style="/*height: 550px;*/background: #F8F8F8;">
 		<div class="content_block" data-widget-wrapper>
 			<div class="listing_widget_arrow _prev"></div>
 			<div class="items_list_listing swiper-container" data-listing-wrapper>
@@ -64,6 +63,15 @@
 			</div>
 			<div class="listing_widget_arrow _next"></div>
 		</div>
+	</div> #}
+
+	<div class="items_list_listing content_block" data-listing-wrapper>
+		<div class="items_list" data-listing-list>
+
+			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt}) | raw }}
+
+		</div>
+		<a href="/catalog/" class="items_list_btn _button" data-listing-list>Полный каталог площадок</a>
 	</div>
 
 	<div class="content_info">

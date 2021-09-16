@@ -6,7 +6,7 @@
 <div data-page-type="item">
 
     <div class="content_block" data-listing-title>
-        {{ this.render('//components/generic/item_title.twig', {'seo':seo}) | raw }}
+        {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'room_id':item.gorko_id}) | raw }}
     </div>
 
     {% if item.images %}

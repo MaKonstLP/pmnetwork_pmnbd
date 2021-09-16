@@ -126,6 +126,13 @@ class ListingController extends BaseFrontendController
 			$seo['text_bottom'] = '';
 		}
 
+
+
+		// echo "<pre>";
+		// print_r($items->items);
+		// exit;
+
+
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(
 			'items' => $items->items,
