@@ -19,10 +19,11 @@
 					<input type="text" name="phone" data-required placeholder="Номер телефона" autocomplete="off"/>
 				</div>
 				<div class="input_wrapper">
-					<input type="number" min="1" name="guests" data-required placeholder="Число гостей" />
+					{# <input type="text" name="email" data-required placeholder="Электронная почта" /> #}
+					<input type="text" name="email" placeholder="Электронная почта" />
 				</div>
 				<div class="input_wrapper">
-					<input type="text" name="email" placeholder="Email" />
+					<input type="number" min="1" name="guests" data-required placeholder="Число гостей" />
 				</div>
 				{# <div class="input_wrapper date_wrapper">
 					<input type="text" name="date" readonly placeholder="Желаемая дата" class="not_check_approove"/>
@@ -34,8 +35,8 @@
 					<input type="text" name="comment" data-required placeholder="Комментарий" />
 				</div>
 			</div>
-			
-			{% if venue_id is defined %}
+
+			{% if target == 'zal' %}
 				<input type="hidden" name="venue_id" value="{{venue_id}}" />
 			{% endif %}
 

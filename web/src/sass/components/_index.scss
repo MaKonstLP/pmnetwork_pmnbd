@@ -1,583 +1,600 @@
-.content_info{
-    position: relative;
+.content_info {
+	position: relative;
 
-    .content_info_block{
-        position: relative;
-        width: 1200px;
-        margin: 0 auto;
+	.content_info_block {
+		position: relative;
+		width: 1200px;
+		margin: 0 auto;
 
-        @include for-small-desktop{
-            width: calc(100% - 20px);
-        }
+		@include for-small-desktop {
+			width: calc(100% - 20px);
+		}
 
-        @include for-pad{
-            width: calc(100% - 20px);
-        }
+		@include for-pad {
+			width: calc(100% - 20px);
+		}
 
-        @include for-mobile{
-            width: calc(100% - 30px);
-        }
-    }
+		@include for-mobile {
+			width: calc(100% - 30px);
+		}
+	}
 
-    .content_info_top{
-        background: #FFF4D7;
-        position: relative;
-    }
+	.content_info_top {
+		background: #fff4d7;
+		position: relative;
+	}
 
-    .main_girl{
-        position: absolute;
-        left: 4%;
-        bottom: 0;
-        z-index: 5;
-        @include for-small-desktop{
-            left: 90px;
-        }
-        @include for-pad{
-            left: 5%;
-        }
-        @include for-mobile{
-            left: -100px;
-            width: 290px;
-        }
-        @include for-phone{
-            display: none;
-        }
-    }
-    .main_girl_mobile{
-        display: none;
-        top: 0;
-        left: 50%;
-        position: absolute;
-        margin-left: -50%;
-        width: 100%;
-        z-index: 2;
-        @include for-phone{
-            display: block;
-        }
-    }
-    .content_info_rectangle_wrap{
-        position: absolute;
-        left: 0;
-        bottom: -2%;
-        clip: rect(-6px 382px 382px -30px);
-        height: 100%;
-        @include for-small-desktop{
-            left: 4rem;
-        }
-        @include for-pad{
-            left: 4.5%;
-        }
-        @include for-mobile{
-            bottom: auto;
-            top: 30px;
-            height: auto;
-            clip: auto;
-            left: -100px;
-        }
-        @include for-phone{
-            display: none;
-        }
-    }
-    .content_info_rectangle{
-        background: linear-gradient(0deg, #FCDD70, #FCDD70), #FFC839;
-        border-radius: 88.71px;
-        transform: matrix(0.9, -0.46, 0.43, 0.89, 0, 0);
-        width: 352px;
-        height: 352px;
-    }
-    .content_info_top_right{
-        display: flex;
-        width: 100%;
-        min-height: 300px;
-        //background: linear-gradient(to right, white 0%, white 25%,#F1E5D3 25%,#F1E5D3 50%,#F1E5D3 100%);
-    }
-    .content_info_top_text{
-        //width: 750px;
-        margin: 0 0 0 360px;
-        display: flex;
-    flex-direction: column;
-    justify-content: center;
-        font-size: 15px;
-        line-height: 24px;
-        color: #1A2824;
-        position: relative;
-        z-index: 3;
-        p{
-            margin: 10px auto;
-        }
-        .seo_text_control{
-            background: #fff4d7;
-            top: auto;
-            bottom: 0;
-            left: 0;
-            height: 25px;
-            cursor: pointer;
-            padding: 0;
-            justify-content: left;
-            ._link{
-                margin: 0;
-                color: #3067F3;
-                border-bottom: 1px dashed #3067F3;
-            }
-        }
-        @include for-small-desktop{
-            margin: 40px 40px 40px 380px;
-            width: auto;
-        }
-        @include for-pad{
-            width: auto;
-            margin: 20px 20px 20px 330px;
-        }
-        @include for-mobile{
-            width: auto;
-            margin: 32px 10px 50px 200px;
-        }
-        @include for-phone{
-            display: inline-block;
-            margin: 85% 12px 30px;
-        }
+	.main_girl {
+		position: absolute;
+		left: 4%;
+		bottom: 0;
+		z-index: 5;
+		@include for-small-desktop {
+			left: 90px;
+		}
+		@include for-pad {
+			left: 5%;
+		}
+		@include for-mobile {
+			left: -100px;
+			width: 290px;
+		}
+		@include for-phone {
+			display: none;
+		}
+	}
+	.main_girl_mobile {
+		display: none;
+		top: 0;
+		left: 50%;
+		position: absolute;
+		margin-left: -50%;
+		width: 100%;
+		z-index: 2;
+		@include for-phone {
+			display: block;
+		}
+	}
+	.content_info_rectangle_wrap {
+		position: absolute;
+		left: 0;
+		bottom: -2%;
+		clip: rect(-6px 382px 382px -30px);
+		height: 100%;
+		@include for-small-desktop {
+			left: 4rem;
+		}
+		@include for-pad {
+			left: 4.5%;
+		}
+		@include for-mobile {
+			bottom: auto;
+			top: 30px;
+			height: auto;
+			clip: auto;
+			left: -100px;
+		}
+		@include for-phone {
+			display: none;
+		}
+	}
+	.content_info_rectangle {
+		background: linear-gradient(0deg, #fcdd70, #fcdd70), #ffc839;
+		border-radius: 88.71px;
+		transform: matrix(0.9, -0.46, 0.43, 0.89, 0, 0);
+		width: 352px;
+		height: 352px;
+	}
+	.content_info_top_right {
+		display: flex;
+		width: 100%;
+		min-height: 300px;
+		//background: linear-gradient(to right, white 0%, white 25%,#F1E5D3 25%,#F1E5D3 50%,#F1E5D3 100%);
+	}
+	.content_info_top_text {
+		//width: 750px;
+		margin: 0 0 0 360px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		font-size: 15px;
+		line-height: 24px;
+		color: #1a2824;
+		position: relative;
+		z-index: 3;
+		p {
+			margin: 10px auto;
+		}
+		.seo_text_control {
+			background: #fff4d7;
+			top: auto;
+			bottom: 0;
+			left: 0;
+			height: 25px;
+			cursor: pointer;
+			padding: 0;
+			justify-content: left;
+			._link {
+				margin: 0;
+				color: #3067f3;
+				border-bottom: 1px dashed #3067f3;
+			}
+		}
+		@include for-small-desktop {
+			margin: 40px 40px 40px 380px;
+			width: auto;
+		}
+		@include for-pad {
+			width: auto;
+			margin: 20px 20px 20px 330px;
+		}
+		@include for-mobile {
+			width: auto;
+			margin: 32px 10px 50px 200px;
+		}
+		@include for-phone {
+			display: inline-block;
+			margin: 85% 12px 30px;
+		}
+	}
+	.content_info_adv_title {
+		font-weight: bold;
+		font-size: 32px;
+		line-height: 40px;
+		color: #fff;
+		text-align: center;
+		margin: 0;
+		//padding: 30px 0 0;
+		width: 1200px;
+		@include for-small-desktop {
+			width: calc(100% - 20px);
+		}
+		@include for-pad {
+			width: 100%;
+		}
+		@include for-mobile {
+			width: 100%;
+		}
+		@include for-phone {
+			font-size: 20px;
+			line-height: 24px;
+			padding: 0 5px 12px 5px;
+		}
+	}
+	.content_info_adv {
+		//background: url(/img/content_info.jpg) no-repeat;
+		height: auto;
+		justify-content: center;
+		position: relative;
+		top: auto;
+		@include for-mobile {
+			//height: 400px;
+		}
+		@include for-phone {
+			width: auto;
+			flex-direction: column;
+			height: auto;
+		}
+	}
+	.content_info_wrap {
+		width: 352px;
+		margin: 0 20px;
+		@include for-mobile {
+			margin: 0 10px;
+		}
+		@include for-phone {
+			display: flex;
+			flex-direction: column;
+			width: auto;
+			margin: 6px 10px 6px 80px;
+			position: relative;
+			.main_rectangle {
+				width: 64px;
+				height: 64px;
+				position: absolute;
+				top: -14px;
+				left: -69px;
+			}
+		}
+	}
+	.content_info_adv_h {
+		font-weight: bold;
+		font-size: 20px;
+		line-height: 24px;
+		color: #ffffff;
+		margin-top: 50px;
+		@include for-mobile {
+			font-size: 17px;
+		}
+		@include for-phone {
+			margin-top: 0;
+			margin-left: -5px;
+		}
+	}
+	.content_info_adv_p {
+		font-size: 14px;
+		line-height: 20px;
+		color: #ffffff;
+		@include for-phone {
+			margin-left: -5px;
+		}
+	}
+	.main_rectangle {
+		margin: 0 auto;
+		@include for-phone {
+			width: 64px;
+			height: 64px;
+			position: relative;
+			top: auto;
+			left: auto;
+			.main_rectangle_1 {
+				position: absolute;
+				left: 0%;
+				right: 26.79%;
+				top: 36.6%;
+				bottom: -9.81%;
 
-    }
-    .content_info_adv_title{
-        font-weight: bold;
-        font-size: 32px;
-        line-height: 40px;
-        color: #fff;
-        text-align: center;
-        margin: 0;
-        //padding: 30px 0 0;
-        width: 1200px;
-        @include for-small-desktop{
-            width: calc(100% - 20px);
-        }
-        @include for-pad{
-            width: 100%;
-        }
-        @include for-mobile{
-            width: 100%;
-        }
-        @include for-phone{
-            font-size: 20px;
-            line-height: 24px;
-            padding: 0 5px 12px 5px;
-        }
-    }
-    .content_info_adv{
-       //background: url(/img/content_info.jpg) no-repeat; 
-       height: auto;
-       justify-content: center;
-       position: relative;
-       top: auto;
-       @include for-mobile{
-            //height: 400px;
-        }
-       @include for-phone{
-            width: auto;
-            flex-direction: column;
-            height: auto;
-        }
+				/* Base Color */
 
-    }
-    .content_info_wrap{
-        width: 352px;
-        margin: 0 20px;
-        @include for-mobile{
-            margin: 0 10px;
-        }
-        @include for-phone{
-            display: flex;
-            flex-direction: column;
-            width: auto;
-            margin: 6px 10px 6px 80px;
-            position: relative;
-            .main_rectangle{
-                width: 64px;
-                height: 64px;
-                position: absolute;
-                top: -14px;
-                left: -69px;
-            }
-            
-
-        }
-    }
-    .content_info_adv_h{
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 24px;
-        color: #FFFFFF;
-        margin-top: 50px;
-        @include for-mobile{
-            font-size: 17px;
-        }
-        @include for-phone{
-            margin-top: 0;
-            margin-left: -5px;
-        }
-    }
-    .content_info_adv_p{
-        font-size: 14px;
-        line-height: 20px;
-        color: #FFFFFF;
-        @include for-phone{
-            margin-left: -5px;
-        }
-    }
-    .main_rectangle{
-        margin: 0 auto;
-        @include for-phone{
-            width: 64px;
-            height: 64px;
-            position: relative;
-            top: auto;
-            left: auto;
-            .main_rectangle_1{
-                position: absolute;
-                left: 0%;
-                right: 26.79%;
-                top: 36.6%;
-                bottom: -9.81%;
-
-                /* Base Color */
-
-                background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
-                border-radius: 16px;
-                transform: rotate(-30deg);
-            }
-            .main_rectangle_icon{
-                width: 40px;
-                height: 40px;
-                position: absolute;
-                top: -26px;
-                left: -4px;
-            }
-        }
-    }
+				background: linear-gradient(0deg, #ffc24a, #ffc24a), linear-gradient(0deg, #b1c86f, #b1c86f),
+					linear-gradient(0deg, #d64582, #d64582), linear-gradient(97.87deg, #a70c72 -6.24%, #e50799 104.4%),
+					#29edb2;
+				border-radius: 16px;
+				transform: rotate(-30deg);
+			}
+			.main_rectangle_icon {
+				width: 40px;
+				height: 40px;
+				position: absolute;
+				top: -26px;
+				left: -4px;
+			}
+		}
+	}
 }
-.content_info_bottom{
-    position: relative;
-    z-index: 10;
-    padding: 55px 0;
+.content_info_bottom {
+	position: relative;
+	z-index: 10;
+	padding: 55px 0;
 
-    .content_block{
-        z-index: 2;
-        height: auto;
-    }
-    .content_info_slider{
-        position: absolute;
-        bottom: 0;
-        height: 100%;
-        overflow: hidden;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        img{
-            //height: 100%;
-        }
-    }
+	.content_block {
+		z-index: 2;
+		height: auto;
+	}
+	.content_info_slider {
+		position: absolute;
+		bottom: 0;
+		height: 100%;
+		overflow: hidden;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		img {
+			//height: 100%;
+		}
+	}
 }
-.main_blog{
-    text-align: center;
-    padding: 65px 0 56px;
-    @include for-phone{
-        padding: 40px 0;
-    }
-    h2{
-        display: inline;
-    }
-    .all_articles{
-        border-bottom: 1px dashed #3067F3;
-        margin-left: 15px;
-        font-size: 15px;
-        line-height: 24px;
+.main_blog {
+	text-align: center;
+	padding: 65px 0 56px;
+	@include for-phone {
+		padding: 40px 0;
+	}
+	h2 {
+		display: inline;
+	}
+	.all_articles {
+		border-bottom: 1px dashed #3067f3;
+		margin-left: 15px;
+		font-size: 15px;
+		line-height: 24px;
 
-        @include for-phone{
-            width: 100px;
-            margin: 0 auto;
-            display: block;
-        }
+		@include for-phone {
+			width: 100px;
+			margin: 0 auto;
+			display: block;
+		}
 
-        &::after{
-            content: "→";
-            margin-left: 5px;
-        }
+		&::after {
+			content: "→";
+			margin-left: 5px;
+		}
 
-        &:hover{
-            border-bottom: none;
-        }
+		&:hover {
+			border-bottom: none;
+		}
+	}
+	.content_block {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+	}
+	.blog_item {
+		background-color: #fff;
+		display: flex;
+		width: 49%;
+		height: auto;
+		background: #ffffff;
+		border: 1px solid #f8f8f8;
+		box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
+		border-radius: 4px;
+		margin: 27px 0 0;
+	}
+	.blog_img_wrap {
+		width: 36%;
+		overflow: hidden;
+	}
+	.blog_img {
+		display: flex;
+		width: 100%;
+		height: 100%;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		img {
+			height: 100%;
+			position: absolute;
+			//right: 0;
+			//bottom: 0;
+		}
+	}
+	.blog_text {
+		width: 63%;
+		padding: 16px;
+		text-align: left;
+	}
+	.blog_date {
+		font-size: 11px;
+		line-height: 20px;
+		color: #848484;
+	}
+	.blog_title {
+		font-size: 17px;
+		line-height: 22px;
+	}
+	.blog_description {
+		font-size: 15px;
+		line-height: 22px;
+		color: #1a2824;
+	}
+	.blog_item_0 {
+		width: 100%;
+	}
+	.blog_item_3,
+	.blog_item_4,
+	.blog_item_5 {
+		width: 31%;
+		height: auto;
+		flex-direction: column;
 
-    }
-    .content_block{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-    .blog_item{
-        background-color: #fff;
-        display: flex;
-        width: 49%;
-        height: auto;
-        background: #FFFFFF;
-        border: 1px solid #F8F8F8;
-        box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
-        border-radius: 4px;
-        margin: 27px 0 0;
-    }
-    .blog_img_wrap {
-        width: 36%;
-        overflow: hidden;
-    }
-    .blog_img{
-        display: flex;
-        width: 100%;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        img{
-            height: 100%;
-            position: absolute;
-            //right: 0;
-            //bottom: 0;
-        }
-    }
-    .blog_text{
-        width: 63%;
-        padding: 16px;
-        text-align: left;
-    }
-    .blog_date{
-        font-size: 11px;
-        line-height: 20px;
-        color: #848484;
-    }
-    .blog_title{
-        font-size: 17px;
-        line-height: 22px
-    }
-    .blog_description{
-        font-size: 15px;
-        line-height: 22px;
-        color: #1A2824;
-    }
-    .blog_item_0{
-        width: 100%;
-    }
-    .blog_item_3, .blog_item_4, .blog_item_5{
-        width: 31%;
-        height: auto;
-        flex-direction: column;
-
-        .blog_img_wrap{
-            width: 100%;
-            height: 136px;
-           /* img{
+		.blog_img_wrap {
+			width: 100%;
+			height: 136px;
+			/* img{
                 height: 136px;
             }*/
-        }
-        .blog_text{
-            width: 100%;
-        }
-    }
+		}
+		.blog_text {
+			width: 100%;
+		}
+	}
 
-    @include for-small-desktop{
-        .content_block{
-            justify-content: center;
-        }
+	@include for-small-desktop {
+		.content_block {
+			justify-content: center;
+		}
 
-        .blog_item_1{
-            width: 78%;
-        }
-        .blog_item_4, .blog_item_5{
-            display: none;
-        }
-        .blog_item_2, .blog_item_3, .blog_item_0{
-            width: 38%;
-            height: auto;
-            flex-direction: column;
-            margin: 27px 13px 0;
+		.blog_item_1 {
+			width: 78%;
+		}
+		.blog_item_4,
+		.blog_item_5 {
+			display: none;
+		}
+		.blog_item_2,
+		.blog_item_3,
+		.blog_item_0 {
+			width: 38%;
+			height: auto;
+			flex-direction: column;
+			margin: 27px 13px 0;
 
-            .blog_img_wrap{
-                width: 100%;
-                height: 136px;
-                img{
-                    //height: auto;
-                    width: 100%;
-                    object-fit: cover;
-                }
-            }
-            .blog_text{
-                width: 100%;
-            }
-        }
-    }
-    @include for-pad{
-        .content_block{
-            justify-content: center;
-        }
+			.blog_img_wrap {
+				width: 100%;
+				height: 136px;
+				img {
+					//height: auto;
+					width: 100%;
+					object-fit: cover;
+				}
+			}
+			.blog_text {
+				width: 100%;
+			}
+		}
+	}
+	@include for-pad {
+		.content_block {
+			justify-content: center;
+		}
 
-        .blog_item_1{
-            width: 95%;
-        }
-        .blog_item_4, .blog_item_5{
-            display: none;
-        }
-        .blog_item_2, .blog_item_3, .blog_item_0{
-            width: 46%;
-            height: auto;
-            flex-direction: column;
-            margin: 27px 13px 0;
+		.blog_item_1 {
+			width: 95%;
+		}
+		.blog_item_4,
+		.blog_item_5 {
+			display: none;
+		}
+		.blog_item_2,
+		.blog_item_3,
+		.blog_item_0 {
+			width: 46%;
+			height: auto;
+			flex-direction: column;
+			margin: 27px 13px 0;
 
-            .blog_img_wrap{
-                width: 100%;
-                height: 136px;
-                img{
-                    //height: auto;
-                    width: 100%;
-                    object-fit: cover;
-                }
-            }
-            .blog_text{
-                width: 100%;
-            }
-        }
-    }
-    @include for-mobile{
-        .content_block{
-            justify-content: center;
-        }
+			.blog_img_wrap {
+				width: 100%;
+				height: 136px;
+				img {
+					//height: auto;
+					width: 100%;
+					object-fit: cover;
+				}
+			}
+			.blog_text {
+				width: 100%;
+			}
+		}
+	}
+	@include for-mobile {
+		.content_block {
+			justify-content: center;
+		}
 
-        .blog_item_1{
-            width: 78%;
-        }
-        .blog_item_4, .blog_item_5{
-            display: none;
-        }
-        .blog_item_2, .blog_item_3, .blog_item_0{
-            width: 38%;
-            height: auto;
-            flex-direction: column;
-            margin: 27px 13px 0;
+		.blog_item_1 {
+			width: 78%;
+		}
+		.blog_item_4,
+		.blog_item_5 {
+			display: none;
+		}
+		.blog_item_2,
+		.blog_item_3,
+		.blog_item_0 {
+			width: 38%;
+			height: auto;
+			flex-direction: column;
+			margin: 27px 13px 0;
 
-            .blog_img_wrap{
-                width: 100%;
-                height: 136px;
-                img{
-                    //height: auto;
-                    width: 100%;
-                    object-fit: cover;
-                }
-            }
-            .blog_text{
-                width: 100%;
-            }
-        }
-    }
-    @include for-phone{
-       .blog_item_1, .blog_item_2, .blog_item_3, .blog_item_0 {
-            width: 350px;
-            height: auto;
-            flex-direction: column;
-            margin: 13px auto 0;
+			.blog_img_wrap {
+				width: 100%;
+				height: 136px;
+				img {
+					//height: auto;
+					width: 100%;
+					object-fit: cover;
+				}
+			}
+			.blog_text {
+				width: 100%;
+			}
+		}
+	}
+	@include for-phone {
+		.blog_item_1,
+		.blog_item_2,
+		.blog_item_3,
+		.blog_item_0 {
+			width: 350px;
+			height: auto;
+			flex-direction: column;
+			margin: 13px auto 0;
 
-            .blog_img_wrap{
-                width: 100%;
-                height: 136px;
-                img{
-                    height: 136px;
-                }
-            }
-            .blog_text{
-                width: 100%;
-            }
-        } 
-    }
+			.blog_img_wrap {
+				width: 100%;
+				height: 136px;
+				img {
+					height: 136px;
+				}
+			}
+			.blog_text {
+				width: 100%;
+			}
+		}
+	}
 }
-.main_podborki{
-    padding: 65px 0;
-    background: #F8F8F8;
-    text-align: center;
-    @include for-phone{
-       padding: 24px 0; 
-    }
-    .content_block{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 12px;
-        @include for-small-desktop{
-            justify-content: center;
-        }
-        @include for-pad{
-            justify-content: center;
-        }
-        @include for-mobile{
-            justify-content: left;
-            width: 100%;
-        }
-        @include for-phone{
-            justify-content: space-evenly;
-        }
-    }
-    .restaurant_item{
-        width: 272px;
-        height: 164px;
-        background: #FFFFFF;
-        border: 1px solid #F8F8F8;
-        box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
-        border-radius: 4px;
-        margin: 12px;
-        @include for-mobile{
-            width: 240px;
-            margin: 4px;
-        }
-        @include for-phone{
-            margin: 8px;
-            width: 142px;
-            height: auto;
-        }
-    }
-    .restaurant_img{
-        height: 120px;
-        @include for-phone{
-            overflow: hidden;
-        }
-        img{
-            width: 100%;
-            @include for-phone{
-                width: auto;
-                height: 100%;
-            }
-        }
-    }
-    .restaurant_text{
-        text-align: center;
-        padding: 9px;
+.main_podborki {
+	padding: 65px 0;
+	background: #f8f8f8;
+	text-align: center;
+	@include for-phone {
+		padding: 24px 0;
+	}
+	.content_block {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		max-width: 1100px;
+		margin-top: 12px;
+		@include for-small-desktop {
+			justify-content: center;
+		}
+		@include for-pad {
+			justify-content: center;
+		}
+		@include for-mobile {
+			// justify-content: left;
+			width: 100%;
+		}
+		@include for-phone {
+			justify-content: space-evenly;
+		}
+	}
+	.restaurant_item {
+		overflow: hidden;
+		width: 272px;
+		// width: calc(33.333% - 24px);
+		height: 164px;
+		background: #ffffff;
+		border: 1px solid #f8f8f8;
+		box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
+		border-radius: 4px;
+		margin: 12px;
+		@include for-mobile {
+			width: 240px;
+			margin: 4px;
+		}
+		@include for-phone {
+			margin: 8px;
+			width: 142px;
+			height: auto;
+		}
+	}
+	.restaurant_img {
+		overflow: hidden;
+		height: 120px;
+		@include for-phone {
+			overflow: hidden;
+		}
+		img {
+			object-fit: cover;
+			width: 100%;
+			height: 100%;
+			@include for-phone {
+				width: auto;
+				height: 100%;
+			}
+		}
+	}
+	.restaurant_text {
+		text-align: center;
+		padding: 9px;
 
-        a{
-            font-size: 15px;
-            line-height: 24px;
-            @include for-phone{
-                line-height: 18px;
-            }
-        }
-        span{
-            font-size: 11px;
-            line-height: 24px;
-            color: #848484;
-            margin-left: 5px;
-            @include for-phone{
-                display: none;
-            }
-        }
-    }
+		a {
+			font-size: 15px;
+			line-height: 24px;
+			@include for-phone {
+				line-height: 18px;
+			}
+		}
+		span {
+			font-size: 11px;
+			line-height: 24px;
+			color: #848484;
+			margin-left: 5px;
+			@include for-phone {
+				display: none;
+			}
+		}
+	}
 }
-.bottom_block{
-    padding: 40px 0;
-    .content_block{
-        margin-top: 16px;
-        
-        /*.seo_text_control{
+.bottom_block {
+	padding: 40px 0;
+	.content_block {
+		margin-top: 16px;
+
+		/*.seo_text_control{
             top: auto;
             bottom: 0;
             left: 0;
@@ -591,28 +608,27 @@
                 border-bottom: 1px dashed #3067F3;
             }
         }*/
-        @include for-mobile{
-            margin-top: 0;
-        }
-        @include for-phone{
-            &._hidden{
-                max-height: 240px;
-            }
-        }
+		@include for-mobile {
+			margin-top: 0;
+		}
+		@include for-phone {
+			&._hidden {
+				max-height: 240px;
+			}
+		}
+	}
 
-    }
-    
-    p:not(._link) {
-        color: #1A2824;
-        margin: 10px auto !important;
-        text-align: left;
-    }
-    @include for-mobile{
-        padding-bottom: 0;
-        h2{
-            width: calc(100% - 30px);
-            margin: 0 auto;
-            text-align: left;
-        }
-    }
+	p:not(._link) {
+		color: #1a2824;
+		margin: 10px auto !important;
+		text-align: left;
+	}
+	@include for-mobile {
+		padding-bottom: 0;
+		h2 {
+			width: calc(100% - 30px);
+			margin: 0 auto;
+			text-align: left;
+		}
+	}
 }

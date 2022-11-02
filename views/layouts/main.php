@@ -31,6 +31,10 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <title><?php echo $this->title ?></title>
 
     <?php $this->head() ?>
+
+    <?php if(Yii::$app->params['noindex_global'] === true){
+        echo '<meta name="robots" content="noindex" />';
+    } ?>
     <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
     <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
     <?= Html::csrfMetaTags() ?>
@@ -48,30 +52,23 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         var fired = false;
-        window.addEventListener('click', () => {
-            if (fired === false) {
-                fired = true;
-                load_other();
-          }
-        });
-        window.addEventListener('scroll', () => {
-            if (fired === false) {
-                fired = true;
-                load_other();
-          }
-        });
-        window.addEventListener('mousemove', () => {
-            if (fired === false) {
-                fired = true;
-                load_other();
-          }
-        });
-        window.addEventListener('touchmove', () => {
-            if (fired === false) {
-                fired = true;
-                load_other();
-          }
-        });
+        const REAL_USER_EVENT_TRIGGERS = [
+            'click',
+            'scroll',
+            'keypress',
+            'wheel',
+            'mousemove',
+            'touchmove',
+            'touchstart',
+        ];
+        REAL_USER_EVENT_TRIGGERS.forEach(event => {
+            window.addEventListener(event, () => {
+                if (fired === false) {
+                    fired = true;
+                    load_other();
+                }
+            });
+        }, { passive: true });
         function load_other() { 
             setTimeout(() => {
                 (function(m, e, t, r, i, k, a) {
@@ -98,6 +95,8 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         }
 
         setTimeout(() => {
+            fired = true;
+            load_other();
             gtag('event', 'read', {'event_category': '15 seconds'});
         }, 15000);
     </script>
@@ -153,7 +152,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         $reduced = array_reduce($activeSubdomenRecords, function ($acc, $subdomen) use ($address) {
                             $firstLetter = mb_substr($subdomen->name, 0, 1);
                             $alias = $subdomen->city_id == 4400 ? '' : $subdomen->alias . '.';
-                            $link = "<a href='http://$alias$address' data-search-city>$subdomen->name</a>\n";
+                            $link = "<a href='https://$alias$address' data-search-city>$subdomen->name</a>\n";
                             isset($acc[$firstLetter]) ? $acc[$firstLetter] .= $link : $acc[$firstLetter] = $link;
                             return $acc;
                         }, []);
@@ -218,10 +217,13 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                         <?php } ?>
                                     </ul>
                                 </li>
-                                <li>
-                                    <a href="https://birthday-place.ru/blog/"><span>Блог</span></a>
-                                </li>
+                                <li><a href="https://birthday-place.ru/blog/"><span>Блог</span></a></li>
                             </ul>
+                            <?php if($this->params['collectionCount'] > 0):?>
+                                <ul class="footer_nav_wrap">
+                                    <li><a href="/collection/"><span>Подборки ресторанов</span></a></li>
+                                </ul>
+                            <?php endif;?>
                         </div>
                     </div>
                     <div class="footer_block _right">
@@ -255,6 +257,24 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         </div>
 
     </div>
+
+	 <!-- вторая форма для страницы статьи блога чтобы отслеживать цель "bron_2" -->
+	<div class="popup_wrap popup_wrap_blog">
+		<div class="popup_layout" data-close-popup></div>
+		<div class="popup_form">
+			<?= $this->render('//components/generic/form_blog.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'main', 'target' => 'bron_2']) ?>
+		</div>
+		<div class="popup_img">
+			<div class="popup_img_close" data-close-popup></div>
+			<div class="popup_img_slider_wrap">
+				<div class="slider_arrow _prev"></div>
+				<div class="slider_arrow _next"></div>
+				<div class="object_gallery_container swiper-container" data-gallery-img-swiper>
+					<div class="object_gallery_swiper swiper-wrapper" data-gallery-list></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
     <?php $this->endBody() ?>

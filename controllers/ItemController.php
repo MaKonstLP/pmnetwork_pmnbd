@@ -17,7 +17,7 @@ class ItemController extends BaseFrontendController
 		$model = ElasticItems::find()->query([
 			'bool' => [
 				'must' => [
-					['match' => ['restaurant_gorko_id' =>452629]],
+					['match' => ['restaurant_gorko_id' => 452629]],
 					//['match' => ['restaurant_city_id' => \Yii::$app->params['subdomen_id']]],
 				],
 			]
@@ -31,8 +31,8 @@ class ItemController extends BaseFrontendController
 				],
 			]
 		])->one();
-		
-		if(empty($rest_item)) {
+
+		if (empty($rest_item)) {
 			throw new NotFoundHttpException();
 		}
 		$rooms = $rest_item['rooms'];
@@ -62,7 +62,7 @@ class ItemController extends BaseFrontendController
 		$other_rests = array_slice($other_rests, 0, 7);
 
 		if (!empty($roomSlug)) {
-			$same_objects = array_filter($rooms, function($room) use ($roomSlug){
+			$same_objects = array_filter($rooms, function ($room) use ($roomSlug) {
 				return $room['slug'] != $roomSlug;
 			});
 			$room = current(array_diff_key($rooms, $same_objects));
@@ -77,6 +77,10 @@ class ItemController extends BaseFrontendController
 				return array_merge($acc, $rest['rooms']);
 			}, []);
 
+			// echo "<pre>";
+			// print_r($room);
+			// exit;
+
 			return $this->render('index.twig', array(
 				'item' => $room,
 				'rest_item' => $rest_item,
@@ -90,7 +94,12 @@ class ItemController extends BaseFrontendController
 		$seo['breadcrumbs'] = Breadcrumbs::get_restaurant_crumbs($rest_item);
 		$seo['address'] = $rest_item->restaurant_address;
 		$this->setSeo($seo);
-		
+
+		// echo "<pre>";
+		// print_r($rest_item);
+		// exit;
+
+
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => ($filtered = array_filter($rooms_price_arr)) ? min($filtered) : 0,
@@ -99,13 +108,12 @@ class ItemController extends BaseFrontendController
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
 		));
-
 	}
 
-	private function setSeo($seo){
-        $this->view->title = $seo['title'];
-        $this->view->params['desc'] = $seo['description'];
-        $this->view->params['kw'] = $seo['keywords'];
-    }
-	
+	private function setSeo($seo)
+	{
+		$this->view->title = $seo['title'];
+		$this->view->params['desc'] = $seo['description'];
+		$this->view->params['kw'] = $seo['keywords'];
+	}
 }

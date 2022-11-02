@@ -350,28 +350,34 @@
     width: 100%;
     flex-direction: row;
     height: auto;
-    a{
+
+    .fast_filter{
         border: 1px solid #C4C4C4;
         box-sizing: border-box;
         border-radius: 54px;
         width: max-content;
         padding: 8px 16px;
-        white-space: pre;
         margin: 8px 5px;
-        font-size: 14px;
-        line-height: 20px;
-        color: #000;
         display: inline-block;
-        & > span{
-            font-size: 11px;
+        cursor: pointer;
+        a{            
+            white-space: pre;
+            font-size: 14px;
             line-height: 20px;
-            color: #848484;
-            margin-left: 5px;
+            color: #000;            
+            
         }
+        span{
+                font-size: 11px;
+                line-height: 20px;
+                color: #848484;
+                margin-left: 5px;
+            }
+        &:hover{
+            background-color: #c4c4c43b;
+        } 
     }
-    a:hover{
-        background-color: #c4c4c43b;
-    }
+    
     @include for-mobile{
 
         overflow-x: auto;
@@ -380,6 +386,7 @@
         justify-content: left;
         .mCSB_container{
             padding: 10px 0;
+            margin-bottom: 15px!important;
         }
     }
 }

@@ -11,9 +11,11 @@ use frontend\components\QueryFromSlice;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use common\models\elastic\ItemsFilterElastic;
 use common\models\Filter;
+use common\models\RestaurantsTypes;
 use common\models\Seo;
 use common\models\Slices;
 use frontend\modules\pmnbd\models\ElasticItems;
+use frontend\modules\pmnbd\models\RestaurantTypeSlice;
 use yii\helpers\ArrayHelper;
 
 class ListingController extends BaseFrontendController
@@ -39,6 +41,9 @@ class ListingController extends BaseFrontendController
 		if (!parent::beforeAction($action)) {
 			return false;
 		}
+		if(strpos($action->controller->request->pathInfo, 'listing') !== false) {
+			throw new \yii\web\NotFoundHttpException();
+		}
 		$this->filter_model = Yii::$app->params['filter_model'];
 		$this->slices_model = Yii::$app->params['slices_model'];
 
@@ -48,11 +53,16 @@ class ListingController extends BaseFrontendController
 	public function actionSlice($slice)
 	{
 		$slice_obj = new QueryFromSlice($slice);
+		
 		if ($slice_obj->flag) {
 			$this->view->params['menu'] = $slice;
 			$params = $this->parseGetQuery($slice_obj->params, $this->filter_model, $this->slices_model);
+			
 			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+			if(isset($_GET['zzz'])) {
+				print_r(count($params['params_filter']['mesto'] ?? []) == 1 );die;
+			}
 			return $this->actionListing(
 				$page 			=	$params['page'],
 				$per_page		=	$this->per_page,
@@ -60,7 +70,10 @@ class ListingController extends BaseFrontendController
 				$breadcrumbs 	=	Breadcrumbs::get_breadcrumbs(2),
 				$canonical 		= 	$canonical,
 				$type 			=	$slice,
-				$fastFilters	=	$params['fast_filters']
+				$fastFilters	=	$params['fast_filters'],
+				$itemTypeName   =	(count($params['params_filter']['mesto'] ?? []) == 1 
+					? (RestaurantTypeSlice::find()->with('restaurantType')->where(['slice_id' => $slice_obj->slice_model])->one()->restaurantType->text ?? "")
+					: ""),
 			);
 		} else {
 			return $this->goHome();
@@ -100,7 +113,7 @@ class ListingController extends BaseFrontendController
 		}
 	}
 
-	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [])
+	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [], $itemTypeName = "")
 	{
 		$elastic_model = new ElasticItems;
 		$items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
@@ -126,6 +139,12 @@ class ListingController extends BaseFrontendController
 			$seo['text_bottom'] = '';
 		}
 
+
+
+		// echo "<pre>";
+		// print_r($items->items);
+		// exit;
+
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(
 			'items' => $items->items,
@@ -135,7 +154,8 @@ class ListingController extends BaseFrontendController
 			'count' => $items->total,
 			'menu' => $type,
 			'main_flag' => $main_flag,
-			'fastFilters' => $fastFilters
+			'fastFilters' => $fastFilters,
+			'itemTypeName' => $itemTypeName,
 		));
 	}
 
@@ -274,6 +294,7 @@ class ListingController extends BaseFrontendController
 			},
 			360
 		);
+		$return['fast_filters'] = array_map("unserialize", array_unique(array_map("serialize", $return['fast_filters'])));
 
 		return $return;
 	}

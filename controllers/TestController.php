@@ -5,6 +5,7 @@ use Yii;
 use common\models\GorkoApiTest;
 use common\models\Subdomen;
 use common\models\Restaurants;
+use common\models\RestaurantsYandex;
 use common\models\RestaurantsModule;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
@@ -33,7 +34,7 @@ class TestController extends BaseFrontendController
 
 	public function actionIndex()
 	{
-		$rests = RestaurantsModule::find()->all();
+		/* $rests = RestaurantsModule::find()->all();
 		foreach ($rests as $key => $rest) {
 			$rest_item = ElasticItems::find()->query([
 				'bool' => [
@@ -49,7 +50,49 @@ class TestController extends BaseFrontendController
 				$rest->save();
 			}
 			
+		} */
+
+		$connection = new \yii\db\Connection([
+			'username' => 'root',
+			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurant_ya_model = RestaurantsYandex::find()->where(['id' => 2])->one();
+
+		$restaurants = Restaurants::find()
+		->with('yandexReview')
+		->where(['active' => 1, 'commission' => 2])
+		->limit(100000)
+		->all();
+
+		foreach ($restaurants as $key => $restaurant) {
+			echo ('<pre>');
+			print_r($restaurant->yandexReview->rev_ya_id);
+			echo ('<pre>');
+		print_r($restaurant->yandexReview->rev_ya_rate);
+		echo ('<pre>');
+		print_r($restaurant->yandexReview->rev_ya_count);
+			exit;
+			
 		}
+
+		echo ('<pre>');
+		print_r($restaurants);
+		exit;
+
+		echo ('<pre>');
+		print_r($restaurant_ya_model->rev_ya_id);
+		echo ('<pre>');
+		print_r($restaurant_ya_model->rev_ya_rate);
+		echo ('<pre>');
+		print_r($restaurant_ya_model->rev_ya_count);
+		exit;
+
+		echo 1111;
 	}
 
 	public function actionAll()

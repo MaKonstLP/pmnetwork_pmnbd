@@ -592,6 +592,9 @@
     		height: 100%;
 		    position: relative;
 		    overflow: hidden;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
 		    img{
 		    	position: absolute;
 			    bottom: 0;

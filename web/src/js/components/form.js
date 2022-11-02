@@ -134,7 +134,7 @@ export default class Form {
 					var custom_error = 'Неверный формат телефона';
 				}
 
-		        if (name === 'email' && !(pattern_email.test($field.val()))) {
+				if (name === 'email' && !(pattern_email.test($field.val()))) {
 					valid = false;
 					var custom_error = 'Неверный формат электронной почты';
 				}
@@ -144,8 +144,14 @@ export default class Form {
 					var custom_error = 'Вы указали прошедшую дату';
 				}
 
-		        if (name === 'policy' && $field.prop('checked'))
-		          valid = true;
+				if (name === 'guests' && (typeof +$field.val() !== 'number' || +$field.val() !== Math.floor(+$field.val()) || +$field.val() <= 0)) {
+					valid = false;
+					var custom_error = 'Введите целое положительное число';
+				}
+
+				if (name === 'policy' && $field.prop('checked')) {
+					valid = true;
+				}
 			}
 			if (valid) {
 				$field.removeClass('_invalid').addClass('check_approove');

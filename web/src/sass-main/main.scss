@@ -397,11 +397,12 @@ h4{
     }*/
 
     @include for-pad{
-        margin-bottom: 50px;
+        margin-bottom: 20px;
     }
 
     @include for-mobile{
-        margin-bottom: 50px;
+        margin-top: -15px;
+        margin-bottom: 20px;
     }
 
     h1{
@@ -569,4 +570,16 @@ h4{
     input{
         display: none;
     }
+}
+
+// скрыть стрелки для input[type=number]
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }

@@ -10,9 +10,9 @@
 			<div class="fscreen_blog_link">
 				<a href="/blog/">Статьи блога</a>
 			</div>
-			{%if post.blogPostTags %}
+			{% if post.blogPostTags %}
 			<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
-			{%endif%}
+			{% endif %}
 			<div class="fscreen_blog_breadcrumbs">
 				<ul class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
 					<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
@@ -22,8 +22,8 @@
 						</a>
 					</li>
 					<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
-						<a itemprop="item" typeof="WebPage" href="/blog/">
-							<span itemprop="name">Блог</span>
+						<a itemprop="item" typeof="WebPage" href="/collection/">
+							<span itemprop="name">Подборки</span>
 							<meta itemprop="position"  content="2">
 						</a>
 					</li>
@@ -51,11 +51,11 @@
 						{% for similarPost in similarPosts %}
 							<div class="blog_item swiper-slide">
 								<div class="blog_img">
-									<a href="{{ similarPost.getUrl() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
+									<a href="{{ similarPost.getUrlCollection() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
 								</div>
 								<div class="blog_text">
 									<p class="blog_date">{{similarPost.getRusDate()}}</p>
-									<a href="{{ similarPost.getUrl() }}">
+									<a href="{{ similarPost.getUrlCollection() }}">
 										<p class="blog_title">{{ similarPost.name }}</p>
 									</a>
 									<p class="blog_description">{{ similarPost.short_intro }}</p>

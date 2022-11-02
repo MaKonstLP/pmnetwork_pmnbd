@@ -1,0 +1,13 @@
+<div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
+		<div class="object swiper-slide">
+			<img src="{{ post.getFileData('image').src }}" data-gallery-img-view/>
+			<div class="fscreen_blog_wrap">
+				<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
+				<div class="fscreen_blog_title">{{ post.name }}</div>
+				<div class="fscreen_blog_date">{{ post.published_at }}</div>
+			</div>
+		</div>
+</div>
+<div class="content_block" data-listing-title>
+{{ html|raw }}
+</div>

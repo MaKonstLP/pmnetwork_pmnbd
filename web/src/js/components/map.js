@@ -47,6 +47,21 @@ export default class YaMap{
             balloonOffset: [0,-37],
         });
 
+
+        if(window.matchMedia('(max-width: 768px)').matches) {
+            myMap.behaviors.disable('scrollZoom');
+            myMap.behaviors.disable('drag');
+            myMap.events.add('click', () => {
+                myMap.behaviors.enable('scrollZoom');
+                myMap.behaviors.enable('drag');
+            });
+            const zoom = myMap.controls.get('zoomControl');
+            zoom.events.add('click', () => {
+                myMap.behaviors.enable('scrollZoom');
+                myMap.behaviors.enable('drag');
+            });
+        }
+
         myMap.geoObjects.add(myPlacemark); 
         
         if($(window).width() > 600){

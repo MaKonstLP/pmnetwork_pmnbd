@@ -23,7 +23,8 @@
 	{% endfor %}
 </ul>
 <div class="title">
-	<h1 data-test="{{item.restaurant_gorko_id}}">{{seo.h1}}</h1>
+	{# <h1 data-test="{{item.restaurant_gorko_id}}">{{seo.h1}}</h1> #}
+	<h1 data-rest-id="{{item.restaurant_gorko_id}}" data-room-id="{{room_id}}">{{seo.h1}}</h1>
 	{# <!--div class="title_desc"><p>{{seo.desc}}</p></div--> #}
 	{# <!--div class="title_address"><p>{{seo.address}}</p></div--> #}
 </div>

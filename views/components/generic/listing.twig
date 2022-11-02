@@ -1,75 +1,98 @@
 {% for item in items %}
-    <div class="item swiper-slide {{type}}">
-        <div class="item_present_wrapper">
-            <img loading="lazy" class="item_present" src="/upload/img/Gift_icon.svg" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
-            <p class="item_present_text">за бронирование</p>
-        </div>
-        <a href="/catalog/restoran-{{item.restaurant_slug}}/">
-            <div class="item_img">
-                {% if item.restaurant_images %}
-                    <picture>
-                        <source srcset="{{Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100-rw')}}" type="image/webp">
-                        <source srcset="{{Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100')}}" type="image/jpeg"> 
-                        <img alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}" src="{{Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100')}}">
-                    </picture>
-                {% else %}
-                    <img loading="lazy" src="/upload/img/bd/no_photo.png" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
-                {% endif %}                
-            </div>
-        </a>
-            <div class="item_info">
-                <div class="item_info_top">
-                    <a href="/catalog/restoran-{{item.restaurant_slug}}/">
-                        <p class="item_name">{{item.restaurant_name}}</p>
-                    </a>
+	<div class="item swiper-slide {{type}}">
+		<div class="item_present_wrapper">
+			<img loading="lazy" class="item_present" src="/upload/img/Gift_icon.svg" atl="Подарок за бронирование в ресторане «{{item.restaurant_name}}»">
+			<p class="item_present_text">за бронирование</p>
+		</div>
+		<a href="/catalog/restoran-{{item.restaurant_slug}}/">
+			<div class="item_img">
+				{# <img loading="lazy" src="{{item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100') : '/upload/img/bd/no_photo.png'}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/> #}
+				<img loading="lazy" src="{% set image_src = item.restaurant_images[0].subpath~'=w360-l100-rw' %}
+				{% set breakLoop = false %}
+				{% for room in item.rooms if breakLoop == false %}
+					{% if room.images %}
+						{% set breakLoop = true %}
+						{% set image_src = room.images[0].subpath~'=w360-l100-rw' %}
+					{% endif %}
+				{% endfor %}
+				{% if item.restaurant_images %}
+					{{image_src}}
+				{% elseif breakLoop == true %}
+					{{image_src}}
+				{% else %}
+					/upload/img/bd/no_photo.png
+				{% endif %}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/>
+			</div>
+		</a>
+		<div class="item_info">
+			<div class="item_info_top">
+				<a href="/catalog/restoran-{{item.restaurant_slug}}/">
+					<p class="item_name">{{ itemTypeName ? itemTypeName~' ' : '' }}{{item.restaurant_name}}</p>
+				</a>
 
-                    {% if type != 'other' %}
-                        <p class="item_address">{{item.restaurant_address}}</p>
-                        <!--p class="item_parent_name 11111111111">{{item.restaurant_name}}</p-->
-                    {% endif %}
-                 </div> 
-                    <div class="item_meta">
-                        <div class="item_meta_items">
-                        {% if item.rooms %}
-                            <div class="item_meta_item">
-                                Вместимость: 
-                                    {% set min_price = 100000000 %}
-                                    {% for room in item.rooms %}
-                                        {{room.capacity}}{{loop.last ? '' : ','}}
-                                        {% set min_price = room.price and (min_price > room.price) ? room.price : min_price %}
-                                    {% endfor %}
-                              
-                            </div>
-                        {% endif %}
-                        {% if item.rooms %}  
-                            <div class="item_meta_item">
-                                Залов: {{item.rooms|length}}
-                            </div>
-                        {% endif %}
-                        </div>
-                        <div class="item_meta_items">
-                        {% if item.restaurant_alcohol in [1,2] %}
-                            <div class="item_meta_item">
-                                Свой алкоголь: да
-                            </div>
-                        {% endif %}    
-                            <div class="item_meta_item">
-                                Парковка: 
-                                    {% if item.restaurant_parking %}  
-                                        на {{item.restaurant_parking}} авто
-                                    {% else %}
-                                        нет
-                                    {% endif %} 
-                            </div>
-                        </div>    
-                    </div>
-                    {% if min_price and min_price != 100000000 %}
-                        <div class="item_price">
-                            от {{min_price}} ₽/чел.
-                        </div>
-                    {% endif %}
-                
-            </div>
-        </a>
-    </div>
+				{% if type != 'other' %}
+					<p class="item_address">{{item.restaurant_address}}</p>
+					<!--p class="item_parent_name 11111111111">{{item.restaurant_name}}</p-->
+				{% endif %}
+			</div> 
+			<div class="item_meta">
+				<div class="item_meta_items">
+					{% if item.rooms %}
+						<div class="item_meta_item">
+							Вместимость: 
+							{% set min_price = 100000000 %}
+							{% for room in item.rooms %}
+								{{room.capacity}}{{loop.last ? '' : ','}}
+								{% set min_price = room.price and (min_price > room.price) ? room.price : min_price %}
+							{% endfor %}
+							
+						</div>
+					{% endif %}
+					{% if item.rooms %}  
+						<div class="item_meta_item">
+							Залов: {{item.rooms|length}}
+						</div>
+					{% endif %}
+				</div>
+				<div class="item_meta_items">
+					{% if item.restaurant_alcohol in [1,2] %}
+						<div class="item_meta_item">
+							Свой алкоголь: да
+						</div>
+					{% endif %}    
+					<div class="item_meta_item">
+						Парковка: 
+						{% if item.restaurant_parking %}  
+							на {{item.restaurant_parking}} авто
+						{% else %}
+							нет
+						{% endif %} 
+					</div>
+				</div>    
+			</div>
+			{% if min_price and min_price != 100000000 %}
+				<div class="item_price">
+					от {{min_price}} ₽/чел.
+				</div>
+			{% endif %}
+			<div class="object_book_hidden_button _button" data-popup-phone-list data-target="lid_pokazat_nomer">Контакты</div>
+			<div class="popup_wrap popup_phone_wrap" data-popup-phone-list-wrap>
+				<div class="popup_phone">
+						<div class="form_close" data-close-popup></div>
+						<p class="popup_phone_title">Ресторан <span itemprop="name">{{item.restaurant_name}}</span></p>
+						<div class="popup_phone_present">
+							<img loading="lazy" src="/upload/img/present.svg">
+							<p>Забронируй зал и получи подарок!</p>
+						</div>
+						<a href="tel:{{item.restaurant_phone}}" class="popup_real_phone"><span itemprop="telephone">{{item.restaurant_phone}}</span></a>
+						<p class="popup_phone_address" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							{{item.restaurant_address|raw}}
+							<meta content="{{app.params.subdomen_name}}" itemprop="addressLocality">
+							<meta content="{{item.restaurant_address|split(', ')[1:]|join(', ')}}" itemprop="streetAddress">
+						</p>
+						<link href="{{ item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath) : '/upload/img/bd/no_photo.png'}}" itemprop="image">
+				</div>
+			</div>
+		</div>		
+	</div>
 {% endfor %}

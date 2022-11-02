@@ -1,0 +1,7 @@
+actionTest Array
+(
+    [username] => root
+    [password] => GxU25UseYmeVcsn5Xhzy
+    [charset] => utf8mb4
+    [dsn] => mysql:host=localhost;dbname=pmn
+)

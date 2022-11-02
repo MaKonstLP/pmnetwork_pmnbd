@@ -8,6 +8,11 @@ export default class Filter{
 
 		this.init(this.$filter);
 
+		//КЛИК ПО БЫСТРОМУ СРЕЗУ
+		$('.fast_filter').on('click', function(){
+			document.location.assign($(this).find('a').attr('href'));
+		});
+
 		//КЛИК ПО БЛОКУ С СЕЛЕКТОМ
 		this.$filter.find('[data-filter-select-current]').on('click', function(e){
 			let $target = $(e.target);

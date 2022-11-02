@@ -15,6 +15,8 @@ use common\models\Subdomen;
 use common\models\FilterItems;
 use common\models\Rooms;
 use common\models\elastic\FilterQueryConstructorElastic;
+use common\widgets\ProgressWidget;
+use common\models\RestaurantsYandex;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
 {
@@ -52,7 +54,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             'restaurant_types',
             'restaurant_main_type',
             'restaurant_location',
+            'restaurant_rating',
             'rooms',
+				'restaurant_rev_ya',
         ];
     }
 
@@ -84,6 +88,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                     'restaurant_city_id'            => ['type' => 'integer'],
                     'restaurant_alcohol'            => ['type' => 'integer'],
                     'restaurant_firework'           => ['type' => 'integer'],
+                    'restaurant_rating'             => ['type' => 'integer'],
                     'restaurant_name'               => ['type' => 'text'],
                     'restaurant_slug'               => ['type' => 'keyword'],
                     'restaurant_address'            => ['type' => 'text'],
@@ -133,6 +138,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                         'restaurant_name'               => ['type' => 'text'],
                         'features'                      => ['type' => 'text'],
                         'cover_url'                     => ['type' => 'text'],
+								'payment_model'                 => ['type' => 'text'],
                         'images'                        => ['type' => 'nested', 'properties' => [
                             'id'                            => ['type' => 'integer'],
                             'sort'                          => ['type' => 'integer'],
@@ -141,7 +147,12 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                             'waterpath'                     => ['type' => 'text'],
                             'timestamp'                     => ['type' => 'text'],
                         ]],
-                    ]]
+                    ]],
+						  'restaurant_rev_ya'                 => ['type' => 'nested', 'properties' => [
+							   'id'                                => ['type' => 'long'],
+							   'rate'                              => ['type' => 'text'],
+							   'count'                             => ['type' => 'text'],
+						  ]]
                 ]
             ],
         ];
@@ -200,10 +211,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
         $restaurants = Restaurants::find()
             ->with('rooms')
-            ->with('rooms.images')
-            ->with('images')
+            ->with('imagesext')
             ->with('subdomen')
-            ->where(['active' => 1])
+            ->with('yandexReview')
+            ->where(['active' => 1, 'commission' => 2])
             ->limit(100000)
             ->all();
 
@@ -213,13 +224,14 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->asArray()
             ->all();
         $restaurants_types = ArrayHelper::index($restaurants_types, 'value');
+		  
 
         $connection_sat = new \yii\db\Connection($params['site_connection_config']);
         $connection_sat->open();
         Yii::$app->set('db', $connection_sat);
 
         $images_module = ImagesModule::find()
-            ->limit(100000)
+            ->limit(500000)
             ->asArray()
             ->all();
         $images_module = ArrayHelper::index($images_module, 'gorko_id');
@@ -233,14 +245,17 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         //print_r($images_module[21256309]);
         //exit;
 
+        $rest_count = count($restaurants);
+        $rest_iter = 0;
         foreach ($restaurants as $restaurant) {
             $res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params);
             $all_res .= $res . ' | ';
+            echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
         }
 
         self::subdomenCheck($connection_core);
 
-        echo 'Обновление индекса ' . self::index() . ' ' . self::type() . ' завершено<br>' . $all_res;
+        echo 'Обновление индекса ' . self::index() . ' ' . self::type() . ' завершено<br>';
         return true;
     }
 
@@ -316,31 +331,67 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $record->restaurant_payment = $restaurant->payment;
         $record->restaurant_special = $restaurant->special;
         $record->restaurant_phone = $restaurant->phone;
+        $restaurant->rating ? $record->restaurant_rating = $restaurant->rating : $record->restaurant_rating = 90;
+
+		  //Отзывы с Яндекса из общей базы
+		  $reviews = [];
+		  $reviews['id'] = $restaurant->yandexReview['rev_ya_id'];
+		  $reviews['rate'] = $restaurant->yandexReview['rev_ya_rate'];
+		  $reviews['count'] = $restaurant->yandexReview['rev_ya_count'];
+		  $record->restaurant_rev_ya = $reviews;
 
         //Картинки ресторана
         $images = [];
-        foreach ($restaurant->images as $key => $image) {
-            $image_arr = [];
-            $image_arr['id'] = $image->gorko_id;
-            $image_arr['sort'] = $image->sort;
-            $image_arr['realpath'] = $image->realpath;
-            if(isset($images_module[$image->gorko_id])){
-                $image_arr['subpath']   = $images_module[$image->gorko_id]['subpath'];
-                $image_arr['waterpath'] = $images_module[$image->gorko_id]['waterpath'];
-                $image_arr['timestamp'] = $images_module[$image->gorko_id]['timestamp'];
+
+        $group = array();
+        foreach ($restaurant->imagesext as $value) {
+            $group[$value['room_id']][] = $value;
+        }
+        $images_sorted = array();
+        $room_ids = array();
+        foreach ($group as $room_id => $images_ext) {
+            $room_ids[] = $room_id;
+            foreach($images_ext as $image){
+                $images_sorted[$room_id][$image['event_id']][] = $image;    
+            }       
+        }
+        $specs = [9, 0, 1];
+        $image_flag = false;
+        foreach ($specs as $spec) {
+            for ($i=0; $i < 20; $i++) { 
+                foreach ($room_ids as $room_id) {
+                    if(isset($images_sorted[$room_id]) && isset($images_sorted[$room_id][$spec]) && isset($images_sorted[$room_id][$spec][$i])){
+                        $image = $images_sorted[$room_id][$spec][$i];
+                        $image_arr = [];
+                        $image_arr['id'] = $image['gorko_id'];
+                        $image_arr['sort'] = $image['sort'];
+                        $image_arr['realpath'] = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $image['path']);;
+                        if(isset($images_module[$image['gorko_id']])){
+                            $image_arr['subpath']   = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $images_module[$image['gorko_id']]['subpath']);
+                            $image_arr['waterpath'] = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $images_module[$image['gorko_id']]['waterpath']);
+                            $image_arr['timestamp'] = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $images_module[$image['gorko_id']]['timestamp']);
+                        }
+                        else{
+                            $queue_id = Yii::$app->queue->push(new AsyncRenewImages([
+                                'gorko_id'      => $image['gorko_id'],
+                                'params'        => $params,
+                                'rest_flag'     => true,
+                                'rest_gorko_id' => $restaurant->gorko_id,
+                                'room_gorko_id' => false,
+                                'elastic_index' => static::index(),
+                                'elastic_type'  => 'rest',
+                            ]));
+                        }                
+                        array_push($images, $image_arr);
+                    }
+                    if(count($images) > 19){
+                        $image_flag = true;
+                        break;
+                    }                        
+                }
+                if($image_flag) break;
             }
-            else{
-                $queue_id = Yii::$app->queue->push(new AsyncRenewImages([
-                    'gorko_id'      => $image->gorko_id,
-                    'params'        => $params,
-                    'rest_flag'     => true,
-                    'rest_gorko_id' => $restaurant->gorko_id,
-                    'room_gorko_id' => false,
-                    'elastic_index' => static::index(),
-                    'elastic_type'  => 'rest',
-                ]));
-            }                
-            array_push($images, $image_arr);
+            if($image_flag) break;
         }
         $record->restaurant_images = $images;
 
@@ -424,31 +475,56 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             $room_arr['restaurant_main_type'] = $record->restaurant_main_type;
             $room_arr['features'] = $room->features;
             $room_arr['cover_url'] = $room->cover_url;
+				switch ($room->payment_model) {
+					case 1:
+						 $room_arr['payment_model'] = 'Только за еду и напитки';
+						 break;
+					case 2:
+						 $room_arr['payment_model'] = 'За аренду зала + за еду и напитки';
+						 break;
+					case 3:
+						 $room_arr['payment_model'] = 'Только аренда (без еды)';
+						 break;            
+					default:
+						 $room_arr['payment_model'] = '';
+						 break;
+			   }
 
             //Картинки залов
             $images = [];
-            foreach ($room->images as $key => $image) {
-                $image_arr = [];
-                $image_arr['id'] = $image->gorko_id;
-                $image_arr['sort'] = $image->sort;
-                $image_arr['realpath'] = $image->realpath;
-                if(isset($images_module[$image->gorko_id])){
-                    $image_arr['subpath']   = $images_module[$image->gorko_id]['subpath'];
-                    $image_arr['waterpath'] = $images_module[$image->gorko_id]['waterpath'];
-                    $image_arr['timestamp'] = $images_module[$image->gorko_id]['timestamp'];
+            $image_flag = false;
+            foreach ($specs as $spec) {
+                for ($i=0; $i < 20; $i++) {
+                    if(isset($images_sorted[$room->gorko_id]) && isset($images_sorted[$room->gorko_id][$spec]) && isset($images_sorted[$room->gorko_id][$spec][$i])){
+                        $image = $images_sorted[$room->gorko_id][$spec][$i];
+                        $image_arr = [];
+                        $image_arr['id'] = $image['gorko_id'];
+                        $image_arr['sort'] = $image['sort'];
+                        $image_arr['realpath'] = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $image['path']);;
+                        if(isset($images_module[$image['gorko_id']])){
+                            $image_arr['subpath']   = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $images_module[$image['gorko_id']]['subpath']);
+                            $image_arr['waterpath'] = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $images_module[$image['gorko_id']]['waterpath']);
+                            $image_arr['timestamp'] = str_replace('lh3.googleusercontent.com', 'img.birthday-place.ru', $images_module[$image['gorko_id']]['timestamp']);
+                        }
+                        else{
+                            $queue_id = Yii::$app->queue->push(new AsyncRenewImages([
+                                'gorko_id'      => $image['gorko_id'],
+                                'params'        => $params,
+                                'rest_flag'     => false,
+                                'rest_gorko_id' => $restaurant->gorko_id,
+                                'room_gorko_id' => $room->gorko_id,
+                                'elastic_index' => static::index(),
+                                'elastic_type'  => 'rest',
+                            ]));
+                        }                
+                        array_push($images, $image_arr);
+                    }
+                    if(count($images) > 19){
+                        $image_flag = true;
+                        break;
+                    }
                 }
-                else{
-                    $queue_id = Yii::$app->queue->push(new AsyncRenewImages([
-                        'gorko_id'      => $image->gorko_id,
-                        'params'        => $params,
-                        'rest_flag'     => false,
-                        'rest_gorko_id' => $restaurant->gorko_id,
-                        'room_gorko_id' => $room->gorko_id,
-                        'elastic_index' => static::index(),
-                        'elastic_type'  => 'rest',
-                    ]));
-                }                
-                array_push($images, $image_arr);
+                if($image_flag) break;
             }
             $room_arr['images'] = $images;
 
@@ -610,4 +686,5 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
         return $query->search()['hits']['total'];
     }
+
 }

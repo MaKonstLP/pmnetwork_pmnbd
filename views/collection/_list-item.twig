@@ -1,0 +1,16 @@
+{%set i = widget.dataProvider.totalcount % 6 == 2 and index + 1 == 2 ? index - 1 : index%} {#Если всего 2 картинки, то вторая выводится также как и первая#}
+{%set i = widget.dataProvider.totalcount % 6 == 4 and index + 1 == 4 ? index - 3 : i%} {#Если всего 4 картинки, то последняя выводится также как и первая#}
+{%set i = widget.dataProvider.totalcount % 6 == 5 and index + 1 == 4 ? index - 2 : i%} {#Если всего 5 картинок, то 4 и 5 выводятся также как 2 и 3#}
+{%set i = widget.dataProvider.totalcount % 6 == 5 and index + 1 == 5 ? index - 2 : i%}
+<div class="blog_item blog_item_{{i}}">
+	<div class="blog_img">
+		<a href="{{ model.getUrlCollection() }}"><img src="{{ model.getFileData('image').src }}"></a>
+	</div>
+	<div class="blog_text">
+		<p class="blog_date">{{ model.published_at|date("Y-m-d") }}</p>
+		<a href="{{ model.getUrlCollection() }}">
+			<p class="blog_title">{{ model.name }}</p>
+		</a>
+		<p class="blog_description">{{ model.short_intro }}</p>
+	</div>
+</div>

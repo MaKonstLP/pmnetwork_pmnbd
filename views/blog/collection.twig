@@ -8,11 +8,11 @@
 		</div>
 		<div class="fscreen_blog_wrap">
 			<div class="fscreen_blog_link">
-				<a href="/blog/">Статьи блога</a>
+				<a href="/collection/">Подборки</a>
 			</div>
-			{%if post.blogPostTags %}
-			<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
-			{%endif%}
+			{% if post.blogPostTags %}
+				<div class="fscreen_blog_label">{{ post.blogPostTags|map(t => t.blogTag.name)|join(' • ') }}</div>
+			{% endif %}
 			<div class="fscreen_blog_breadcrumbs">
 				<ul class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
 					<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
@@ -22,8 +22,8 @@
 						</a>
 					</li>
 					<li class="breadcrumbs_item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" typeof="ListItem">
-						<a itemprop="item" typeof="WebPage" href="/blog/">
-							<span itemprop="name">Блог</span>
+						<a itemprop="item" typeof="WebPage" href="/collection/">
+							<span itemprop="name">Подборки</span>
 							<meta itemprop="position"  content="2">
 						</a>
 					</li>
@@ -40,25 +40,25 @@
 		{#{{ preview ? post.getBodyHtml()|raw : post.getHtml()|raw }}#}
 		 {{ post.getHtml([1])|raw }} 
 	</div>
-	{% if similarPosts %}
+	{% if similarCollections %}
 		<div class="other_objects same_blogs_wrap">
-			<h2>Похожие статьи</h2>
+			<h2>Похожие подборки</h2>
 			<div class="content_block">
 				<div class="listing_widget_arrow _prev"></div>
 				<div class="listing_widget_arrow _next"></div>
 				<div class="swiper-container" data-other-blogs-swiper>
 					<div class="swiper-wrapper" data-other-blogs-list>
-						{% for similarPost in similarPosts %}
+						{% for similarCollection in similarCollections %}
 							<div class="blog_item swiper-slide">
 								<div class="blog_img">
-									<a href="{{ similarPost.getUrl() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
+									<a href="{{ similarCollection.getUrl() }}"><img src="{{ similarCollection.getFileData('image').src }}"></a>
 								</div>
 								<div class="blog_text">
-									<p class="blog_date">{{similarPost.getRusDate()}}</p>
-									<a href="{{ similarPost.getUrl() }}">
-										<p class="blog_title">{{ similarPost.name }}</p>
+									<p class="blog_date">{{similarCollection.getRusDate()}}</p>
+									<a href="{{ similarCollection.getUrl() }}">
+										<p class="blog_title">{{ similarCollection.name }}</p>
 									</a>
-									<p class="blog_description">{{ similarPost.short_intro }}</p>
+									<p class="blog_description">{{ similarCollection.short_intro }}</p>
 								</div>
 							</div>
 						{% endfor %}

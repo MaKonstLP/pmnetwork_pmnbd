@@ -40,6 +40,12 @@ class FormController extends Controller
                 case 'name':
                     $payload['name'] = $value;
                     break;
+                case 'email':
+                    $payload['email'] = $value;    
+                    break;
+                case 'guests':
+                    $payload['guests'] = $value;
+                    break;
                 case 'phone':
                     $payload['phone'] = $value;
                     break;
@@ -66,6 +72,7 @@ class FormController extends Controller
                 'body' => $messages['successBody'],
                 'name' => isset($_POST['name']) ? $_POST['name'] : '',
                 'phone' => $_POST['phone'],
+                'guests' => isset($_POST['guests']) ? $_POST['guests'] : '',
                 'messageApi' => $messageApi
             ];
         } else {

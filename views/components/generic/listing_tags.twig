@@ -1,7 +1,9 @@
 {% if fastFilters %}
 	<div class="fast_filters">
 		{% for fastFilter in fastFilters %}
-			<a href="/catalog/{{fastFilter.alias}}/">{{fastFilter.name}}<span>{{fastFilter.count}}</span></a>
+			<div class="fast_filter">
+				<a href="/catalog/{{fastFilter.alias}}/">{{fastFilter.name}}</a><span>{{fastFilter.count}}</span>
+			</div>
 		{% endfor %}
 	</div>
 {% endif %}

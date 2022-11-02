@@ -38,7 +38,7 @@ footer{
         }
 
         @include for-phone{
-            height: 400px;
+            height: 450px;
         }
 
         .footer_row{
@@ -126,10 +126,10 @@ footer{
                     font-family: 'Proxima Nova Thin', sans-serif;
                     color: #000;
                     @include for-pad{
-                        width: 120px;
+                        width: 125px;
                     }
                     @include for-mobile{
-                        width: 120px;
+                        width: 125px;
                     }
                 }
 

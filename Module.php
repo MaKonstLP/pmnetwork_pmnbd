@@ -2,12 +2,14 @@
 
 namespace app\modules\pmnbd;
 
+use Yii;
 use common\models\Filter;
 use common\models\Slices;
 use common\models\Subdomen;
 use frontend\components\ParamsFromQuery;
 use frontend\components\QueryFromSlice;
-use Yii;
+use backend\modules\pmnbd\models\blog\BlogPost;
+use backend\modules\pmnbd\models\blog\BlogPostSubdomen;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 
@@ -130,6 +132,23 @@ class Module extends \yii\base\Module
         Yii::$app->params['footer_slices'] = array_filter($footerSlices, function ($slice) {
             return $slice['count'] > 0;
         });
+
+        $noindex_global = false;
+        foreach ($_GET as $key => $value) {
+            if ($key != 'page' && $key != 'q') {
+                $noindex_global = true;
+            }
+        }
+        Yii::$app->params['noindex_global'] = $noindex_global;
+
+        $collection = BlogPost::findWithMedia()
+		->with('blogPostTags')
+		->joinWith('blogPostSubdomens')
+		->where(['published' => true,'collection' => true])
+		->andWhere([BlogPostSubdomen::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
+		->count();
+		$this->view->params['collectionCount'] = $collection;
+
     }
 
     private function redirect($redirect)

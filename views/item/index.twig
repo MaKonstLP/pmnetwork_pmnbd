@@ -6,7 +6,7 @@
 <div data-page-type="item">
 
     <div class="content_block" data-listing-title>
-        {{ this.render('//components/generic/item_title.twig', {'seo':seo}) | raw }}
+        {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'room_id':item.gorko_id}) | raw }}
     </div>
 
     {% if item.images %}
@@ -45,7 +45,7 @@
                <span class="object_desc_title">Вместимость:<span class="dots"></span></span><span class="object_desc_value">{{item.capacity}} человек</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Тип зала:<span class="dots"></span></span><span class="object_desc_value">{{item.type_name}} человек</span>
+               <span class="object_desc_title">Тип зала:<span class="dots"></span></span><span class="object_desc_value">{{item.type_name}}</span>
             </p>
             <p class="object_desc_item">
                <span class="object_desc_title">Возможность аренды без еды:<span class="dots"></span></span><span class="object_desc_value">{{item.rent_only==0 ? 'нет' : 'да' }}</span>
@@ -53,9 +53,14 @@
             <p class="object_desc_item">
                <span class="object_desc_title">Светлый зал:<span class="dots"></span></span><span class="object_desc_value">{{item.bright_room==0 ? 'нет' : 'да' }}</span>
             </p>
-            <p class="object_desc_item">
+            {# <p class="object_desc_item">
                <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">только за еду и напитки</span>
-            </p>
+            </p> #}
+				{% if item.payment_model %}
+					<p class="object_desc_item">
+						<span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">{{item.payment_model}}</span>
+					</p>
+				{% endif %}
             <p class="object_desc_item">
                <span class="object_desc_title">Отдельный вход:<span class="dots"></span></span><span class="object_desc_value">{{item.separate_entrance==0 ? 'нет' : 'да' }}</span>
             </p>
@@ -121,10 +126,16 @@
                         </div>
                         {% if same_object.price %}
                             <div class="object_desc_item">
-                               <p class="object_desc_title">Стоимость аренды без еды:</p>
-                               <p class="object_desc_value">{{same_object.price}} ₽</p>
+                               <p class="object_desc_title">Стоимость:</p>
+                               <p class="object_desc_value">{{same_object.price}} ₽/чел.</p>
                             </div>
                         {% endif %}
+								{% if same_object.payment_model %}
+									<div class="object_desc_item">
+										<p class="object_desc_title">Схема оплаты:</p>
+										<p class="object_desc_value">{{same_object.payment_model}}</p>
+									</div>
+								{% endif %}
                     </div>
                 </div>
             {% endfor %}
