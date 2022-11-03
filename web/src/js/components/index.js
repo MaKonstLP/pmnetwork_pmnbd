@@ -16,6 +16,7 @@ export default class Index{
 			}
 			self.redirectToListing();
 		});
+
 	}
 
 	redirectToListing(){

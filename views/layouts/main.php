@@ -1,54 +1,56 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use common\models\Subdomen;
 use yii\helpers\Html;
+
 //use frontend\modules\svadbanaprirode\assets\AppAsset;
 
 frontend\modules\pmnbd\assets\AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>">
 
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="<?= Yii::$app->charset ?>">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="icon" href="/upload/img/bd/favicon.ico">
-    <link type="image/x-icon" rel="shortcut icon" href="/upload/img/bd/favicon.ico">
-    <link type="image/png" sizes="16x16" rel="icon" href="/upload/img/bd/favicon-16x16.png">
-    <link type="image/png" sizes="32x32" rel="icon" href="/upload/img/bd/favicon-32x32.png">
-    <link type="image/png" sizes="192x192" rel="icon" href="/upload/img/bd/android-chrome-192x192.png">
-    <link rel="apple-touch-icon" href="/upload/img/bd/apple-touch-icon.png">
-    <meta name="msapplication-square150x150logo" content="/upload/img/bd/mstile-150x150.png">
-    <meta name="msapplication-config" content="/upload/img/bd/browserconfig.xml">
-    <link rel="manifest" href="/upload/img/bd/webmanifest.json">
+        <link rel="icon" href="/upload/img/bd/favicon.ico">
+        <link type="image/x-icon" rel="shortcut icon" href="/upload/img/bd/favicon.ico">
+        <link type="image/png" sizes="16x16" rel="icon" href="/upload/img/bd/favicon-16x16.png">
+        <link type="image/png" sizes="32x32" rel="icon" href="/upload/img/bd/favicon-32x32.png">
+        <link type="image/png" sizes="192x192" rel="icon" href="/upload/img/bd/android-chrome-192x192.png">
+        <link rel="apple-touch-icon" href="/upload/img/bd/apple-touch-icon.png">
+        <meta name="msapplication-square150x150logo" content="/upload/img/bd/mstile-150x150.png">
+        <meta name="msapplication-config" content="/upload/img/bd/browserconfig.xml">
+        <link rel="manifest" href="/upload/img/bd/webmanifest.json">
 
-    <title><?php echo $this->title ?></title>
+        <title><?php echo $this->title ?></title>
 
-    <?php $this->head() ?>
+        <?php $this->head() ?>
 
-    <?php if(Yii::$app->params['noindex_global'] === true){
-        echo '<meta name="robots" content="noindex" />';
-    } ?>
-    <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
-    <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
-    <?= Html::csrfMetaTags() ?>
-    
-    <style>
-    <?php 
-        if (file_exists(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css'))) {
-            print_r(file_get_contents(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css')));
-        }
-    ?>
-    </style>
-</head>
+        <?php if (Yii::$app->params['noindex_global'] === true) {
+            echo '<meta name="robots" content="noindex" />';
+        } ?>
+        <?php if (!empty($this->params['desc'])) echo "<meta name='description' content='" . $this->params['desc'] . "'>"; ?>
+        <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
+        <?= Html::csrfMetaTags() ?>
 
-<body>
+        <style>
+            <?php
+                if (file_exists(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css'))) {
+                    print_r(file_get_contents(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css')));
+                }
+            ?>
+        </style>
+    </head>
+
+    <body>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         var fired = false;
@@ -68,11 +70,12 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     load_other();
                 }
             });
-        }, { passive: true });
-        function load_other() { 
+        }, {passive: true});
+
+        function load_other() {
             setTimeout(() => {
-                (function(m, e, t, r, i, k, a) {
-                    m[i] = m[i] || function() {
+                (function (m, e, t, r, i, k, a) {
+                    m[i] = m[i] || function () {
                         (m[i].a = m[i].a || []).push(arguments)
                     };
                     m[i].l = 1 * new Date();
@@ -89,9 +92,9 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 
                 var googletagmanager_js = document.createElement('script');
                 googletagmanager_js.src = 'https://www.googletagmanager.com/gtag/js?id=UA-179040293-1';
-                document.body.appendChild(googletagmanager_js); 
+                document.body.appendChild(googletagmanager_js);
 
-            },500);
+            }, 500);
         }
 
         setTimeout(() => {
@@ -101,35 +104,42 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         }, 15000);
     </script>
     <noscript>
-        <div><img src="https://mc.yandex.ru/watch/67719148" style="position:absolute; left:-9999px;" alt="" /></div>
+        <div><img src="https://mc.yandex.ru/watch/67719148" style="position:absolute; left:-9999px;" alt=""/></div>
     </noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
- <?php /*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-179040293-1"></script> */?>
+    <?php /*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-179040293-1"></script> */ ?>
     <script>
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
             dataLayer.push(arguments);
         }
+
         gtag('js', new Date());
 
         gtag('config', 'UA-179040293-1');
     </script>
     <?php $this->beginBody() ?>
 
+    <!--    --><?php
+    //    echo '<pre>';
+    //    print_r(Yii::$app->params);
+    //    die();
+    //    ?>
     <div class="main_wrap">
 
-        <header>
-            <div class="header_wrap<?=(Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : '';?>">
+        <header class="<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>">
+            <div class="header_wrap<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>">
                 <a href="/" class="header_logo">
-                    <div class="header_logo_img"></div>
+                    <img class="header_logo_img" src="/upload/img/logo.svg"
+                         alt="День рождения в <?= Yii::$app->params['subdomen_dec'] ?>">
                 </a>
                 <a href="/" class="header_logo header_logo_2">
                     <div class="header_logo_text">МОЙ ДЕНЬ</div>
                 </a>
-                <div class="header_city<?=(Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : '';?>">
-                    <img src="/upload/img/geo_label.png" />
+                <div class="header_city<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>">
+                    <img src="/upload/img/geo_label.png"/>
                     <span class="city"><?= Yii::$app->params['subdomen_name'] ?></span>
                     <span class="choose"></span>
                 </div>
@@ -166,10 +176,42 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         <?php endforeach; ?>
                     </div>
                 </div>
-                <div class="header_phone">
-                    <a href="tel:<?= Yii::$app->params['subdomen_phone'] ?>" data-target="telefon_1"><?= Yii::$app->params['subdomen_phone_pretty'] ?></a>
-                    <p data-open-popup-form class="_link" data-target="podbor_1">Подберите мне зал</p>
+                <div class="header_nav<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>"
+                     data-menu>
+                    <?php
+                    $kindArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                        return $meta['type'] == 'kind';
+                    }); ?>
+                    <?php foreach ($kindArr as $alias => $meta): ?>
+                        <a href="/catalog/<?= $alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
+                    <?php endforeach; ?>
+                    <?php
+                    $featureArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                        return $meta['type'] == 'feature';
+                    }); ?>
+                    <?php foreach ($featureArr as $type_alias => $meta): ?>
+                        <a href="/catalog/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
+                    <?php endforeach; ?>
+                    <a href="/blog/" class="header_nav-link">Блог</a>
+                    <?php if ($this->params['collectionCount'] > 0): ?>
+                        <a href="/collection/" class="header_nav-link">Подборки</a>
+                    <?php endif; ?>
                 </div>
+                <div class="header_nav-mobile<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>"
+                     data-menu-burger>
+                    <div class="header_nav-title">МЕНЮ</div>
+                    <div class="header_nav-burger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <!--                <div class="header_phone">-->
+                <!--                    <a href="tel:-->
+                <? //= Yii::$app->params['subdomen_phone'] ?><!--" data-target="telefon_1">-->
+                <? //= Yii::$app->params['subdomen_phone_pretty'] ?><!--</a>-->
+                <!--                    <p data-open-popup-form class="_link" data-target="podbor_1">Подберите мне зал</p>-->
+                <!--                </div>-->
             </div>
         </header>
 
@@ -177,60 +219,65 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
             <?= $content ?>
         </div>
 
-        <footer<?=Yii::$app->controller->action->id == 'post' ? ' class="__bgWhite"' : '';?>>
+        <footer<?= Yii::$app->controller->action->id == 'post' ? ' class="__bgWhite"' : ''; ?>>
             <div class="footer_wrap">
                 <div class="footer_row">
                     <div class="footer_block _left">
                         <a href="/" class="footer_logo">
-                            <div class="footer_logo_img"></div>
+                            <img class="footer_logo_img" src="/upload/img/logo.svg"
+                                 alt="День рождения в <?= Yii::$app->params['subdomen_dec'] ?>">
                         </a>
                         <a href="/" class="footer_logo footer_logo_2">
                             <div class="footer_logo_text">МОЙ ДЕНЬ</div>
                         </a>
                         <div class="footer_info">
                             <p class="footer_copy">© <?php echo date("Y"); ?> Мой день</p>
-                            <a target="_blank" href="<?= Yii::$app->params['siteProtocol'] . '://' . Yii::$app->params['siteAddress'] ?>/politika/" class="footer_pc _link">Политика конфиденциальности</a>
+                            <a target="_blank"
+                               href="<?= Yii::$app->params['siteProtocol'] . '://' . Yii::$app->params['siteAddress'] ?>/politika/"
+                               class="footer_pc _link">Политика конфиденциальности</a>
                         </div>
                         <div class="footer_nav">
                             <ul class="footer_nav_wrap">
-                                <li>
-                                    <span>Типы заведения</span>
-                                    <ul>
+                                <li class="footer_nav_wrap-el">
+                                    <span class="footer_nav_wrap-title">Типы заведения</span>
+                                    <ul class="footer_nav_wrap-sub _columns-2">
                                         <?php
                                         $kindArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
                                             return $meta['type'] == 'kind';
                                         });
                                         foreach ($kindArr as $alias => $meta) { ?>
-                                            <li><a href="/catalog/<?= $alias ?>/"><?= $meta['name'] ?></a></li>
+                                            <li class="footer_nav_wrap-sub_el"><a href="/catalog/<?= $alias ?>/"><?= $meta['name'] ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
-                                <li>
-                                    <span>Особенности</span>
-                                    <ul>
+                                <li class="footer_nav_wrap-el">
+                                    <span class="footer_nav_wrap-title">Особенности</span>
+                                    <ul class="footer_nav_wrap-sub">
                                         <?php
                                         $featureArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
                                             return $meta['type'] == 'feature';
                                         });
                                         foreach ($featureArr as $type_alias => $meta) { ?>
-                                            <li><a href="/catalog/<?= $type_alias ?>/"><?= $meta['name'] ?></a></li>
+                                            <li class="footer_nav_wrap-sub_el"><a href="/catalog/<?= $type_alias ?>/"><?= $meta['name'] ?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
-                                <li><a href="https://birthday-place.ru/blog/"><span>Блог</span></a></li>
+                                <li class="footer_nav_wrap-el">
+                                    <span class="footer_nav_wrap-title">Интересное</span>
+                                    <ul class="footer_nav_wrap-sub">
+                                        <li class="footer_nav_wrap-sub_el"><a href="/blog/">Блог</a></li>
+                                        <?php if ($this->params['collectionCount'] > 0): ?>
+                                            <li class="footer_nav_wrap-sub_el"><a href="/collection/">Подборки</a></li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </li>
                             </ul>
-                            <?php if($this->params['collectionCount'] > 0):?>
-                                <ul class="footer_nav_wrap">
-                                    <li><a href="/collection/"><span>Подборки ресторанов</span></a></li>
-                                </ul>
-                            <?php endif;?>
                         </div>
                     </div>
-                    <div class="footer_block _right">
-
-                        <a class="footer_ph" href="tel:<?= Yii::$app->params['subdomen_phone'] ?>" data-target="telefon_1"><?= Yii::$app->params['subdomen_phone_pretty'] ?></a>
-
-                    </div>
+<!--                    <div class="footer_block _right">-->
+<!--                        <a class="footer_ph" href="tel:--><?//= Yii::$app->params['subdomen_phone'] ?><!--"-->
+<!--                           data-target="telefon_1">--><?//= Yii::$app->params['subdomen_phone_pretty'] ?><!--</a>-->
+<!--                    </div>-->
                 </div>
             </div>
         </footer>
@@ -258,31 +305,33 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 
     </div>
 
-	 <!-- вторая форма для страницы статьи блога чтобы отслеживать цель "bron_2" -->
-	<div class="popup_wrap popup_wrap_blog">
-		<div class="popup_layout" data-close-popup></div>
-		<div class="popup_form">
-			<?= $this->render('//components/generic/form_blog.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'main', 'target' => 'bron_2']) ?>
-		</div>
-		<div class="popup_img">
-			<div class="popup_img_close" data-close-popup></div>
-			<div class="popup_img_slider_wrap">
-				<div class="slider_arrow _prev"></div>
-				<div class="slider_arrow _next"></div>
-				<div class="object_gallery_container swiper-container" data-gallery-img-swiper>
-					<div class="object_gallery_swiper swiper-wrapper" data-gallery-list></div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- вторая форма для страницы статьи блога чтобы отслеживать цель "bron_2" -->
+    <div class="popup_wrap popup_wrap_blog">
+        <div class="popup_layout" data-close-popup></div>
+        <div class="popup_form">
+            <?= $this->render('//components/generic/form_blog.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'main', 'target' => 'bron_2']) ?>
+        </div>
+        <div class="popup_img">
+            <div class="popup_img_close" data-close-popup></div>
+            <div class="popup_img_slider_wrap">
+                <div class="slider_arrow _prev"></div>
+                <div class="slider_arrow _next"></div>
+                <div class="object_gallery_container swiper-container" data-gallery-img-swiper>
+                    <div class="object_gallery_swiper swiper-wrapper" data-gallery-list></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <?php $this->endBody() ?>
     <!--link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap&subset=cyrillic" rel="stylesheet"-->
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&display=swap&subset=cyrillic" rel="stylesheet" crossorigin="anonymous">
-    <link href="//cdn.jsdelivr.net/jquery.mcustomscrollbar/3.0.6/jquery.mCustomScrollbar.min.css" rel="stylesheet" crossorigin="anonymous">
-</body>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&display=swap&subset=cyrillic"
+          rel="stylesheet" crossorigin="anonymous">
+    <link href="//cdn.jsdelivr.net/jquery.mcustomscrollbar/3.0.6/jquery.mCustomScrollbar.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+    </body>
 
-</html>
+    </html>
 <?php $this->endPage() ?>

@@ -47,5 +47,12 @@ window.jQuery = $;
 	    	form.push(new Form($(this)))
 	    });
 
-  	});
+		$('[data-menu-burger]').on('click', function(){
+			console.log('data-menu-burger');
+			$(this).toggleClass('_active');
+			$('[data-menu]').toggleClass('_active');
+			$('body').toggleClass('_popup_overflow');
+		});
+
+	});
 })($);
