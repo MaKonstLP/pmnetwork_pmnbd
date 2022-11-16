@@ -25,6 +25,10 @@
 @mixin for-lowdesc {
  	@media (max-width: 1650px) { @content; }
 }
+
+@mixin for-desc {
+  @media (max-width: 1700px) { @content; }
+}
 @mixin placeholder {
   &::-webkit-input-placeholder { @content; }
   &:-moz-placeholder           { @content; }
