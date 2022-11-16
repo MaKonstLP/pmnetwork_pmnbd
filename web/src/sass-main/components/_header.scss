@@ -17,7 +17,7 @@ header {
   //  height: 99px;
   //}
 
-  @include for-lowlap {
+  @include for-desc {
     height: 64px;
   }
 
@@ -65,8 +65,8 @@ header {
       display: flex;
       column-gap: 30px;
       row-gap: 16px;
-      transition: all .3s ease;
       justify-content: center;
+      transition: all .3s ease;
 
       .header_nav-link {
         font-weight: 700;
@@ -76,7 +76,7 @@ header {
         letter-spacing: -.8px;
       }
 
-      @include for-lowlap{
+      @include for-desc{
         .header_nav-link {
           font-size: 17px;
           line-height: 22px;
@@ -198,7 +198,7 @@ header {
         }
       }
 
-      @include for-lowlap{
+      @include for-desc{
         display: flex;
       }
       @include for-phone {
@@ -213,7 +213,7 @@ header {
       position: absolute;
       left: 229.65px;
       cursor: pointer;
-      @include for-lowlap {
+      @include for-desc {
         left: 185.65px;
       }
       @include for-phone {
@@ -471,7 +471,7 @@ header {
   left: 40px;
   color: #000;
 
-  @include for-lowlap {
+  @include for-desc {
     left: 12px;
   }
 
@@ -510,7 +510,7 @@ header {
 .header_logo_2 {
   left: 78.28px;
 
-  @include for-lowlap {
+  @include for-desc {
     left: 50.28px;
   }
 }

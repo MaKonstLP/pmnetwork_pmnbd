@@ -323,6 +323,23 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         </div>
     </div>
 
+    <!--    карта       -->
+    <div class="popup_wrap popup_wrap_single-map">
+        <div class="popup_layout" data-close-popup></div>
+        <div class="popup_form">
+            <?= $this->render('//components/generic/popup_single_map.twig') ?>
+        </div>
+        <div class="popup_img">
+            <div class="popup_img_close" data-close-popup></div>
+            <div class="popup_img_slider_wrap">
+                <div class="slider_arrow _prev"></div>
+                <div class="slider_arrow _next"></div>
+                <div class="object_gallery_container swiper-container" data-gallery-img-swiper>
+                    <div class="object_gallery_swiper swiper-wrapper" data-gallery-list></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php $this->endBody() ?>
     <!--link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap&subset=cyrillic" rel="stylesheet"-->

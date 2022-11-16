@@ -171,14 +171,10 @@ li {
     position: relative;
 
     @include for-small-desktop{
-        width: calc(100% - 20px);
+        width: calc(100% - 24px);
     }
 
-    @include for-pad{
-        width: calc(100% - 20px);
-    }
-
-    @include for-mobile{
+    @include for-notdesc{
         width: calc(100% - 24px);
     }
 }
@@ -584,3 +580,6 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.main_top{
+    padding-top: 24px !important;
+}
