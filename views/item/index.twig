@@ -1,8 +1,8 @@
-{{this.registerMetaTag({'property':'og:title','content':seo.h1|raw})}}
-{{this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)})}}
-{{this.registerMetaTag({'property':'og:type','content':'website'})}}
-{{this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'~item.slug~'/'})}}
-{{this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.images[0].subpath)})}}
+{{ this.registerMetaTag({'property':'og:title','content':seo.h1|raw}) }}
+{{ this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)}) }}
+{{ this.registerMetaTag({'property':'og:type','content':'website'}) }}
+{{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'~item.slug~'/'}) }}
+{{ this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.images[0].subpath)}) }}
 <div data-page-type="item">
 
     <div class="content_block" data-listing-title>
@@ -10,61 +10,89 @@
     </div>
 
     {% if item.images %}
-    <div class="object_gallery_wrap">
-        <div class="listing_widget_arrow _prev"></div>
-        <div class="listing_widget_arrow _next"></div>
-        <div class="object_gallery_container swiper-container" data-gallery-main-swiper data-gallery-swiper>
-            <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
-                {% for image in item.images%}
-                    <div class="object swiper-slide" 11111>
-                        <div class="object_img">
-                           <img loading="lazy" src="{{ Declension.get_image_src(image.waterpath~'=w746-h498-l95') }}" data-gallery-img-view/>
-                       </div>
-                    </div>
-                {% endfor %}
+        <div class="object_gallery_wrap">
+            <div class="listing_widget_arrow _prev"></div>
+            <div class="listing_widget_arrow _next"></div>
+            <div class="object_gallery_container swiper-container" data-gallery-main-swiper data-gallery-swiper>
+                <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
+                    {% for image in item.images %}
+                        <div class="object swiper-slide" 11111>
+                            <div class="object_img">
+                                <img loading="lazy"
+                                     src="{{ Declension.get_image_src(image.waterpath~'=w746-h498-l95') }}"
+                                     data-gallery-img-view/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="listing_widget_controll">
+                    <div class="listing_widget_pagination"></div>
+                </div>
             </div>
-            <div class="listing_widget_controll">
-                <div class="listing_widget_pagination"></div>
-            </div> 
-        </div>
-        <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
-            <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
-                {% for image in item.images%}
-                    <div class="object swiper-slide"222222>
-                       <img loading="lazy" src="{{ Declension.get_image_src(image.subpath~'=w150-h90-l80') }}"/>
-                    </div>
-                {% endfor %}
+            <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
+                <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
+                    {% for image in item.images %}
+                        <div class="object swiper-slide" 222222>
+                            <img loading="lazy" src="{{ Declension.get_image_src(image.subpath~'=w150-h90-l80') }}"/>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
     <div class="content_block object_desc_wrap">
+
+        <div class="object_meta _mobile">
+            <div class="object_meta_item">
+                <p class="object_meta_title">Средний чек:</p>
+                <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу' }}</p>
+            </div>
+            <div class="object_meta_item">
+                <div class="item_btn">
+                    <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
+                        Позвонить
+                    </a>
+                    <button class="item_btn-book _button" data-tager="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                </div>
+            </div>
+        </div>
+
         <div class="object_desc">
             <p class="object_desc_item">
-               <span class="object_desc_title">Вместимость:<span class="dots"></span></span><span class="object_desc_value">{{item.capacity}} человек</span>
+                <span class="object_desc_title">Адрес:<span class="dots"></span></span>
+                <span class="object_desc_value object_desc_address" data-action="roll_to_map">{{ rest_item.restaurant_address }}</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Тип зала:<span class="dots"></span></span><span class="object_desc_value">{{item.type_name}}</span>
+                <span class="object_desc_title">Вместимость:<span class="dots"></span></span><span
+                        class="object_desc_value">{{ item.capacity }} человек</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Возможность аренды без еды:<span class="dots"></span></span><span class="object_desc_value">{{item.rent_only==0 ? 'нет' : 'да' }}</span>
+                <span class="object_desc_title">Тип зала:<span class="dots"></span></span><span
+                        class="object_desc_value">{{ item.type_name }}</span>
             </p>
             <p class="object_desc_item">
-               <span class="object_desc_title">Светлый зал:<span class="dots"></span></span><span class="object_desc_value">{{item.bright_room==0 ? 'нет' : 'да' }}</span>
+                <span class="object_desc_title">Возможность аренды без еды:<span class="dots"></span></span><span
+                        class="object_desc_value">{{ item.rent_only==0 ? 'нет' : 'да' }}</span>
+            </p>
+            <p class="object_desc_item">
+                <span class="object_desc_title">Светлый зал:<span class="dots"></span></span><span
+                        class="object_desc_value">{{ item.bright_room==0 ? 'нет' : 'да' }}</span>
             </p>
             {# <p class="object_desc_item">
                <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">только за еду и напитки</span>
             </p> #}
-				{% if item.payment_model %}
-					<p class="object_desc_item">
-						<span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">{{item.payment_model}}</span>
-					</p>
-				{% endif %}
+            {% if item.payment_model %}
+                <p class="object_desc_item">
+                    <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span
+                            class="object_desc_value">{{ item.payment_model }}</span>
+                </p>
+            {% endif %}
             <p class="object_desc_item">
-               <span class="object_desc_title">Отдельный вход:<span class="dots"></span></span><span class="object_desc_value">{{item.separate_entrance==0 ? 'нет' : 'да' }}</span>
+                <span class="object_desc_title">Отдельный вход:<span class="dots"></span></span><span
+                        class="object_desc_value">{{ item.separate_entrance==0 ? 'нет' : 'да' }}</span>
             </p>
-            <!--p>{{item.features}}</p-->
+            <!--p>{{ item.features }}</p-->
             <!--p>Anstar House Vatutinki - это уникальное место для проведения идеальной свадьбы. На территории комплекса имеется живописный сад, где возможно организовать выездную церемонию и фотосессию.</p>
             <p>В большом доме на берегу озера жених и невеста смогут провести утренние сборы, а также комфортно разместиться гости.</p>
             <p>Для проведения мероприятий имеется большой банкетный зал. Интерьер выполнен в светлых тонах, что позволяет использовать любое стилистическое оформление.</p-->
@@ -73,7 +101,7 @@
             <div class="object_meta">
                 <div class="object_meta_item">
                     <p class="object_meta_title">Средний чек:</p>
-                    <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу'}}</p>
+                    <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу' }}</p>
                 </div>
                 <div class="object_meta_item">
                     <p class="object_meta_title">Забронировать по телефону:</p>
@@ -81,17 +109,20 @@
                         <p class="object_book_phone object_meta_value">
                             <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
                         </p>
-                        <div class="object_book_hidden_button" data-popup-phone data-popup-phone data-target="lid_pokazat_nomer">Показать номер</div>
+                        <div class="object_book_hidden_button" data-popup-phone data-popup-phone
+                             data-target="lid_pokazat_nomer">Показать номер
+                        </div>
                         <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                             <div class="popup_phone">
                                 <div class="form_close" data-close-popup></div>
-                                <p class="popup_phone_title">{{seo.h1}}</p>
+                                <p class="popup_phone_title">{{ seo.h1 }}</p>
                                 <div class="popup_phone_present">
                                     <img loading="lazy" src="/upload/img/present.svg">
                                     <p>Забронируй зал и получи подарок!</p>
                                 </div>
-                                <a href="tel:{{item.restaurant_phone}}" class="popup_real_phone">{{rest_item.restaurant_phone}}</a>
-                                <p class="popup_phone_address">{{rest_item.restaurant_address|raw}}</p>
+                                <a href="tel:{{ rest_item.restaurant_phone }}"
+                                   class="popup_real_phone">{{ rest_item.restaurant_phone }}</a>
+                                <p class="popup_phone_address">{{ rest_item.restaurant_address|raw }}</p>
                             </div>
                         </div>
                     </div>
@@ -104,45 +135,79 @@
     </div>
 
     {% if same_objects %}
-    <div class="content_block same_objects">
-        <h2>Другие залы этой же площадки</h2>
-        <div class="same_objects_wrap">
-            {% for same_object in same_objects %}
-                <div class="same_object">
-                    <div class="same_object_img">
-                        <div class="same_object_img_item">
-                            {#<img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}">#}
-                            <img loading="lazy" src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
-                        </div>
-                        <div class="same_object_img_item">
-                            <img loading="lazy" src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png')}}">
-                        </div>
-                    </div>
-                    <div class="same_object_desc">
-                        <div class="title"><a href="/catalog/restoran-{{item.restaurant_slug}}/{{same_object.slug}}/">{{same_object.name}}</a></div>
-                        <div class="object_desc_item">
-                           <p class="object_desc_title">Вместимость:</p>
-                           <p class="object_desc_value">{{same_object.capacity}} человек</p>
-                        </div>
-                        {% if same_object.price %}
-                            <div class="object_desc_item">
-                               <p class="object_desc_title">Стоимость:</p>
-                               <p class="object_desc_value">{{same_object.price}} ₽/чел.</p>
+        <div class="content_block ">
+            <div class="same_objects">
+                <h2>Другие залы этой же площадки</h2>
+                <div class="same_objects_wrap">
+                    {% for same_object in same_objects %}
+                        <div class="same_object">
+                            <div class="same_object_img">
+                                <div class="same_object_img_item">
+                                    {# <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}"> #}
+                                    <img loading="lazy"
+                                         src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
+                                </div>
+                                <div class="same_object_img_item">
+                                    <img loading="lazy"
+                                         src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
+                                </div>
+                                <div class="same_object_img_item">
+                                    <img loading="lazy"
+                                         src="{{ same_object.images[2] ? Declension.get_image_src(same_object.images[2].subpath~'=w445-h302-n-l95') : (same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
+                                </div>
                             </div>
-                        {% endif %}
-								{% if same_object.payment_model %}
-									<div class="object_desc_item">
-										<p class="object_desc_title">Схема оплаты:</p>
-										<p class="object_desc_value">{{same_object.payment_model}}</p>
-									</div>
-								{% endif %}
-                    </div>
+                            <div class="same_object_desc">
+                                <div class="title"><a
+                                            href="/catalog/restoran-{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
+                                </div>
+                                <div class="object_desc_item">
+                                    <p class="object_desc_title">Вместимость:</p>
+                                    <p class="object_desc_value">{{ same_object.capacity }} человек</p>
+                                </div>
+                                {% if same_object.price %}
+                                    <div class="object_desc_item">
+                                        <p class="object_desc_title">Стоимость:</p>
+                                        <p class="object_desc_value">{{ same_object.price }} ₽/чел.</p>
+                                    </div>
+                                {% endif %}
+                                {% if same_object.payment_model %}
+                                    <div class="object_desc_item">
+                                        <p class="object_desc_title">Схема оплаты:</p>
+                                        <p class="object_desc_value">{{ same_object.payment_model }}</p>
+                                    </div>
+                                {% endif %}
+                                <div class="item_btn">
+                                    <button class="item_btn-book _button" data-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="map" name="map">
+        <div class="map_title">Зал {{ item.name }} в ресторане {{ rest_item.restaurant_name }}</div>
+        <div class="map_data_wrap">
+            <div class="map_data">
+                <div class="map_img_wrap">
+                    <img loading="lazy" class="map_img" src="{{ Declension.get_image_src(item.images[0].subpath~'=w710-h472-n-l95') }}">
+                </div>
+
+                <a href="/catalog/restoran-{{ rest_item.restaurant_slug }}/"
+                   class="map_rest_name">{{ rest_item.restaurant_name }}</a>
+                <p class="map_rest_address">{{ rest_item.restaurant_address }}</p>
+                <p class="map_close">Спасибо, закрыть</p>
+            </div>
+        </div>
+        <div id="map" data-mapDotX="{{ rest_item.restaurant_latitude }}" data-mapDotY="{{ rest_item.restaurant_longitude }}"
+             data-balloon="" data-hint="">
+
         </div>
     </div>
-    {% endif %}
-    
+
     <div class="other_objects">
         <h2>Похожие залы</h2>
         <div class="other_objects_wrap content_block">
@@ -150,23 +215,31 @@
             <div class="listing_widget_arrow _next"></div>
             <div class="other_objects_container swiper-container" data-other-objects-swiper>
                 <div class="other_objects_swiper swiper-wrapper" data-other-objects-list>
-                   {% for other_room in other_rooms %} 
-                        <div class="other_object swiper-slide">
-                            <div class="other_object_img">
-                                <a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">
-                                    <img loading="lazy" src="{{ Declension.get_image_src(other_room.images[0].subpath~'=w305-h200-s-l95')}}">
-                                </a>
-                            </div>
-                            <div class="title"><a href="/catalog/restoran-{{other_room.restaurant_slug}}/{{other_room.slug}}/">{{other_room.name}}</a></div>
-                            <div class="restaurant_name">{{other_room.restaurant_name}}</div>
-                            <div class="object_meta_item">
-                                <div class="object_desc_item">
-                                   <p class="object_desc_title">Вместимость:</p>
-                                   <p class="object_desc_value">{{other_room.capacity}} человек</p>
+                    {% for other_room in other_rooms %}
+                        <div class="swiper-slide">
+                            <div class="other_object ">
+                                <div class="other_object_img">
+                                    <a href="/catalog/restoran-{{ other_room.restaurant_slug }}/{{ other_room.slug }}/">
+                                        <img loading="lazy"
+                                        src="{{ other_room.images ? Declension.get_image_src(other_room.images[0].subpath~'=w305-h200-s-l95') : '/upload/img/bd/no_photo_s.png' }}">
+                                    </a>
                                 </div>
-                                <div class="object_desc_item">
-                                   <p class="object_desc_title">Стоимость аренды без еды:</p>
-                                   <p class="object_desc_value">{{other_room.price}} ₽</p>
+                                <div class="title"><a href="/catalog/restoran-{{ other_room.restaurant_slug }}/{{ other_room.slug }}/">{{ other_room.name }}</a></div>
+                                <div class="restaurant_name">
+                                    <a href="/catalog/restoran-{{ other_room.restaurant_slug }}/">{{ other_room.restaurant_name }}</a></div>
+                                <div class="object_meta_item">
+                                    {% if other_room.capacity %}
+                                        <div class="object_desc_item">
+                                            <p class="object_desc_title">Вместимость:</p>
+                                            <p class="object_desc_value">{{ other_room.capacity }} человек</p>
+                                        </div>
+                                    {% endif %}
+                                    {% if other_room.price %}
+                                        <div class="object_desc_item">
+                                            <p class="object_desc_title">Стоимость аренды без еды:</p>
+                                            <p class="object_desc_value">{{ other_room.price }} ₽</p>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -174,7 +247,20 @@
                 </div>
                 <div class="listing_widget_controll">
                     <div class="listing_widget_pagination"></div>
-                </div>  
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="display_bottom">
+        <div class="item_btn">
+            <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
+                Позвонить
+            </a>
+            <button class="item_btn-book _button" data-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+        </div>
+    </div>
+
+</div>
+
+{#{{ this.render('//components/generic/form.twig', {'title': 'Забронировать ' ~ item.restaurant_main_type|lower ~ ' «' ~ item.restaurant_name|trim ~'»', 'target': 'podval_rest', 'venue_id' : item.restaurant_gorko_id}) | raw }}#}
