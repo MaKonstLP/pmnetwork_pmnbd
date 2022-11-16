@@ -72,13 +72,13 @@ export default class Filter{
 		});
 	}
 
-	filterListingSubmit(page = 1){
+	filterListingSubmit(page = 1, sort=''){
 		let self = this;
 		self.state.page = page;
+		self.state.sort = sort;
 
-		let data = {
-			'filter' : JSON.stringify(self.state)
-		}
+		let data = { 'filter' : JSON.stringify(self.state) }
+		
 		console.log('filter111', data);
 		this.promise = new Promise(function(resolve, reject) {
 			self.reject = reject;

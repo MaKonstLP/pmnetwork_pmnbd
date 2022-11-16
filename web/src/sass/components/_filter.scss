@@ -300,8 +300,8 @@
         }
 
         @include for-mobile{
-            //margin-top: 14px;
-            //width: 100%;
+            margin-top: 14px;
+            width: 100%;
         }
 
         @include for-phone{
@@ -321,8 +321,8 @@
 
         @include for-mobile{
             margin: 0;
-            //width: 100%;
-            //text-align: center;
+            width: 100%;
+            text-align: center;
         }
     }
     .filter_mobile{
@@ -407,15 +407,16 @@
     }
 
     @include for-pad{
-        width: max-content;
-        position: absolute;
-        bottom: 40px;
-        right: 40px;
+        //width: max-content;
+        //position: absolute;
+        //bottom: 40px;
+        //right: 40px;
+        width: inherit;
     }
 
-    @include for-phone{
-            display: none;
-        }
+    @include for-mobile{
+        display: none;
+    }
 }
 .popup_filter_wrap{
     position: fixed;
@@ -434,6 +435,7 @@
 }
 .popup_filter{
     position: relative;
+    padding: 10px 10px 0;
     .popup_filter_title{
         font-weight: bold;
         font-size: 20px;
@@ -543,8 +545,8 @@
     .popup_filter_close {
         position: absolute;
         transform: rotate(45deg);
-        top: 16px;
-        right: 5px;
+        top: 10px;
+        right: 10px;
         width: 28px;
         height: 28px;
         &:before {
@@ -569,21 +571,13 @@
         }
     }
     .header_logo{
-        top: 16px;
+        top: 5px;
     }
     .header_logo_2{
-        top: 22px;
+        top: 14px;
     }
      .header_logo_img {
         width: 33px;
         height: 33px;
-        background: linear-gradient(0deg,#ffc24a,#ffc24a),linear-gradient(0deg,#b1c86f,#b1c86f),linear-gradient(0deg,#d64582,#d64582),linear-gradient(98.07deg,#a70c72 -6.24%,#e50799 104.4%),#29edb2;
-        border-radius: 50%;
-        background-size: contain;
-        -webkit-filter: hue-rotate(0);
-        filter: hue-rotate(0);
-        transition: -webkit-filter .2s ease;
-        transition: filter .2s ease;
-        transition: filter .2s ease,-webkit-filter .2s ease;
     }
 }

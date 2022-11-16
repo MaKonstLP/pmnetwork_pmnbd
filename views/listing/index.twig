@@ -22,7 +22,15 @@
 			</div>
 		</div>
 		{{filter | raw }}
+
+		<div class="listing_sort">
+			<div class="listing_sort-title">Сортировать по:</div>
+			<button class="listing_sort-item" data-value="check" data-listing-sort></button>
+			<button class="listing_sort-item" data-value="-check" data-listing-sort></button>
+		</div>
 	</div>
+
+
 
 	<div class="items_list_listing content_block" data-listing-wrapper>
 		<div class="items_list" data-listing-list>
@@ -57,7 +65,9 @@
 	<div class="popup_layout" data-close-popup></div>
 	<div class="popup_filter_top">
 		<a href="/" class="header_logo">
-			<div class="header_logo_img"></div>
+			<div class="header_logo_img">
+				<img class="header_logo_img" src="/upload/img/logo.svg" alt="День рождения в Москве">
+			</div>
 		</a>
 		<a href="/" class="header_logo header_logo_2">
 			<div class="header_logo_text">МОЙ ДЕНЬ</div>

@@ -141,9 +141,9 @@ class ListingController extends BaseFrontendController
 
 
 
-		// echo "<pre>";
-		// print_r($items->items);
-		// exit;
+//		 echo "<pre>";
+//		 print_r($items->items);
+//		 exit;
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(
@@ -163,8 +163,16 @@ class ListingController extends BaseFrontendController
 	{
 		$params = $this->parseGetQuery(json_decode($_GET['filter'], true), $this->filter_model, $this->slices_model);
 
+
 		$elastic_model = new ElasticItems;
 		$items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model);
+
+		if (!empty($params['sort']))
+            if ($params['sort'] == '-check')
+                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_DESC);
+            else
+                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_ASC);
+
 
 		$pagination = PaginationWidgetPrevNext::widget([
 			'total' => $items->pages,
@@ -223,6 +231,24 @@ class ListingController extends BaseFrontendController
 		return $slice_url;
 	}
 
+//	private function sortListing($items, $sort){
+//	    if ($sort == '-check'){
+//            foreach ($items->items as $item){
+//                ArrayHelper::multisort($item['rooms'], 'price', SORT_ASC);
+//                $item['check'] = $item['rooms'][0]['price'];
+//            }
+//            ArrayHelper::multisort($items->items , 'check', SORT_ASC);
+//        }else{
+//            foreach ($items->items as $item){
+//                ArrayHelper::multisort($item['rooms'], 'price', SORT_DESC);
+//                $item['check'] = $item['rooms'][0]['price'];
+//            }
+//            ArrayHelper::multisort($items->items , 'check', SORT_DESC);
+//        }
+//
+//	    return $items;
+//    }
+
 	private function parseGetQuery($getQuery, $filter_model, $slices_model)
 	{
 		$return = [];
@@ -231,6 +257,10 @@ class ListingController extends BaseFrontendController
 		} else {
 			$return['page'] = 1;
 		}
+
+        if (isset($getQuery['sort'])) {
+            $return['sort'] = $getQuery['sort'];
+        }
 
 		$temp_params = new ParamsFromQuery($getQuery, $filter_model, $slices_model);
 		$return['params_api'] = $temp_params->params_api;
