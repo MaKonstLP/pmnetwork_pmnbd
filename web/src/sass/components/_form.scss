@@ -143,26 +143,24 @@
 	font-weight: 600;
 	font-size: 32px;
 	line-height: 40px;
+	text-align: center;
 
 	@include for-mobile{
 		margin-right: 0px;
 		font-size: 28px;
 		line-height: 32px;
-		text-align: center;
 	}
 
 	@include for-pad{
 		margin-right: 0px;
 		font-size: 28px;
 		line-height: 32px;
-		text-align: center;
 	}
 
 	@include for-mobile{
 		margin-right: 0px;
 		font-size: 28px;
 		line-height: 32px;
-		text-align: center;
 	}
 
 	@include for-phone{
@@ -537,6 +535,7 @@
 	text-align: center;
 	.form_title_main{
 		margin-bottom: 16px;
+		text-align: center;
 	}
 	.form_close_bottom{
 		margin: 4px auto;

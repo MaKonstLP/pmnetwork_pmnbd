@@ -40,7 +40,7 @@
 			{% endif %}
 
 			<div class="form_submit">
-				<button class="_button">Отправить</button>
+				<button class="_button" data-target="{{ btn_target ? btn_target : '' }}" >Отправить</button>
 				<div class="form_policy checkbox_item _active" data-action="form_checkbox">
 					<input type="checkbox" name="policy" class="personalData" checked="">
 					<p class="checkbox_pseudo" >Я согласен с <a target="_blank" href="{{app.params.siteProtocol}}://{{app.params.siteAddress}}/politika/">политикой обработки персональных данных</a></p>
