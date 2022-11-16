@@ -7,33 +7,38 @@ export default class Main {
 	constructor() {
 		var self = this;
 
+
 		$('body').on('click', '[data-seo-control]', function () {
 			$(this).closest('[data-seo-text]').addClass('_active');
 		});
 
-		$('body').on('click', '[data-open-popup-form]', function () {
-			$('.popup_wrap').not('.popup_phone_wrap').not('.popup_wrap_blog').addClass('_active');
+		// $('body').on('click', '[data-open-popup-form]', function () {
+		// 	$('.popup_wrap').not('.popup_phone_wrap').not('.popup_wrap_blog').not('.popup_wrap_single-map').addClass('_active');
+		// 	$('body').addClass('_popup_overflow');
 
-			// let dataFormTarget = $('.form_block').data('form-target');
-			// if ($('[data-page-type="index"].post-blog').length && $(this).data('rest-name')) {
-			// 	let restaurantType = $(this).data('rest-type').toLowerCase();
-			// 	let restaurantName = $(this).data('rest-name');
-			// 	$('.form_title_main').html('Забронировать ' + restaurantType + ' «' + $.trim(restaurantName) + '»');
+		// 	let dataFormTarget = $('.form_block').data('form-target');
+		// 	if ($('[data-page-type="index"].post-blog').length && $(this).data('rest-name')) {
+		// 		let restaurantType = $(this).data('rest-type').toLowerCase();
+		// 		let restaurantName = $(this).data('rest-name');
+		// 		$('.form_title_main').html('Забронировать ' + restaurantType + ' «' + $.trim(restaurantName) + '»');
 
-			// 	$('.form_block').attr('data-form-target', 'bron_2');
-			// } else {
-			// 	$('.form_title_main').html('Помочь подобрать зал?');
-			// 	$('.form_block').attr('data-form-target', dataFormTarget);
-			// }
-		});
+		// 		$('.form_block').attr('data-form-target', 'bron_2');
+		// 	} else {
+		// 		$('.form_title_main').html('Помочь подобрать зал?');
+		// 		$('.form_block').attr('data-form-target', dataFormTarget);
+		// 	}
+		// });
+
 
 		$('body').on('click', '[data-open-popup-form-blog]', function () {
 			$('.popup_wrap.popup_wrap_blog').addClass('_active');
 
-			if ($('[data-page-type="index"].post-blog').length && $(this).data('rest-name')) {
+			let dataFormTarget = $(this).data('form-target'); 
+			if ($(this).data('rest-name')) {
 				let restaurantType = $(this).data('rest-type').toLowerCase();
 				let restaurantName = $(this).data('rest-name');
 				$('.popup_wrap_blog .form_title_main').html('Забронировать ' + restaurantType + ' «' + $.trim(restaurantName) + '»');
+				$('.form_block').attr('data-form-target', dataFormTarget);
 			} else {
 				$('.popup_wrap_blog .form_title_main').html('Помочь подобрать зал?');
 			}
@@ -45,8 +50,16 @@ export default class Main {
 			$('.popup_wrap .popup_img').hide();
 			$('.popup_wrap .popup_form .form_main').show();
 			$('.popup_wrap .popup_form .form_success').hide();
+			$('body').removeClass('_popup_overflow');
 		});
 
+		$('[data-menu-burger]').on('click', function(){
+			$(this).toggleClass('_active');
+			$('[data-menu]').toggleClass('_active');
+			$('body').toggleClass('_popup_overflow');
+		});
+
+	
 		/*$('body').on('click', '[data-gallery-img-view]', function () {
 			 //$('.popup_wrap .popup_img img').attr('src', $(this).attr('src'));
 			 $('.popup_wrap .popup_form').hide();
@@ -420,6 +433,7 @@ export default class Main {
 				fire();
 			}
 		});
+
 	}
 
 	sendCalltracking(phone) {
