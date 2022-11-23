@@ -20,10 +20,11 @@ export default class YaMap {
 
         ymaps.ready(function () {
             console.log('mapInit');
+            var parent = $('.map');
             var myMap = new ymaps.Map('map', {
                     center: [
-                        $('.map #map').data('mapdotx'),
-                        $('.map #map').data('mapdoty'),
+                        parent.find('#map').data('mapdotx'),
+                        parent.find('#map').data('mapdoty'),
                     ],
                     zoom: 15,
                     behaviors: ["drag", "dblClickZoom", "rightMouseButtonMagnifier", "multiTouch"]
@@ -34,14 +35,14 @@ export default class YaMap {
                     balloonContent: '\
                             <div class="balloon_content_wrap">\
                                 <div class="balloon_content_img">\
-                                    <img src="' + $('.map_img').attr('src') + '">\
+                                    <img src="' + parent.find('.map_img').attr('src') + '">\
                                 </div>\
                                 <div class="ballon_content_text">\
-                                    <a class="ballon_content_name" href="#">' + $('.map_rest_name').html() + '</a>\
-                                    <p class="ballon_content_address">' + $('.map_rest_address').html() + '</p>\
+                                    <a class="ballon_content_name" href="' + parent.find('.map_rest_name').attr('href') + '">' + parent.find('.map_rest_name').html() + '</a>\
+                                    <p class="ballon_content_address">' + parent.find('.map_rest_address').html() + '</p>\
                                 </div>\
                             </div>\
-            ',
+                    ',
                 }, {
                     //iconLayout: 'default#image',
                     preset: 'islands#darkGreenIcon',
@@ -70,6 +71,7 @@ export default class YaMap {
                 myPlacemark.balloon.open();
             }
         });
+
     }
 
 
