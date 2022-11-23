@@ -146,7 +146,8 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                 <div class="city_list_wrap" data-search-wrap>
                     <div class="city_list_top">
                         <a href="/" class="header_logo">
-                            <div class="header_logo_img"></div>
+                            <img class="header_logo_img" src="/upload/img/logo.svg"
+                                 alt="День рождения в <?= Yii::$app->params['subdomen_dec'] ?>">
                         </a>
                         <a href="/" class="header_logo header_logo_2">
                             <div class="header_logo_text">МОЙ ДЕНЬ</div>
@@ -329,16 +330,6 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         <div class="popup_form">
             <?= $this->render('//components/generic/popup_single_map.twig') ?>
         </div>
-        <div class="popup_img">
-            <div class="popup_img_close" data-close-popup></div>
-            <div class="popup_img_slider_wrap">
-                <div class="slider_arrow _prev"></div>
-                <div class="slider_arrow _next"></div>
-                <div class="object_gallery_container swiper-container" data-gallery-img-swiper>
-                    <div class="object_gallery_swiper swiper-wrapper" data-gallery-list></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <?php $this->endBody() ?>
@@ -352,3 +343,4 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 
     </html>
 <?php $this->endPage() ?>
+

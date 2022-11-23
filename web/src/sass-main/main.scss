@@ -193,9 +193,11 @@ li {
         overflow: hidden;
     }
     @include for-mobile{
-      margin-top: 100px;  
+      margin-top: 130px;
     }
-
+    @include for-phone{
+        margin-top: 110px;
+    }
     &._loading{
         .content_loading{
             display: block;
@@ -582,4 +584,26 @@ input[type=number] {
 
 .main_top{
     padding-top: 24px !important;
+}
+
+._popup_overflow{
+ overflow: hidden;
+}
+
+.item-gallery-pagination{
+    top: unset !important;
+    bottom: 8px !important;
+    width: 60px;
+    height: 8px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    .swiper-pagination-bullet{
+        width: 8px;
+        height: 8px;
+        border: 1px solid #DEDEDE;
+        &.swiper-pagination-bullet-active{
+            border: 1px solid #FFC24A;
+            background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
+        }
+    }
 }

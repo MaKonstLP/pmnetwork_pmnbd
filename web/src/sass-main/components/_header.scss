@@ -35,6 +35,10 @@ header {
 
     background: #F8F8F8;
 
+    @include for-phone{
+      padding-top: 10px;
+    }
+
     &.home {
       color: #fff;
       background: none;
@@ -202,6 +206,7 @@ header {
         display: flex;
       }
       @include for-phone {
+        width: auto;
         .header_nav-title{
           display: none;
         }
@@ -576,6 +581,10 @@ header {
     width: 100%;
     height: auto;
     border-radius: unset;
+
+    .header_logo img{
+      margin-top: -3px;
+    }
   }
 }
 
@@ -591,6 +600,8 @@ header {
 
   @include for-phone {
     display: block;
+    //display: flex;
+    //align-items: center;
   }
 }
 
