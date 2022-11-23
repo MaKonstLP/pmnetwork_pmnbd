@@ -32,19 +32,21 @@ export default class Main {
 
 		$('body').on('click', '[data-open-popup-form-blog]', function () {
 			console.log('zabr');
-			$('.popup_wrap').not('.popup_wrap_single-map').addClass('_active');
+			let popup = $('.popup_wrap').not('.popup_wrap_single-map');
+			popup.addClass('_active');
 			$('body').addClass('_popup_overflow');
 			
 			let dataFormTarget = $(this).data('form-target');
-			console.log(dataFormTarget);
 
-			if ($(this).data('rest-name')) {
+
+			if ($(this).data('rest-name')) { 
 				let restaurantType = $(this).data('rest-type').toLowerCase();
 				let restaurantName = $(this).data('rest-name');
-				$('.popup_wrap_blog .form_title_main').html('Забронировать ' + restaurantType + ' «' + $.trim(restaurantName) + '»');
-				$('.form_block').attr('data-form-target', dataFormTarget);
+				popup.find('.form_title_main').html('Забронировать ' + restaurantType + ' «' + $.trim(restaurantName) + '»');
+				popup.find('.form_block').attr('data-form-target', dataFormTarget);
 			} else {
-				$('.popup_wrap_blog .form_title_main').html('Помочь подобрать зал?');
+				popup.find('.form_title_main').html('Помочь подобрать зал?');
+				console.log(dataFormTarget);
 			}
 		});
 
