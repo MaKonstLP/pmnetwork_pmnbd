@@ -32,7 +32,8 @@ export default class Main {
 
 		$('body').on('click', '[data-open-popup-form-blog]', function () {
 			$('.popup_wrap.popup_wrap_blog').addClass('_active');
-
+			$('body').addClass('_popup_overflow');
+			
 			let dataFormTarget = $(this).data('form-target'); 
 			if ($(this).data('rest-name')) {
 				let restaurantType = $(this).data('rest-type').toLowerCase();
@@ -56,7 +57,7 @@ export default class Main {
 		$('[data-menu-burger]').on('click', function(){
 			$(this).toggleClass('_active');
 			$('[data-menu]').toggleClass('_active');
-			$('body').toggleClass('_popup_overflow');
+			// $('body').toggleClass('_popup_overflow');
 		});
 
 	
