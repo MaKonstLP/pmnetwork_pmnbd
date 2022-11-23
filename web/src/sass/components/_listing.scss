@@ -111,23 +111,7 @@
 			img{
 				width: 100%;
 			}
-			.item-gallery-pagination{
-				top: unset;
-				bottom: 8px;
-				width: 60px;
-				height: 8px;
-				left: 50%;
-				transform: translateX(-50%);
-				.swiper-pagination-bullet{
-					width: 8px;
-					height: 8px;
-					border: 1px solid #DEDEDE;
-					&.swiper-pagination-bullet-active{
-						border: 1px solid #FFC24A;
-						background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
-					}
-				}
-			}
+
 			img {
 				//width: 100%;
 				min-height: 100%;
@@ -358,7 +342,7 @@ div[data-append-items] {
 			font-weight: 700;
 			font-size: 15px;
 			line-height: 24px;
-			color: #1a2824; 
+			color: #1a2824;
 			border: none;
 			cursor: default;
 			transition: all .3s ease;

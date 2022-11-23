@@ -139,8 +139,6 @@ class ListingController extends BaseFrontendController
 			$seo['text_bottom'] = '';
 		}
 
-
-
 //		 echo "<pre>";
 //		 print_r($items->items);
 //		 exit;
