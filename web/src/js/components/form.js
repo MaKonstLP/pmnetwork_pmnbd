@@ -12,7 +12,7 @@ export default class Form {
 		this.$policy = this.$form.find('[name="policy"]');
 		this.$policy_checkbox = this.$form.find('[data-action="form_checkbox"]');
 		this.to = (this.$form.attr('action') == undefined || this.$form.attr('action') == '') ? this.to : this.$form.attr('action');
-		this.$formModal = this.$form.parents('body').find('.popup_wrap');
+		this.$formModal = this.$form.parents('body').find('.popup_wrap').not('.popup_wrap_single-map');
 		this.$formModalMain = this.$formModal.find('.form_main');
 		this.$formSuccess = this.$formModal.find('.form_success');
 		this.target = this.$form.data('form-target');
@@ -203,11 +203,18 @@ export default class Form {
 	success(data) {
 		//modal.append(data);
 		//modal.show();
+
 		this.$formModalMain.hide();
 		data.title && this.$formSuccess.find('[data-form-result-title]').text(data.title);
 		data.body && this.$formSuccess.find('[data-form-result-body]').text(data.body);
 		this.$formSuccess.show();
+
+		// if (this.$formModal.not('._active').length == 0)
+		// this.$formModal.hasClass('._active').removeClass('_active');
+		// this.$formModal.not('.popup_wrap_single-map ').not('.popup_wrap_blog ').not('._active').addClass('_active');
+
 		this.$formModal.not('._active').addClass('_active');
+
 		this.reset();
 		console.log('reachGoal', this.target);
 		ym('67719148', 'reachGoal', this.target);
