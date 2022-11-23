@@ -5,7 +5,7 @@
 {{this.registerMetaTag({'property':'og:image','content':'https://birthday-place.ru/upload/img/bd/mstile-150x150.png'})}}
 {% set  mainRestTypes = mainRestTypesCounts|length %}
 <div data-page-type="index" {{mainRestTypes > 0 ? '' : 'class=" _short"'}}>
-	<div class="main_top_image" style="position: relative;background: url({{seo.media["header-image"]|first.src}}) center no-repeat;background-size: cover;">
+	<div class="main_top_image" style="position: relative;background: url({{seo.media["header-image"]|first.src}}) center no-repeat;background-size: cover; padding-top: 30px">
 		{#<div class="main_top_slider{{mainRestTypes > 0 ? '' : ' _short'}}{{mainRestTypes < 4 ? ' __short_3' : ''}}">
 			<img loading="lazy" src="" alt="{{seo.media['header-image']|first.alt}}">
 		</div>#}

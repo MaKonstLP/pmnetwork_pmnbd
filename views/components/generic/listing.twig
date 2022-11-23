@@ -151,14 +151,15 @@
                 {% endif %}
             </div>
             <div class="item_bot">
-                {% if item.restaurant_min_check and item.restaurant_min_check != 0 %}
-                    <div class="item_price">
-                        от {{ item.restaurant_min_check }} ₽/чел. <br>
-{#                        min ({{ item.restaurant_min_check }})<br>#}
-{#                        max ({{ item.restaurant_max_check }})<br>#}
-{#                        avg ({{ item.restaurant_avg_check }})<br>#}
-                    </div>
-                {% endif %}
+                <div class="item_price">
+                    {% if item.restaurant_min_check and item.restaurant_min_check != 0 %}
+                            от {{ item.restaurant_min_check }} ₽/чел. <br>
+{#                          min ({{ item.restaurant_min_check }})<br>#}
+{#                          max ({{ item.restaurant_max_check }})<br>#}
+{#                          avg ({{ item.restaurant_avg_check }})<br>#}
+                    {% endif %}
+                </div>
+
                 {% if item.restaurant_rev_ya.rate and item.restaurant_rev_ya.count %}
                     <div class="item_rating">
                         <img src="/upload/img/item_star.svg" alt="Оценка {{ item.restaurant_name }}">
