@@ -31,10 +31,13 @@ export default class Main {
 
 
 		$('body').on('click', '[data-open-popup-form-blog]', function () {
-			$('.popup_wrap.popup_wrap_blog').addClass('_active');
+			console.log('zabr');
+			$('.popup_wrap').not('.popup_wrap_single-map').addClass('_active');
 			$('body').addClass('_popup_overflow');
 			
-			let dataFormTarget = $(this).data('form-target'); 
+			let dataFormTarget = $(this).data('form-target');
+			console.log(dataFormTarget);
+
 			if ($(this).data('rest-name')) {
 				let restaurantType = $(this).data('rest-type').toLowerCase();
 				let restaurantName = $(this).data('rest-name');
