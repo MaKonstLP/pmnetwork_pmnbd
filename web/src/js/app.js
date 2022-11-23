@@ -58,15 +58,15 @@ window.jQuery = $;
             console.log('data-single-map');
 
             let popup = $('.popup_wrap.popup_wrap_single-map');
-            $('#map').html('');
+            $('#map-popup').html('');
             popup.find('.map_img').attr('src', $(this).data('map_img'));
             popup.find('.map_rest_name').attr('href', $(this).data('map_rest_href'));
             popup.find('.map_rest_name').text($(this).data('map_rest_name'));
             popup.find('.map_rest_address').text($(this).data('map_rest_address'));
-            popup.find('[data-mapdotx]').data('mapdotx', $(this).data('map_dot_x'));
-            popup.find('[data-mapdotx]').data('mapdoty', $(this).data('map_dot_y'));
+            popup.find('#map-popup').data('mapdotx', $(this).data('map_dot_x'));
+            popup.find('#map-popup').data('mapdoty', $(this).data('map_dot_y'));
 
-            yaMap.mapInit();
+            yaMap.mapPopup();
 
             $('body').addClass('_popup_overflow');
             popup.addClass('_active');
