@@ -38,7 +38,7 @@
 
 	<div class="content_block">
 		{#{{ preview ? post.getBodyHtml()|raw : post.getHtml()|raw }}#}
-		 {{ post.getHtml([1])|raw }} 
+		 {{ post.getHtml([1])|raw }}
 	</div>
 	{% if similarPosts %}
 		<div class="other_objects same_blogs_wrap">
@@ -72,3 +72,5 @@
 	{% endif %}
 
 </div>
+
+
