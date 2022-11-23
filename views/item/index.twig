@@ -53,7 +53,7 @@
                     <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
                         Позвонить
                     </a>
-                    <button class="item_btn-book _button" data-tager="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="item_btn">
-                                    <button class="item_btn-book _button" data-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
 
                                 </div>
                             </div>
@@ -257,7 +257,7 @@
             <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
                 Позвонить
             </a>
-            <button class="item_btn-book _button" data-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+            <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
         </div>
     </div>
 

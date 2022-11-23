@@ -4,7 +4,8 @@
 {{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'}) }}
 {{ this.registerMetaTag({'property':'og:image','content':(item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath) : '/upload/img/bd/no_photo.png')}) }}
 <div data-page-type="item">
-    {% set pro = item.restaurant_rev_ya.rate > 4.4 ? 'pro' : '' %}
+{#    {% set pro = item.restaurant_rev_ya.rate > 4.4 ? 'pro' : '' %}#}
+    {% set pro = '' %}
     <div class="content_block" data-listing-title>
         {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'item':item}) | raw }}
         <div class="title_bot">
@@ -326,7 +327,7 @@
                                 </div>
                             {% endif %}
                             <div class="item_btn">
-                                <button class="item_btn-book" data-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                                <button class="item_btn-book" data-form-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
                             </div>
                         </div>
                     </div>
