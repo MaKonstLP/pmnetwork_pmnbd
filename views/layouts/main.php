@@ -285,14 +285,11 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 
     </div>
 
-    <div class="popup_wrap">
-
+    <div class="popup_wrap ">
         <div class="popup_layout" data-close-popup></div>
-
         <div class="popup_form">
             <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'header', 'target' => 'podbor_2']) ?>
         </div>
-
         <div class="popup_img">
             <div class="popup_img_close" data-close-popup></div>
             <div class="popup_img_slider_wrap">
@@ -304,24 +301,6 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
             </div>
         </div>
 
-    </div>
-
-    <!-- вторая форма для страницы статьи блога чтобы отслеживать цель "bron_2" -->
-    <div class="popup_wrap popup_wrap_blog">
-        <div class="popup_layout" data-close-popup></div>
-        <div class="popup_form">
-            <?= $this->render('//components/generic/form_blog.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'main', 'target' => 'bron_2']) ?>
-        </div>
-        <div class="popup_img">
-            <div class="popup_img_close" data-close-popup></div>
-            <div class="popup_img_slider_wrap">
-                <div class="slider_arrow _prev"></div>
-                <div class="slider_arrow _next"></div>
-                <div class="object_gallery_container swiper-container" data-gallery-img-swiper>
-                    <div class="object_gallery_swiper swiper-wrapper" data-gallery-list></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!--    карта       -->
