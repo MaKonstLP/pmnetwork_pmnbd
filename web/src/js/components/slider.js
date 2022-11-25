@@ -20,6 +20,7 @@ export default class Slider {
         //}
 
         $('body').on('click', '[data-gallery-img-view]', function () {
+
             let slider = $(this).closest('[data-gallery-swiper]');
             let active = $(this).closest('[data-swiper-slide-index]').attr('data-swiper-slide-index');
             let slider_popup = $('[data-gallery-img-swiper]');
@@ -33,8 +34,9 @@ export default class Slider {
             slider_popup.find('[data-swiper-slide-index="' + active + '"]').addClass('swiper-slide-active');
             $('.popup_wrap .popup_form').hide();
             $('.popup_wrap .popup_img').show();
-            $('.popup_wrap').not('.popup_phone_wrap').addClass('_active');
+            $('.popup_wrap').not('.popup_phone_wrap').not('.popup_wrap_single-map').addClass('_active');
             self.initSwiperPopup(slider_popup, active);
+
         });
 
         // $(window).on('resize', function () {
