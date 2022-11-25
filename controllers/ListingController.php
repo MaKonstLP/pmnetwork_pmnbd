@@ -163,13 +163,13 @@ class ListingController extends BaseFrontendController
 
 
 		$elastic_model = new ElasticItems;
-		$items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model);
+		$items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model,'','','','','','','', $check_sort = $params['sort']);
 
-		if (!empty($params['sort']))
-            if ($params['sort'] == '-check')
-                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_DESC);
-            else
-                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_ASC);
+//		if (!empty($params['sort']))
+//            if ($params['sort'] == '-check')
+//                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_DESC);
+//            else
+//                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_ASC);
 
 
 		$pagination = PaginationWidgetPrevNext::widget([

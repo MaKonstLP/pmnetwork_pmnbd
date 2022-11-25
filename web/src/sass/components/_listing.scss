@@ -348,10 +348,10 @@ div[data-append-items] {
 			border-color: #3067f3;
 		}
 
-		&[data-value=check]:before{
+		&[data-type=sort_asc]:before{
 			content: 'возрастанию цены';
 		}
-		&[data-value=-check]:before{
+		&[data-type=sort_desc]:before{
 			content: 'убыванию цены';
 		}
 
@@ -371,10 +371,10 @@ div[data-append-items] {
 				background: url("/upload/img/icon_sort_blue.svg") no-repeat 100%;
 			}
 
-			&[data-value=check]:after{
+			&[data-type=sort_asc]:after{
 				transform: translateY(-27%) rotateX(180deg);
 			}
-			&[data-value=-check]:after{
+			&[data-type=sort_desc]:after{
 				transform: translateY(-50%);
 			}
 

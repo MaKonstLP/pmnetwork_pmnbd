@@ -25,18 +25,14 @@
 
 		<div class="listing_sort">
 			<div class="listing_sort-title">Сортировать по:</div>
-			<button class="listing_sort-item" data-value="check" data-listing-sort></button>
-			<button class="listing_sort-item" data-value="-check" data-listing-sort></button>
+			<button class="listing_sort-item" data-type="sort_asc" data-value="4" data-listing-sort></button>
+			<button class="listing_sort-item" data-type="sort_desc" data-value="3" data-listing-sort></button>
 		</div>
 	</div>
 
-
-
 	<div class="items_list_listing content_block" data-listing-wrapper>
 		<div class="items_list" data-listing-list>
-
 			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt, 'itemTypeName':itemTypeName}) | raw }}
-
 		</div>
 	</div>
 
