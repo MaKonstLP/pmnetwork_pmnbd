@@ -98,16 +98,31 @@ class CollectionController extends BaseFrontendController
 		$this->setSeo($seo);
 
 		$tag = $post->blogPostTags[0]->blogTag ?? BlogTag::find()->one();
-        $similarPosts = BlogPost::findWithMedia()
+        $similarPostsPrev = BlogPost::findWithMedia()
 			->with('blogPostTags')
 			->joinWith('blogPostSubdomens')
 			->where(['published' => true])
-			->andWhere(['!=', 'id', $post->id])
-			->andWhere(['collection' => true])
+            ->andWhere(['!=', 'id', $post->id])
+            ->andWhere(['<', 'published_at', $post->published_at])
+            ->andWhere(['collection' => true])
 			->andWhere([BlogPostSubdomen::tableName() . '.subdomen_id' => $subdomen])
 			->orderBy(['published_at' => SORT_DESC])
-			->limit(3)
+			->limit(2)
 			->all();
+
+        $similarPostsNext = BlogPost::findWithMedia()
+            ->with('blogPostTags')
+            ->joinWith('blogPostSubdomens')
+            ->where(['published' => true])
+            ->andWhere(['!=', 'id', $post->id])
+            ->andWhere(['>', 'published_at', $post->published_at])
+            ->andWhere(['collection' => true])
+            ->andWhere([BlogPostSubdomen::tableName() . '.subdomen_id' => $subdomen])
+            ->orderBy(['published_at' => SORT_ASC])
+            ->limit(2)
+            ->all();
+
+        $similarPosts = array_merge($similarPostsPrev, $similarPostsNext);
 
 		return $this->render('post.twig', compact('post', 'similarPosts'));
 	}

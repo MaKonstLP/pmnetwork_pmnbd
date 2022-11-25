@@ -48,7 +48,9 @@
 				<div class="listing_widget_arrow _next"></div>
 				<div class="swiper-container" data-other-blogs-swiper>
 					<div class="swiper-wrapper" data-other-blogs-list>
-						{% for similarPost in similarPosts %}
+						{% set counter = 0 %}
+						{% for similarPost in similarPosts if counter < 3 %}
+							{% set counter = counter + 1 %}
 							<div class="blog_item swiper-slide">
 								<div class="blog_img">
 									<a href="{{ similarPost.getUrlCollection() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
