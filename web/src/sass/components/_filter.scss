@@ -537,6 +537,10 @@
     }
 }
 .popup_filter_top{
+    display: flex;
+    align-items: center;
+    padding: 3px 12px;
+
     position: relative;
     height: 45px;
     .header_logo_2 {
@@ -546,7 +550,7 @@
     .popup_filter_close {
         position: absolute;
         transform: rotate(45deg);
-        top: 10px;
+        top: 8px;
         right: 10px;
         width: 28px;
         height: 28px;
@@ -573,6 +577,9 @@
     }
     .header_logo{
         top: 5px;
+        img{
+            //margin-top: 2px;
+        }
     }
     .header_logo_2{
         top: 14px;

@@ -607,3 +607,9 @@ input[type=number] {
         }
     }
 }
+.breadcrumbs{
+    row-gap: 20px !important;
+    .breadcrumbs_item_multiple::after {
+        top: 5px !important;
+    }
+}
