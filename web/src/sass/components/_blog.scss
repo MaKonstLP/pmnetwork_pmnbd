@@ -19,6 +19,7 @@
     height: 260px;
 
     img {
+      width: 100%;
       height: 100%;
       object-fit: cover;
       /*position: absolute;
@@ -718,6 +719,10 @@
       text-transform: uppercase;
       font-weight: 400;
       color: #1A2824;
+
+      &:hover{
+        color: #3067f3;
+      }
     }
 
     .item_name {
