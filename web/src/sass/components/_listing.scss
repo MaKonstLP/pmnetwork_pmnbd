@@ -115,6 +115,10 @@
 			}
 		}
 
+		.item_link{
+			display: block;
+			//margin-bottom: 14px;
+		}
 		.item_info {
 			height: calc(100% - 176px);
 			display: flex;
@@ -134,7 +138,7 @@
 						font-size: 20px;
 						line-height: 24px;
 						color: #1A2824;
-						margin-bottom: 8px;
+						margin-bottom: 12px;
 						text-decoration: underline;
 						text-decoration-style: solid;
 						text-underline-offset: 6px;
@@ -391,8 +395,6 @@ div[data-append-items] {
 	flex-direction: row;
 	align-items: center;
 	img{
-		width: 18px;
-		height: 18px;
 		margin-right: 3px;
 	}
 	.item_rating-rate{
