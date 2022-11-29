@@ -25,9 +25,7 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class="listing_widget_controll">
-                    <div class="listing_widget_pagination"></div>
-                </div>
+                <div class="gallery-pagination"></div>
             </div>
             <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
@@ -53,7 +51,7 @@
                     <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
                         Позвонить
                     </a>
-                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-room-name="{{ item.name }}"  data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
                 </div>
             </div>
         </div>
@@ -177,7 +175,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="item_btn">
-                                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-room-name="{{ same_object.name }}"  data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
 
                                 </div>
                             </div>
@@ -257,7 +255,7 @@
             <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
                 Позвонить
             </a>
-            <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+            <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-room-name="{{ item.name }}"  data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
         </div>
     </div>
 

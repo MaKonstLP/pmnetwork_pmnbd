@@ -74,6 +74,7 @@ export default class Slider {
             centeredSlides: true,
             loop: true,
             init: false,
+            initialSlide: 1,
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
                 prevEl: '.listing_widget_arrow._prev',
@@ -81,20 +82,18 @@ export default class Slider {
             thumbs: {
                 swiper: galleryThumbs
             },
-            pagination: {
-                el: '.listing_widget_pagination',
-                type: 'bullets',
-            },
 
             breakpoints: {
                 1000: {
                     slidesPerView: 1.2,
                 },
-                600: {
+                768: {
                     slidesPerView: 1,
                     pagination: {
-                        el: '.listing_widget_pagination',
+                        el: '.gallery-pagination',
                         type: 'bullets',
+                        dynamicBullets: true,
+                        dynamicMainBullets: 1,
                     },
                 }
             }
@@ -104,11 +103,19 @@ export default class Slider {
             let activeIndex = galleryTop.realIndex + 1;
             let slidesCount = $(galleryTop.el).find('.swiper-slide').not('.swiper-slide-duplicate').length;
             let activeSlide = $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + activeIndex + ')');
-            let nextSlide = $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex + 1) + ')').length > 0 ? $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex + 1) + ')') : $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(1)');
-            let prevSlide = $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex - 1) + ')').length > 0 ? $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex - 1) + ')') : $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + slidesCount + ')');
+
+            let nextSlide = $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex + 1) + ')').length > 0 ?
+                                $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex + 1) + ')') :
+                                $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(1)');
+
+            let prevSlide = $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex - 1) + ')').length > 0 ?
+                                $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + (activeIndex - 1) + ')') :
+                                $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + slidesCount + ')');
+
             $('[data-gallery-thumb-swiper] .swiper-slide').each(function () {
                 $(this).removeClass('swiper-slide-virtual-active')
             });
+
             nextSlide.addClass('swiper-slide-virtual-active');
             prevSlide.addClass('swiper-slide-virtual-active');
         };

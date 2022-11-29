@@ -37,12 +37,16 @@ export default class Main {
 			$('body').addClass('_popup_overflow');
 			
 			let dataFormTarget = $(this).data('form-target');
-
-
-			if ($(this).data('rest-name')) { 
+			if ($(this).data('rest-name')) {
 				let restaurantType = $(this).data('rest-type').toLowerCase();
 				let restaurantName = $(this).data('rest-name');
-				popup.find('.form_title_main').html('Забронировать ' + restaurantType + ' «' + $.trim(restaurantName) + '»');
+				let roomName = $(this).data('room-name');
+				if (!roomName){
+					popup.find('.form_title_main').html('Забронировать ' + $.trim(restaurantType) + ' «' + $.trim(restaurantName) + '»');
+				}else{
+					popup.find('.form_title_main').html('Забронировать ' + $.trim(roomName) + ', ' + $.trim(restaurantType) + ' «' + $.trim(restaurantName) + '»');
+				}
+
 				popup.find('.form_block').attr('data-form-target', dataFormTarget);
 			} else {
 				popup.find('.form_title_main').html('Помочь подобрать зал?');

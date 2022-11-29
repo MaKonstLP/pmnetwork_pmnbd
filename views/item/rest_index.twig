@@ -130,9 +130,7 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class="listing_widget_controll">
-                    <div class="listing_widget_pagination"></div>
-                </div>
+                <div class="gallery-pagination"></div>
             </div>
             <div class="content_block">
                 <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
@@ -327,7 +325,7 @@
                                 </div>
                             {% endif %}
                             <div class="item_btn">
-                                <button class="item_btn-book" data-form-target="zal" data-rest-name="{{ item.restaurant_name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
+                                <button class="item_btn-book" data-form-target="zal" data-rest-name="{{ item.restaurant_name }}" data-room-name="{{ same_object.name }}" data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
                             </div>
                         </div>
                     </div>
