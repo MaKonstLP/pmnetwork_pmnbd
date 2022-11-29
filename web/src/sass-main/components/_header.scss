@@ -21,9 +21,9 @@ header {
     height: 64px;
   }
 
-  @include for-phone {
-    height: 50px;
-  }
+  //@include for-phone {
+  //  height: 50px;
+  //}
 
   .header_wrap {
     display: grid;
@@ -39,10 +39,6 @@ header {
 
     @include for-lowlap {
       padding: 0 12px;
-    }
-
-    @include for-phone{
-      padding-top: 10px;
     }
 
 
@@ -83,15 +79,31 @@ header {
       column-gap: 30px;
       row-gap: 16px;
       justify-content: center;
-      transition: opacity .3s ease;
+      transition: opacity .3s ease !important;
 
       .header_nav-link {
         font-weight: 700;
         font-size: 20px;
         line-height: 24px;
         color: #1A2824;
-        letter-spacing: -.8px;
         white-space: nowrap;
+        transition: all .3s ease;
+
+        &:hover{
+          color: #FFC24A !important;
+          //background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
+          //-webkit-background-clip: text;
+          //-webkit-text-fill-color: transparent;
+        }
+      }
+
+      &.home{
+        &._active{
+          background: rgba(52,53,61,.7);
+        }
+        .header_nav-link {
+          color: #FFFFFF;
+        }
       }
 
       @include for-lowlap {
@@ -113,6 +125,15 @@ header {
         background: #FFFFFF;
         box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
         opacity: 0;
+
+        &.home{
+          &._active{
+            background: #FFFFFF;
+          }
+          .header_nav-link {
+            color: #1A2824;
+          }
+        }
       }
       @include for-phone {
         .header_nav-link {
@@ -149,14 +170,8 @@ header {
         top: 64px;
       }
 
-      &.home{
-        &._active{
-          background: rgba(52,53,61,.7);
-        }
-        .header_nav-link {
-          color: #FFFFFF;
-        }
-      }
+
+
     }
 
     .header_nav-mobile {
@@ -250,7 +265,7 @@ header {
         height: 22px;
         left: auto;
         right: 56px;
-        top: 12px;
+        top: 18px;
         &.home {
           background: url(/upload/img/geo_label_mobile_home.svg) no-repeat;
         }
@@ -526,7 +541,7 @@ header {
   .header_logo_text {
     font-size: 18px;
     font-weight: 300;
-    letter-spacing: 0.2em;
+    letter-spacing: 4.2px;
     text-transform: uppercase;
     font-family: 'Proxima Nova Thin', sans-serif;
   }
