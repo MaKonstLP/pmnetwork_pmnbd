@@ -81,13 +81,15 @@
     	width: 100%;
     }
     .form_inputs{
-    	justify-content: left;
+    	justify-content: space-between;
     	.input_wrapper{
-	    	width: 47%;
-	    	&:nth-child(1),
-	    	&:nth-child(3){
-	    		margin-right: 25px;
-	    	}
+	    	width: 45%;
+	    	//&:nth-child(1){
+	    	//	margin-right: 25px;
+	    	//}
+			&:nth-child(3){
+				width: 100%;
+			}
 	    	&:nth-child(4){
 	    		// width: 30%;
 	    	}

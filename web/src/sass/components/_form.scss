@@ -67,7 +67,7 @@
 	&:before{
 		width: 100%;
 		height: 2px;
-		top: 10px;
+		top: 9px;
 		left: 0px;
 	}
 
@@ -207,7 +207,7 @@
 		.input_wrapper{
 			/*width: 130px;
 			margin-right: 20px;*/
-			width: 23%;
+			width: 30%;
 			height: 60px;
 
 			@include for-phone{
@@ -602,7 +602,7 @@
     	width: 100%;
     }
     .form_inputs{
-    	justify-content: left;
+    	justify-content: space-between;
     	@include for-pad{
     		justify-content: space-between;
     	}
@@ -634,16 +634,18 @@
 					width: 50%;
 				}
     		}
-	    	&:nth-child(1),
-	    	&:nth-child(3){
-	    		margin-right: 25px;
-    			@include for-pad{
-		    		margin: 0;
-		    	}
-		    	@include for-mobile{
-		    		margin: 0;
-		    	}
-	    	}
+	    	//&:nth-child(1){
+	    	//	margin-right: 25px;
+    		//	@include for-pad{
+		    //		margin: 0;
+		    //	}
+		    //	@include for-mobile{
+		    //		margin: 0;
+		    //	}
+	    	//}
+			&:nth-child(3){
+				width: 100%;
+			}
 	    	//&:nth-child(4){
 	    	//	width: 30%;
 	    	//	@include for-small-desktop{
