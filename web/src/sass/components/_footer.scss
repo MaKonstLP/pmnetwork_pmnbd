@@ -230,6 +230,13 @@ footer{
                 @include for-notdesc{
                     margin-right: 8px;
                 }
+
+                &:first-child{
+                    .footer_nav_wrap-title{
+                        letter-spacing: .5px;
+                    }
+                }
+
                 .footer_nav_wrap-title{
                     font-weight: bold;
                     font-size: 14px;
@@ -237,13 +244,17 @@ footer{
                     color: #1A2824;
                     margin-bottom: 8px;
                 }
+
                 .footer_nav_wrap-sub{
                     margin: 4px 0;
                     .footer_nav_wrap-sub_el{
                         margin: 0 26px 8px 0;
                         a{
                             color: $clrGrey;
-                            border-bottom: 1px solid $clrLinkBorder;
+                            text-decoration: underline;
+                            text-underline-offset: 5px;
+                            text-decoration-color: $clrLinkBorder;
+
                             &:hover{
                                 border-bottom: none;
                             }
