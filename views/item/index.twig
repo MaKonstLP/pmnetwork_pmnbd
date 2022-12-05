@@ -56,7 +56,46 @@
             </div>
         </div>
 
-        <div class="object_desc">
+{#        <dl class="object_description">#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Адрес:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description" ><a data-action="roll_to_map">{{ rest_item.restaurant_address }}</a></dd>#}
+{#            </div>#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Вместимость:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description">{{ item.capacity }} человек</dd>#}
+{#            </div>#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Тип зала:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description">{{ item.type_name }}</dd>#}
+{#            </div>#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Возможность аренды без еды:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description">{{ item.rent_only==0 ? 'нет' : 'да' }}</dd>#}
+{#            </div>#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Светлый зал:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description">{{ item.bright_room==0 ? 'нет' : 'да' }}</dd>#}
+{#            </div>#}
+
+{#            {% if item.payment_model %}#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Схема оплаты:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description">{{ item.payment_model }}</dd>#}
+{#            </div>#}
+{#            {% endif %}#}
+{#            <div class="object_description-item">#}
+{#                <dt class="object_description-title"><span class="text">Отдельный вход:</span><div class="dots"></div></dt>#}
+{#                <dd class="object_description-description">{{ item.separate_entrance==0 ? 'нет' : 'да' }}</dd>#}
+{#            </div>#}
+{#            <!--p>{{ item.features }}</p-->#}
+{#            <!--p>Anstar House Vatutinki - это уникальное место для проведения идеальной свадьбы. На территории комплекса имеется живописный сад, где возможно организовать выездную церемонию и фотосессию.</p>#}
+{#            <p>В большом доме на берегу озера жених и невеста смогут провести утренние сборы, а также комфортно разместиться гости.</p>#}
+{#            <p>Для проведения мероприятий имеется большой банкетный зал. Интерьер выполнен в светлых тонах, что позволяет использовать любое стилистическое оформление.</p-->#}
+{#        </dl>#}
+
+
+                <div class="object_desc">
             <p class="object_desc_item">
                 <span class="object_desc_title">Адрес:<span class="dots"></span></span>
                 <span class="object_desc_value object_desc_address" data-action="roll_to_map">{{ rest_item.restaurant_address }}</span>
@@ -77,9 +116,9 @@
                 <span class="object_desc_title">Светлый зал:<span class="dots"></span></span><span
                         class="object_desc_value">{{ item.bright_room==0 ? 'нет' : 'да' }}</span>
             </p>
-            {# <p class="object_desc_item">
+             <p class="object_desc_item">
                <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">только за еду и напитки</span>
-            </p> #}
+            </p>
             {% if item.payment_model %}
                 <p class="object_desc_item">
                     <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span
@@ -133,50 +172,58 @@
     </div>
 
     {% if same_objects %}
-        <div class="content_block ">
-            <div class="same_objects">
+        <div class="rest_rooms_wrap">
+            <div class="content_block room_objects">
                 <h2>Другие залы этой же площадки</h2>
-                <div class="same_objects_wrap">
+                <div class="room_objects_wrap">
                     {% for same_object in same_objects %}
-                        <div class="same_object">
-                            <div class="same_object_img">
-                                <div class="same_object_img_item">
+                        <div class="room_object">
+                            <div class="room_object_img">
+                                <div class="room_object_img_item">
                                     {# <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}"> #}
                                     <img loading="lazy"
                                          src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
                                 </div>
-                                <div class="same_object_img_item">
+                                <div class="room_object_img_item">
                                     <img loading="lazy"
                                          src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
                                 </div>
-                                <div class="same_object_img_item">
+                                <div class="room_object_img_item">
                                     <img loading="lazy"
                                          src="{{ same_object.images[2] ? Declension.get_image_src(same_object.images[2].subpath~'=w445-h302-n-l95') : (same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
                                 </div>
                             </div>
-                            <div class="same_object_desc">
-                                <div class="title"><a
-                                            href="/catalog/restoran-{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
-                                </div>
-                                <div class="object_desc_item">
-                                    <p class="object_desc_title">Вместимость:</p>
-                                    <p class="object_desc_value">{{ same_object.capacity }} человек</p>
-                                </div>
-                                {% if same_object.price %}
-                                    <div class="object_desc_item">
-                                        <p class="object_desc_title">Стоимость:</p>
-                                        <p class="object_desc_value">{{ same_object.price }} ₽/чел.</p>
+                            <div class="room_object_desc">
+                                <div class="room_object_desc-top">
+                                    <div class="room_object_desc-title"><a
+                                                href="/catalog/restoran-{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
                                     </div>
-                                {% endif %}
-                                {% if same_object.payment_model %}
-                                    <div class="object_desc_item">
-                                        <p class="object_desc_title">Схема оплаты:</p>
-                                        <p class="object_desc_value">{{ same_object.payment_model }}</p>
+                                    <div class="room_object-meta">
+                                        <div class="room_desc_item">
+                                            <p class="room_desc_title">Вместимость:</p>
+                                            <p class="room_desc_value">{{ same_object.capacity }} человек</p>
+                                        </div>
+                                        {% if same_object.price %}
+                                            <div class="room_desc_item">
+                                                <p class="room_desc_title">Стоимость:</p>
+                                                <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>
+                                            </div>
+                                        {% endif %}
+                                        {% if same_object.payment_model %}
+                                            <div class="room_desc_item">
+                                                <p class="room_desc_title">Схема оплаты:</p>
+                                                <p class="room_desc_value">{{ same_object.payment_model }}</p>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
+                                </div>
                                 <div class="item_btn">
-                                    <button class="item_btn-book _button" data-form-target="zal"  data-rest-name="{{ item.restaurant_name }}" data-room-name="{{ same_object.name }}"  data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>Забронировать</button>
-
+                                    <button class="item_btn-book" data-form-target="zal"
+                                            data-rest-name="{{ item.restaurant_name }}"
+                                            data-room-name="{{ same_object.name }}"
+                                            data-rest-type="{{ item.restaurant_main_type }}" data-open-popup-form-blog>
+                                        Забронировать
+                                    </button>
                                 </div>
                             </div>
                         </div>
