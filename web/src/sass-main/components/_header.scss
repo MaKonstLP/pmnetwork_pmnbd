@@ -42,38 +42,13 @@ header {
     }
 
 
-    &.home {
-      color: #fff;
-      background: none;
-
-      .header_logo_text {
-        color: #fff;
-      }
-
-      .city {
-        color: #fff;
-        border-bottom: 1px dashed rgba(255, 255, 255, .3);
-      }
-
-      //.header_phone {
-      //  color: #fff;
-      //
-      //  & > ._link {
-      //    border-color: rgba(255, 255, 255, .3);
-      //  }
-      //
-      //  & > p, & > a {
-      //    color: #fff;
-      //  }
-      //}
-    }
-
-    .header_left{
+    .header_left {
       display: flex;
       flex-direction: row;
       align-items: center;
       margin-right: 20px;
     }
+
     .header_nav {
       display: flex;
       column-gap: 30px;
@@ -89,7 +64,7 @@ header {
         white-space: nowrap;
         transition: all .3s ease;
 
-        &:hover{
+        &:hover {
           color: #FFC24A !important;
           //background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
           //-webkit-background-clip: text;
@@ -97,14 +72,6 @@ header {
         }
       }
 
-      &.home{
-        &._active{
-          background: rgba(52,53,61,.7);
-        }
-        .header_nav-link {
-          color: #FFFFFF;
-        }
-      }
 
       @include for-lowlap {
         .header_nav-link {
@@ -126,14 +93,7 @@ header {
         box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
         opacity: 0;
 
-        &.home{
-          &._active{
-            background: #FFFFFF;
-          }
-          .header_nav-link {
-            color: #1A2824;
-          }
-        }
+
       }
       @include for-phone {
         .header_nav-link {
@@ -141,7 +101,7 @@ header {
           line-height: 24px;
           position: relative;
           //margin: 0 auto;
-          &:after{
+          &:after {
             content: '';
             width: 24px;
             height: 1px;
@@ -151,7 +111,8 @@ header {
             left: 50%;
             transform: translateX(-50%);
           }
-          &:last-child:after{
+
+          &:last-child:after {
             width: 0;
             height: 0;
           }
@@ -164,14 +125,12 @@ header {
         justify-content: flex-start;
         height: calc(100vh - 50px);
       }
-      &._active{
+
+      &._active {
         display: flex;
         opacity: 1;
         top: 64px;
       }
-
-
-
     }
 
     .header_nav-mobile {
@@ -184,7 +143,7 @@ header {
       height: 32px;
       cursor: pointer;
 
-      .header_nav-burger{
+      .header_nav-burger {
         width: 24px;
         height: 24px;
       }
@@ -196,6 +155,7 @@ header {
         letter-spacing: 0.1em;
         color: #000000;
       }
+
       span {
         position: absolute;
         top: 14px;
@@ -205,21 +165,25 @@ header {
         background: #1A2824;
         border-radius: 16px;
         transition: all .3s ease;
+
         &:first-child {
           top: 7px;
         }
+
         &:last-child {
           top: 21px;
         }
       }
 
-      &._active{
+      &._active {
         span {
           transform: scale(0);
+
           &:first-child {
             transform: rotate(-45deg);
             top: 14px;
           }
+
           &:last-child {
             transform: rotate(45deg);
             bottom: 16px;
@@ -228,21 +192,13 @@ header {
         }
       }
 
-      &.home{
-        .header_nav-title {
-          color: #FFFFFF;
-        }
-        span{
-          background: #FFFFFF;
-        }
-      }
 
       @include for-lowlap {
         display: flex;
       }
       @include for-phone {
         width: auto;
-        .header_nav-title{
+        .header_nav-title {
           display: none;
         }
       }
@@ -255,9 +211,11 @@ header {
       flex-direction: row;
       flex-wrap: nowrap;
       align-items: center;
-      img{
+
+      img {
         margin-bottom: 3px;
       }
+
       @include for-phone {
         position: absolute;
         background: url(/upload/img/geo_label_mobile.svg) no-repeat;
@@ -266,9 +224,6 @@ header {
         left: auto;
         right: 56px;
         top: 18px;
-        &.home {
-          background: url(/upload/img/geo_label_mobile_home.svg) no-repeat;
-        }
         img, span {
           display: none;
         }
@@ -498,18 +453,23 @@ header {
   }
 
   .city_list_top {
-    display: flex;
+    display: none;
     align-items: center;
     flex-direction: row;
     padding: 0 12px;
     height: unset;
     margin-bottom: 10px;
-  
+    margin-top: 3px;
+
     .header_logo_2 {
       .header_logo_text {
-        font-family: 'Proxima Nova Regular', sans-serif;
-        color: #000;
+        //font-family: 'Proxima Nova Regular', sans-serif;
+        color: #000 !important;
       }
+    }
+
+    @include for-phone{
+      display: flex;
     }
 
   }
@@ -625,7 +585,7 @@ header {
     height: auto;
     border-radius: unset;
 
-    .header_logo img{
+    .header_logo img {
       margin-top: -3px;
     }
   }
@@ -651,8 +611,8 @@ header {
 .city_list_close {
   position: absolute;
   transform: rotate(45deg);
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 11px;
   width: 28px;
   height: 28px;
 
@@ -733,8 +693,60 @@ header {
   }
 }
 
-._popup_overflow{
+._popup_overflow {
   @include for-phone {
     overflow: hidden;
+  }
+}
+
+
+header.home:not(._active) {
+  .header_wrap {
+    color: #fff;
+    background: none;
+
+    .header_logo_text {
+      color: #fff;
+    }
+
+    .city {
+      color: #fff;
+      border-bottom: 1px dashed rgba(255, 255, 255, .3);
+    }
+
+    .header_nav-mobile {
+      .header_nav-title {
+        color: #FFFFFF;
+      }
+
+      span {
+        background: #FFFFFF;
+      }
+    }
+
+    .header_city{
+      @include for-phone {
+          background: url(/upload/img/geo_label_mobile_home.svg) no-repeat;
+      }
+    }
+
+    .header_nav {
+      &._active {
+        background: rgba(52, 53, 61, .7);
+      }
+
+      .header_nav-link {
+        color: #FFFFFF;
+      }
+
+      @include for-lowlap {
+        &._active {
+          background: #FFFFFF;
+        }
+        .header_nav-link {
+          color: #1A2824;
+        }
+      }
+    }
   }
 }
