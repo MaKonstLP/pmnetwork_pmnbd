@@ -146,12 +146,13 @@
 		}
 
 		.listing_widget_pagination{
-			display: none;
-			margin: 0px 11px;
+			display: flex;
+			width: 100%;
+			flex-wrap: wrap;
+			row-gap: 6px;
+			justify-content: center;
+			margin: 0 20px;
 
-			@include for-notdesc{
-		    	display: block;
-		    }
 		    .swiper-pagination-bullet{
 		    	width: 10px;
 		    	height: 10px;
@@ -245,10 +246,18 @@
 	.listing_widget_arrow._prev{
 		top: 50%;
 		transform: translateY(-50%);
+		width: 24px;
+		height: 48px;
+		background: url(/upload/img/arrow_tr.svg) no-repeat;
+		left: -58px;
 	}
 	.listing_widget_arrow._next{
 		top: 50%;
 		transform: translateY(-50%) rotate(180deg);
+		width: 24px;
+		height: 48px;
+		background: url(/upload/img/arrow_tr.svg) no-repeat;
+		right: -58px;
 	}
 }
 

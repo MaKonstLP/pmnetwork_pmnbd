@@ -85,17 +85,26 @@ export default class Slider {
 
             breakpoints: {
                 1000: {
+                    spaceBetween: 0,
                     slidesPerView: 1.2,
                 },
                 768: {
+                    spaceBetween: 0,
                     slidesPerView: 1,
                     pagination: {
                         el: '.gallery-pagination',
                         type: 'bullets',
-                        dynamicBullets: true,
-                        dynamicMainBullets: 1,
                     },
                 }
+                // 360: {
+                //     slidesPerView: 1,
+                //     pagination: {
+                //         el: '.gallery-pagination',
+                //         type: 'bullets',
+                //         dynamicBullets: true,
+                //         dynamicMainBullets: 1,
+                //     },
+                // }
             }
         });
 

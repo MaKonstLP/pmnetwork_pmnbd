@@ -130,7 +130,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 <div class="main_wrap">
 
     <header class="<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>">
-        <div class="header_wrap<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>">
+        <div class="header_wrap">
             <div class="header_left">
                 <a href="/" class="header_logo">
                     <img class="header_logo_img" src="/upload/img/logo.svg"
@@ -139,7 +139,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                 <a href="/" class="header_logo header_logo_2">
                     <div class="header_logo_text">МОЙ ДЕНЬ</div>
                 </a>
-                <div class="header_city<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>">
+                <div class="header_city">
                     <img src="/upload/img/geo_label.png"/>
                     <span class="city"><?= Yii::$app->params['subdomen_name'] ?></span>
                     <span class="choose"></span>
@@ -179,7 +179,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="header_nav<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>"
+            <div class="header_nav"
                  data-menu>
                 <?php
                 $kindArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
@@ -200,7 +200,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     <a href="/collection/" class="header_nav-link">Подборки</a>
                 <?php endif; ?>
             </div>
-            <div class="header_nav-mobile<?= (Yii::$app->controller->action->id == 'post' || Yii::$app->request->url == '/') ? ' home' : ''; ?>"
+            <div class="header_nav-mobile"
                  data-menu-burger>
                 <div class="header_nav-title">МЕНЮ</div>
                 <div class="header_nav-burger">
@@ -288,6 +288,15 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
             </div>
         </div>
     </footer>
+
+<!--    <p style="font-family: 'Lato', sans-serif; font-weight: 300">Lato 300</p>-->
+<!--    <p style="font-family: 'Lato', sans-serif; font-weight: 300; font-style: italic">Lato 300 italic</p>-->
+<!--    <p style="font-family: 'Lato', sans-serif; font-weight: 400">Lato 400</p>-->
+<!--    <p style="font-family: 'Lato', sans-serif; font-weight: 400; font-style: italic">Lato 400 italic</p>-->
+<!--    <p style="font-family: 'Lato', sans-serif; font-weight: 700">Lato 700</p>-->
+<!--    <p style="font-family: 'Lato', sans-serif; font-weight: 700; font-style: italic">Lato 700 italic</p>-->
+<!--    <p style="font-family: 'Proxima Nova Thin', sans-serif;">Proxima Nova Thin</p>-->
+<!--    <p style="font-family: 'Proxima Nova Regular', sans-serif;">Proxima Nova Regular</p>-->
 
 </div>
 
