@@ -2,9 +2,11 @@
 
 namespace app\modules\pmnbd\controllers;
 
+use Yii;
 use backend\modules\pmnbd\models\blog\BlogPost;
 use backend\modules\pmnbd\models\blog\BlogTag;
 use common\models\Seo;
+use backend\modules\pmnbd\models\blog\BlogPostSubdomen;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
@@ -19,7 +21,7 @@ class BlogController extends BaseFrontendController
 		$slices_model;
 
 
-	public function actionIndex()
+	public function actionIndex($page = '')
 	{
 		$query = BlogPost::findWithMedia()->with('blogPostTags')->where(['published' => true])->andWhere(['not', ['collection' => true]]);
 		$topPosts = (clone $query)->where(['featured' => true])->andWhere(['not', ['collection' => true]])->limit(5)->all();
@@ -37,6 +39,8 @@ class BlogController extends BaseFrontendController
                 ],
             ],
 		]);
+
+		$dataProvider->getPagination()->page = !empty($page) ? $page - 1 : 0;
 
 		$seo = (new Seo('blog', $dataProvider->getPagination()->page + 1))->seo;
 		$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(1);
@@ -63,6 +67,8 @@ class BlogController extends BaseFrontendController
 
 	public function actionPost($alias)
 	{
+        $subdomen = Yii::$app->params['subdomen_id'];
+
 		$post = BlogPost::findWithMedia()->with('blogPostTags')->where(['published' => true, 'alias' => $alias])->one();
 		if (empty($post)) {
 			throw new NotFoundHttpException();
@@ -71,9 +77,34 @@ class BlogController extends BaseFrontendController
 		$seo = ArrayHelper::toArray($post->seoObject);
 		$this->setSeo($seo);
 
-		$tag = $post->blogPostTags[0]->blogTag ?? BlogTag::find()->one();
+//		$tag = $post->blogPostTags[0]->blogTag ?? BlogTag::find()->one();
         //$similarPosts = $tag->getBlogPosts()->where(['published' => true])->andWhere(['!=', 'id', $post->id])->orderBy(['published_at' => SORT_DESC])->limit(6)->all();
-        $similarPosts = BlogPost::findWithMedia()->with('blogPostTags')->where(['published' => true])->andWhere(['!=', 'id', $post->id])->andWhere(['not', ['collection' => true]])->orderBy(['published_at' => SORT_DESC])->limit(3)->all();
+//        $similarPosts = BlogPost::findWithMedia()->with('blogPostTags')->where(['published' => true])->andWhere(['!=', 'id', $post->id])->andWhere(['not', ['collection' => true]])->orderBy(['published_at' => SORT_DESC])->limit(3)->all();
+
+
+        $tag = $post->blogPostTags[0]->blogTag ?? BlogTag::find()->one();
+        $similarPostsPrev = BlogPost::findWithMedia()
+            ->with('blogPostTags')
+            ->where(['published' => true])
+            ->andWhere(['!=', 'id', $post->id])
+            ->andWhere(['<', 'published_at', $post->published_at])
+            ->andWhere(['collection' => false])
+            ->orderBy(['published_at' => SORT_DESC])
+            ->limit(2)
+            ->all();
+
+        $similarPostsNext = BlogPost::findWithMedia()
+            ->with('blogPostTags')
+            ->where(['published' => true])
+            ->andWhere(['!=', 'id', $post->id])
+            ->andWhere(['>', 'published_at', $post->published_at])
+            ->andWhere(['collection' => false])
+            ->orderBy(['published_at' => SORT_ASC])
+            ->limit(3)
+            ->all();
+
+        $similarPosts = array_merge($similarPostsPrev, $similarPostsNext);
+
 
 		return $this->render('post.twig', compact('post', 'similarPosts'));
 	}

@@ -19,7 +19,7 @@ class CollectionController extends BaseFrontendController
 	public $filter_model,
 		   $slices_model;
 
-	public function actionIndex()
+	public function actionIndex($page = '')
 	{
 		$subdomen = Yii::$app->params['subdomen_id'];
 
@@ -54,7 +54,9 @@ class CollectionController extends BaseFrontendController
             ],
 		]);
 
-		$seo = (new Seo('collection', $dataProvider->getPagination()->page + 1))->seo;
+        $dataProvider->getPagination()->page = !empty($page) ? $page - 1 : 0;
+
+        $seo = (new Seo('collection', $dataProvider->getPagination()->page + 1))->seo;
 		$seo['breadcrumbs'] = Breadcrumbs::get_breadcrumbs(1);
 		$this->setSeo($seo);
 
