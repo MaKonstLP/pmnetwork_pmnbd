@@ -1429,6 +1429,10 @@
     line-height: 24px;
     color: #4A56BA;
     margin-bottom: 4px;
+
+    a:hover{
+      color: #4155FF;
+    }
   }
 
   @include for-phone{
