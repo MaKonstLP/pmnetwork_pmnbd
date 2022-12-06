@@ -30,6 +30,20 @@ export default class Main {
 		// });
 
 
+
+		$('body').on('click', '[data-page]', function () {
+			console.log('[data-page]', $(this).data('page'));
+
+			const url = new URL(location.href);
+			if ($(this).data('page') + 1 == 1){
+				url.searchParams.delete('page');
+			}else {
+				url.searchParams.set('page', $(this).data('page') + 1);
+			}
+
+			history.pushState(null, '', url);
+		});
+
 		$('body').on('click', '[data-open-popup-form-blog]', function () {
 			console.log('zabr');
 			let popup = $('.popup_wrap').not('.popup_wrap_single-map');
