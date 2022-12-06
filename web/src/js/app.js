@@ -38,7 +38,7 @@ window.jQuery = $;
             $('[data-item-gallery]').length > 0 ||
             $('[data-gallery-post-swiper]').length > 0) &&
             $('[data-page-type="listing"]').length == 0 ) {
-            
+
             var slider = new Slider();
         }
 

@@ -30,14 +30,34 @@
       @include for-phone{
         display: none;
       }
-    } 
+      &._prev {
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 48px;
+        background: url(/upload/img/arrow_tr.svg) no-repeat;
+      }
+      &._next {
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%) rotate(180deg);
+        width: 24px;
+        height: 48px;
+        background: url(/upload/img/arrow_tr.svg) no-repeat;
+      }
+
+    }
+
     .listing_widget_controll{
       position: absolute;
       top: 444px;
       z-index: 1;
       width: 100%;
       .listing_widget_pagination{
-        display: block;
+        display: flex;
+        justify-content: center;
+        gap: 4px;
       }
       @include for-mobile{
         top: 290px;
@@ -85,6 +105,7 @@
       }
   }
 }
+
 .object_gallery_container {
   width: 100%;
   //height: 300px;

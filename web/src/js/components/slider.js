@@ -12,7 +12,9 @@ export default class Slider {
         if ($('[data-gallery-main-swiper]').length > 0) self.initSwiperItem($('[data-gallery-main-swiper]'), $('[data-gallery-thumb-swiper]'));
         if ($('[data-other-objects-swiper]').length > 0) self.initSwiperSameItem($('[data-other-objects-swiper]'));
         if ($('[data-other-blogs-swiper]').length > 0) self.initSwiperSameBlogs($('[data-other-blogs-swiper]'));
-        if ($('[data-gallery-blog-swiper]').length > 0) self.initSwiperTitleBlog($('[data-gallery-blog-swiper]'));
+        if ($('[data-gallery-blog-swiper]').length > 0) {
+            self.initSwiperTitleBlog($('[data-gallery-blog-swiper]'));
+        }
         if ($('[data-gallery-post-swiper]').length > 0) $('[data-gallery-post-swiper]').each(function () {
             self.initSwiperBlog($(this), $(this).siblings('[data-gallery-post-thumb-swiper]'))
         });
@@ -214,10 +216,9 @@ export default class Slider {
     }
 
     initSwiperSameItem($container) {
-        console.log('111111111111111');
         let swiper = new Swiper($container, {
             slidesPerView: 3,
-            spaceBetween: 16,
+            spaceBetween: 12,
             loop: true,
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
@@ -258,10 +259,6 @@ export default class Slider {
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
                 prevEl: '.listing_widget_arrow._prev',
-            },
-            pagination: {
-                el: '.listing_widget_pagination',
-                type: 'bullets',
             },
             breakpoints: {
                 /*1200:{

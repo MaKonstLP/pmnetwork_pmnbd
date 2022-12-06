@@ -285,19 +285,21 @@
     }
   }
   .object_desc_item {
-    align-items:flex-start;
-    @include for-notdesc {
-      align-items: last baseline;
-    }
-  }
-  .object_desc_title{
-    position: relative;
-  }
-  .object_desc_value {
-    width: 50%;
-    display: flex;
     align-items: flex-end;
+
+    .object_desc_title{
+      position: relative;
+      align-self: flex-start;
+    }
+
+    .object_desc_value {
+      width: 50%;
+      display: flex;
+      align-self: flex-end;
+    }
+
   }
+
 }
 
 .object_desc_item {
@@ -579,7 +581,9 @@
     }
   }
 }
-
+.other_objects_swiper.swiper-wrapper{
+  align-items: stretch;
+}
 .other_objects {
   background: #f8f8f8;
   padding: 32px 0 48px;
@@ -597,7 +601,13 @@
       }
     }
   }
+
+  .swiper-slide{
+    height: unset;
+  }
+
 }
+
 
 .other_objects_swiper.swiper-wrapper{
   margin-bottom: 20px;
@@ -605,7 +615,7 @@
 .other_object {
   background-color: #fff;
   padding: 16px;
-
+  height: 100%;
   border: 1px solid #DEDEDE;
   box-shadow: 0px 5px 20px rgba(34, 36, 28, 0.1);
   border-radius: 4px;
@@ -1080,12 +1090,8 @@
   bottom: -100px;
   background: #F8F8F8;
   z-index: 510;
-
+  padding: 0 12px;
   transition: all .3s ease;
-  .item_btn{
-    margin: 16px auto;
-    justify-content: center;
-  }
 
   @include for-phone{
     &._active{
@@ -1481,8 +1487,8 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 2px 6px;
+  //justify-content: space-between;
+  gap: 2px 26px;
   @include for-notdesc{
     flex-direction: row;
   }
@@ -1502,7 +1508,7 @@
   }
 
   @include for-phone{
-    gap: 8px 6px;
+    gap: 8px 26px;
     .room_desc_item{
       display: flex;
       flex-direction: row;

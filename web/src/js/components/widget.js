@@ -34,7 +34,7 @@ export default class Widget {
         console.log('items', $items);
         let swiper = new Swiper($container, {
             slidesPerView: 3,
-            spaceBetween: 16,
+            spaceBetween: 12,
             loop: ($items < 3 ? false : true),
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
