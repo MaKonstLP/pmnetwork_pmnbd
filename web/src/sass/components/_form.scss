@@ -602,6 +602,7 @@
     	width: 100%;
     }
     .form_inputs{
+		width: 100% !important;
     	justify-content: space-between;
     	@include for-pad{
     		justify-content: space-between;
@@ -616,14 +617,14 @@
 	    		width: 43%;
 	    		margin-left: 0;
 	    	}
-	    	@include for-pad{
-	    		width: 25%;
-	    		margin: 0;
-	    	}
-	    	@include for-mobile{
-	    		width: 23%;
-	    		margin: 0;
-	    	}
+	    	//@include for-pad{
+	    	//	width: 25%;
+	    	//	margin: 0;
+	    	//}
+	    	//@include for-mobile{
+	    	//	width: 23%;
+	    	//	margin: 0;
+	    	//}
 	    	@include for-phone{
 	    		width: 100%;
     			margin: 0;
