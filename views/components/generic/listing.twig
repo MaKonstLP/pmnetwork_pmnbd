@@ -2,18 +2,20 @@
     {# {% set pro = item.restaurant_rev_ya.rate > 4.4 ? 'pro' : '' %} #}
     {% set pro = '' %}
     <div class="item swiper-slide {{ type }} {{ pro }}">
-        <div class="item_present_wrapper">
-            <img loading="lazy" class="item_present" src="/upload/img/Gift_icon.svg"
-                 atl="Подарок за бронирование в ресторане «{{ item.restaurant_name }}»">
-            <p class="item_present_text">за бронирование</p>
-        </div>
-        {% if pro == 'pro' %}
+        {% if not item.restaurant_premium %}
+			<div class="item_present_wrapper">
+					<img loading="lazy" class="item_present" src="/upload/img/Gift_icon.svg"
+						atl="Подарок за бронирование в ресторане «{{ item.restaurant_name }}»">
+					<p class="item_present_text">за бронирование</p>
+			</div>
+		{% endif %}
+        {# {% if pro == 'pro' %}
             <div class="item_pro_wrapper">
                 <img loading="lazy" class="item_pro" src="/upload/img/item_pro.svg"
                      atl="PRO «{{ item.restaurant_name }}»">
                 <p class="item_pro_text">pro</p>
             </div>
-        {% endif %}
+        {% endif %} #}
         <a href="/catalog/restoran-{{ item.restaurant_slug }}/">
             {# <img loading="lazy" src="{{item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100') : '/upload/img/bd/no_photo.png'}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/> #}
             <div class="item_img swiper" data-item-gallery>
@@ -211,5 +213,11 @@
             {# </div> #}
             {# </div> #}
         </div>
+
+		  {% if item.restaurant_premium %}
+				<div class="item_additional-premium">
+					<span>Pro</span>
+				</div>
+			{% endif %}
     </div>
 {% endfor %}

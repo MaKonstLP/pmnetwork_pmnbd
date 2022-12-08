@@ -81,6 +81,8 @@ class ItemController extends BaseFrontendController
 			// print_r($room);
 			// exit;
 
+			if($rest_item->restaurant_premium) Yii::$app->params['premium_rest'] = true;
+
 			return $this->render('index.twig', array(
 				'item' => $room,
 				'rest_item' => $rest_item,

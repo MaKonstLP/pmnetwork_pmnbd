@@ -9,13 +9,13 @@
     <div class="content_block" data-listing-title>
         {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'item':item}) | raw }}
         <div class="title_bot">
-            {% if pro == 'pro' %}
+            {# {% if pro == 'pro' %}
                 <div class="item_pro_wrapper">
                     <img loading="lazy" class="item_pro" src="/upload/img/item_pro.svg"
                          atl="PRO «{{ item.restaurant_name }}»">
                     <p class="item_pro_text">pro</p>
                 </div>
-            {% endif %}
+            {% endif %} #}
             {% if item.restaurant_rev_ya.rate and item.restaurant_rev_ya.count %}
                 <div class="item_rating">
                     <img src="/upload/img/item_star.svg" alt="Оценка {{ item.restaurant_name }}">

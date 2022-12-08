@@ -16,6 +16,7 @@ use common\models\Seo;
 use common\models\Subdomen;
 use common\models\SubdomenPages;
 use frontend\components\Declension;
+use frontend\components\PremiumMixer;
 use frontend\modules\pmnbd\models\MediaEnum;
 use yii\web\Response;
 use frontend\components\QueryFromSlice;
@@ -82,8 +83,8 @@ class SiteController extends BaseFrontendController
 
 		// print_r($mainRestTypesCounts);die;
 
-		//   $items = new ItemsFilterElastic([], 30, 1, false, 'restaurants', new ElasticItems());
-		$items = new ItemsFilterElastic([], 36, 1, false, 'restaurants', new ElasticItems());
+		// $items = new ItemsFilterElastic([], 36, 1, false, 'restaurants', new ElasticItems());
+		$items = PremiumMixer::getItemsWithPremium([], 36, 1, false, 'restaurants', new ElasticItems(), false, false, false, false, false, true);
 		$mainWidget = $this->renderPartial('//components/generic/listing.twig', [
 			'items' => $items->items
 		]);

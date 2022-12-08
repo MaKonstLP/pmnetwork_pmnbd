@@ -9,6 +9,26 @@
   .rest_rooms_wrap {
     background-color: #ffff;
   }
+
+  .item_additional-premium {
+	display: flex;
+	align-items: center;
+	width: 60px;
+	height: 22px;
+	background-color: #fff;
+	background-image: url(/upload/img/pro_star.svg);
+	background-repeat: no-repeat;
+	background-position: 6px 2px;
+	border: 1px solid #ffc368;
+	border-radius: 2px;
+	font-family: GothamPro,Montserrat,sans-serif;
+	font-weight: 700;
+	font-size: 12px;
+	line-height: 14px;
+	text-transform: uppercase;
+	padding-left: 24px;
+	margin: 12px auto;
+}
 }
 
 .object_head {

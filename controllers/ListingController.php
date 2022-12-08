@@ -8,6 +8,7 @@ use frontend\widgets\FilterWidget;
 use frontend\widgets\PaginationWidgetPrevNext;
 use frontend\components\ParamsFromQuery;
 use frontend\components\QueryFromSlice;
+use frontend\components\PremiumMixer;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use common\models\elastic\ItemsFilterElastic;
 use common\models\Filter;
@@ -116,7 +117,8 @@ class ListingController extends BaseFrontendController
 	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [], $itemTypeName = "")
 	{
 		$elastic_model = new ElasticItems;
-		$items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
+		// $items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
+		$items = PremiumMixer::getItemsWithPremium($params_filter, $per_page, $page, false, 'restaurants', $elastic_model, false, false, false, false, false, true);
 
 		$filter = FilterWidget::widget([
 			'filter_active' => $params_filter,
@@ -163,7 +165,8 @@ class ListingController extends BaseFrontendController
 
 
 		$elastic_model = new ElasticItems;
-		$items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model,'','','','','','','', $check_sort = $params['sort']);
+		// $items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model,'','','','','','','', $check_sort = $params['sort']);
+		$items = PremiumMixer::getItemsWithPremium($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model, false, false, false, false, false, true, $params['sort']);
 
 //		if (!empty($params['sort']))
 //            if ($params['sort'] == '-check')
