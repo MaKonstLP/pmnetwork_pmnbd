@@ -9,7 +9,8 @@
     }
 
     @include for-phone{
-        display: none;
+        //display: none;
+        margin-bottom: 0;
     }
 
     .items_pagination_item{
