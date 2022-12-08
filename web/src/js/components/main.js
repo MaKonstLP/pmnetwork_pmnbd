@@ -41,6 +41,14 @@ export default class Main {
 				url.searchParams.set('page', $(this).data('page') + 1);
 			}
 
+			let parent = $(this).closest('.list-view');
+
+			setTimeout(function () {
+				$('html,body').animate({scrollTop: parent.offset().top - 180}, 400);
+			}, 100);
+
+			console.log(parent);
+
 			history.pushState(null, '', url);
 		});
 
