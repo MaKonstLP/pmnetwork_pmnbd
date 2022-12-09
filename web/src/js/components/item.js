@@ -4,7 +4,43 @@ import 'slick-carousel';
 
 export default class Item {
 	constructor($item) {
-		var self = this;
+		let self = this;
+		var fired = false;
+
+		window.addEventListener('click', () => {
+			if (fired === false) {
+				fired = true;
+				load_other();
+			}
+		}, {passive: true});
+
+		window.addEventListener('scroll', () => {
+			if (fired === false) {
+				fired = true;
+				load_other();
+			}
+		}, {passive: true});
+
+		window.addEventListener('mousemove', () => {
+			if (fired === false) {
+				fired = true;
+				load_other();
+			}
+		}, {passive: true});
+
+		window.addEventListener('touchmove', () => {
+			if (fired === false) {
+				fired = true;
+				load_other();
+			}
+		}, {passive: true});
+
+		function load_other() {
+			console.log('load_other');
+			setTimeout(function() {
+				self.reviewInit();
+			}, 100);
+		}
 
 		$('[data-action="roll_to_map"]').on('click', function () {
 			let map_offset_top = $('.map').offset().top;
@@ -70,4 +106,41 @@ export default class Item {
 		});
 
 	}
+
+
+
+	reviewInit(){
+		let self = this;
+		let yaIframe = $('[data-src]');
+		if(yaIframe.length > 0){
+			yaIframe.attr('src', yaIframe.data('src') );
+			// this.script(yaUrl).then((data) => {
+			// 	yaWrapper.attr('src', yaUrl );
+			// });
+		}
+	}
+
+
+	script(url) {
+		console.log('script');
+		return new Promise(function (resolve, reject) {
+			let r = false;
+			let t = document.getElementsByTagName('script')[0];
+			let s = document.createElement('script');
+
+			s.type = 'text/javascript';
+			s.src = url;
+			s.async = true;
+			s.onload = s.onreadystatechange = function () {
+				if (!r && (!this.readyState || this.readyState === 'complete')) {
+					r = true;
+					resolve(this);
+				}
+			};
+			s.onerror = s.onabort = reject;
+			t.parentNode.insertBefore(s, t);
+		});
+	}
+
+
 }
