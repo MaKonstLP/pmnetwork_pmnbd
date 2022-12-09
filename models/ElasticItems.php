@@ -71,7 +71,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
 	public static function index()
 	{
-		return 'pmn_bd_restaurants_dev';
+		return 'pmn_bd_restaurants';
 	}
 
 	public static function type()
@@ -299,7 +299,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$rest_count = count($restaurants);
 		$rest_iter = 0;
 		foreach ($restaurants as $restaurant) {
-			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite);
+			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium);
 			$all_res .= $res . ' | ';
 			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
@@ -330,7 +330,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		);
 	}
 
-	public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite)
+	public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium)
 	{
 		$isExist = false;
 
@@ -516,6 +516,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$record->restaurant_premium = 0;
 		if ($premium)
 			$record->restaurant_premium = 1;
+			
 
 		//Тип помещения
 		$restaurant_types = [];
@@ -582,6 +583,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 				$room_arr['slug'] = $slug;
 				\Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $room->gorko_id, 'slug' => $room_arr['slug']])->execute();
 			}
+
+            // dj не должен попадать в залы
+            if ($room->id == '33324')
+                continue;
 
 			$room_arr['id'] = $room->id;
 			$room_arr['gorko_id'] = $room->gorko_id;
