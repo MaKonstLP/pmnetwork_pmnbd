@@ -2,6 +2,7 @@
 
 namespace app\modules\pmnbd\controllers;
 
+use Yii;
 use common\models\Restaurants;
 use common\models\Seo;
 use frontend\modules\pmnbd\components\Breadcrumbs;
@@ -97,9 +98,9 @@ class ItemController extends BaseFrontendController
 		$seo['address'] = $rest_item->restaurant_address;
 		$this->setSeo($seo);
 
-		// echo "<pre>";
-		// print_r($rest_item);
-		// exit;
+//		 echo "<pre>";
+//		 print_r($seo);
+//		 exit;
 
 
 		return $this->render('rest_index.twig', array(
