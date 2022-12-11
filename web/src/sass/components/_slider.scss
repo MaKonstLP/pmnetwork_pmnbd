@@ -184,8 +184,11 @@
     height: 100%;
     opacity: 0.4; 
   }
-  .swiper-slide-active, .swiper-slide-next, .swiper-slide-prev, .swiper-slide-virtual-active {
-    opacity: 1;
+  .swiper-slide-active, .swiper-slide-next, .swiper-slide-prev{
+    opacity: 0.4 !important;
+  }
+  .swiper-slide.swiper-slide-virtual-active {
+    opacity: 1 !important;
   }
   .object{
     img{

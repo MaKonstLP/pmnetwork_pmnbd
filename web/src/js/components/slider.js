@@ -38,8 +38,21 @@ export default class Slider {
             $('.popup_wrap .popup_img').show();
             $('.popup_wrap').not('.popup_phone_wrap').not('.popup_wrap_single-map').addClass('_active');
             self.initSwiperPopup(slider_popup, active);
-
+            bodyOverflow();
         });
+
+        function bodyOverflow() {
+            let body = $('body');
+            let lockPaddingValue = window.innerWidth - document.querySelector('body').offsetWidth + 'px';
+            body.toggleClass('_popup_overflow');
+            if (body.hasClass('_popup_overflow') && window.innerWidth >= 570) {
+                body.css('padding-right', lockPaddingValue);
+                $('.popup_form').css('padding-right', lockPaddingValue);
+            } else {
+                body.css('padding-right', 0);
+                $('.popup_form').css('padding-right', 0);
+            }
+        }
 
         // $(window).on('resize', function () {
             //if($(window).width() <= 1650){
@@ -62,11 +75,12 @@ export default class Slider {
         let galleryThumbs = new Swiper($container_thumb, {
             spaceBetween: 0,
             slidesPerView: 15,
-            watchSlidesVisibility: true,
+            // watchSlidesVisibility: true,
             watchSlidesProgress: true,
             centerInsufficientSlides: true,
-            //centeredSlides: true,
-            slideToClickedSlide: true,
+            // centeredSlides: true,
+            // slideToClickedSlide: true,
+
         });
 
 
@@ -76,7 +90,7 @@ export default class Slider {
             centeredSlides: true,
             loop: true,
             init: false,
-            initialSlide: 1,
+            initialSlide: 0,
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
                 prevEl: '.listing_widget_arrow._prev',
@@ -111,7 +125,7 @@ export default class Slider {
         });
 
         let setActive = function () {
-            let activeIndex = galleryTop.realIndex + 1;
+            let activeIndex = galleryTop.realIndex + 2;
             let slidesCount = $(galleryTop.el).find('.swiper-slide').not('.swiper-slide-duplicate').length;
             let activeSlide = $('[data-gallery-thumb-swiper] .swiper-slide:nth-child(' + activeIndex + ')');
 
@@ -125,8 +139,12 @@ export default class Slider {
 
             $('[data-gallery-thumb-swiper] .swiper-slide').each(function () {
                 $(this).removeClass('swiper-slide-virtual-active')
+                // $(this).removeClass('swiper-slide-next')
+                // $(this).removeClass('swiper-slide-prev')
+                // $(this).removeClass('swiper-slide-active')
             });
 
+            activeSlide.addClass('swiper-slide-virtual-active');
             nextSlide.addClass('swiper-slide-virtual-active');
             prevSlide.addClass('swiper-slide-virtual-active');
         };
