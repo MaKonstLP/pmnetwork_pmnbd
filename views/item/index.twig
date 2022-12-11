@@ -15,14 +15,29 @@
             <div class="listing_widget_arrow _next"></div>
             <div class="object_gallery_container swiper-container" data-gallery-main-swiper data-gallery-swiper>
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
+
+                    {% set lazyCount = 2 %}
+                    {% set counter = 0 %}
+                    {% set last = item.images | length %}
+                    {% set lazy = '' %}
                     {% for image in item.images %}
-                        <div class="object swiper-slide" 11111>
+                        {% set counter = counter + 1 %}
+                        {% if counter == last %}
+                            {% set lazy = '' %}
+                        {% endif %}
+
+                        <div class="object swiper-slide">
                             <div class="object_img">
-                                <img loading="lazy"
+                                <img {{ lazy }}
                                      src="{{ Declension.get_image_src(image.waterpath~'=w746-h498-l95') }}"
                                      data-gallery-img-view/>
                             </div>
                         </div>
+
+                        {% set lazyCount = lazyCount - 1 %}
+                        {% if lazyCount == 0 %}
+                            {% set lazy = 'loading=lazy' %}
+                        {% endif %}
                     {% endfor %}
                 </div>
                 <div class="gallery-pagination"></div>
