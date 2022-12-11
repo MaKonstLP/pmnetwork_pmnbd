@@ -9,38 +9,37 @@ export default class Widget {
         //if($(window).width() <= 1650){
         $('[data-widget-wrapper]').each(function () {
             let listing_wrap = $(this).find('[data-listing-wrapper]');
-            self.initSwiper(listing_wrap, (listing_wrap.find('.swiper-slide').length - 4));
+            let slides = listing_wrap.find('.item.swiper-slide');
+            console.log(slides);
+            self.initSwiper(listing_wrap, slides.length);
         });
         //}
 
-        $(window).on('resize', function () {
-            //if($(window).width() <= 1650){
-            if (self.swiperArr.length == 0) {
-                $('[data-widget-wrapper]').each(function () {
-                    self.initSwiper($(this).find('[data-listing-wrapper]'));
-                });
-            }
-            /*}
-            else{
-                $.each(self.swiperArr, function(){
-                    this.destroy(true, true);
-                });
-                self.swiperArr = [];
-            }*/
-        });
+        // $(window).on('resize', function () {
+        //     //if($(window).width() <= 1650){
+        //     if (self.swiperArr.length == 0) {
+        //         $('[data-widget-wrapper]').each(function () {
+        //             self.initSwiper($(this).find('[data-listing-wrapper]'));
+        //         });
+        //     }
+        //     /*}
+        //     else{
+        //         $.each(self.swiperArr, function(){
+        //             this.destroy(true, true);
+        //         });
+        //         self.swiperArr = [];
+        //     }*/
+        // });
     }
 
     initSwiper($container, $items) {
-        console.log('items', $items);
-        // let swiperOtherRest = this.swiper;
-        // swiperOtherRest.loopDestroy();
-        // swiperOtherRest.loopCreate();
+        console.log('items',$items);
 
-        let swiperOtherRest = new Swiper($container, {
+        let swiper = new Swiper($container, {
             slidesPerView: 3,
             spaceBetween: 12,
             loop: ($items < 4 ? false : true),
-            centeredSlides: ($items < 3 ? false : true),
+            centeredSlides: ($items > 3 ? false : true),
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
                 prevEl: '.listing_widget_arrow._prev',
@@ -69,35 +68,28 @@ export default class Widget {
                 }
             },
             on: {
-                init: function (){
-                    checkArrow($items);
-                    checkPagination($items);
-                    // centeredSlides($items);
-                },
+                init: checkCount(),
             }
         });
 
-        function checkArrow($items) {
+
+        function checkCount() {
+            console.log('checkArrow', $items);
             var swiperPrev = document.querySelector('.other_rests_wrap .listing_widget_arrow._prev');
             var swiperNext = document.querySelector('.other_rests_wrap .listing_widget_arrow._next');
+            var pagination = document.querySelector('.other_rests_wrap .listing_widget_controll');
             if ( $items < 4  ) {
                 swiperPrev.style.display = 'none';
                 swiperNext.style.display = 'none';
+                pagination.style.display = 'none';
             } else {
                 swiperPrev.style.display = 'block';
                 swiperNext.style.display = 'block';
-            }
-        }
-        function checkPagination($items) {
-            var pagination = document.querySelector('.other_rests_wrap .listing_widget_controll');
-            if ( $items < 4  ) {
-                pagination.style.display = 'none';
-            } else {
                 pagination.style.display = 'block';
             }
         }
 
         let swiper_var = $container.swiper;
-        this.swiperArr.push(swiperOtherRest);
+        this.swiperArr.push(swiper);
     }
 }
