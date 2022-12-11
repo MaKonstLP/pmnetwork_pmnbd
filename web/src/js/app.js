@@ -37,7 +37,7 @@ window.jQuery = $;
             $('[data-other-blogs-swiper]').length > 0 ||
             $('[data-item-gallery]').length > 0 ||
             $('[data-gallery-post-swiper]').length > 0) &&
-            $('[data-page-type="listing"]').length == 0 ) {
+            $('[data-page-type="listing"]').length == 0) {
 
             var slider = new Slider();
         }
@@ -68,11 +68,23 @@ window.jQuery = $;
 
             yaMap.mapPopup();
 
-            $('body').addClass('_popup_overflow');
+            bodyOverflow();
             popup.addClass('_active');
         });
 
- 
+        function bodyOverflow() {
+            let body = $('body');
+            let lockPaddingValue = window.innerWidth - document.querySelector('body').offsetWidth + 'px';
+            body.toggleClass('_popup_overflow');
+            if (body.hasClass('_popup_overflow') && window.innerWidth >= 570) {
+                body.css('padding-right', lockPaddingValue);
+                $('.popup_form').css('padding-right', lockPaddingValue);
+            } else {
+                body.css('padding-right', 0);
+                $('.popup_form').css('padding-right', 0);
+            }
+        }
+
 
     });
 })($);

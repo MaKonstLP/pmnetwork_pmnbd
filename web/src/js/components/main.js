@@ -7,6 +7,18 @@ export default class Main {
 	constructor() {
 		var self = this;
 
+		function bodyOverflow() {
+			let body = $('body');
+			let lockPaddingValue = window.innerWidth - document.querySelector('body').offsetWidth + 'px';
+			body.toggleClass('_popup_overflow');
+			if (body.hasClass('_popup_overflow') && window.innerWidth >= 570) {
+				body.css('padding-right', lockPaddingValue);
+				$('.popup_form').css('padding-right', lockPaddingValue);
+			} else {
+				body.css('padding-right', 0);
+				$('.popup_form').css('padding-right', 0);
+			}
+		}
 
 		$('body').on('click', '[data-seo-control]', function () {
 			$(this).closest('[data-seo-text]').addClass('_active');
@@ -56,7 +68,7 @@ export default class Main {
 			console.log('zabr');
 			let popup = $('.popup_wrap').not('.popup_wrap_single-map');
 			popup.addClass('_active');
-			$('body').addClass('_popup_overflow');
+			bodyOverflow();
 			
 			let dataFormTarget = $(this).data('form-target');
 			if ($(this).data('rest-name')) {
@@ -82,14 +94,14 @@ export default class Main {
 			$('.popup_wrap .popup_img').hide();
 			$('.popup_wrap .popup_form .form_main').show();
 			$('.popup_wrap .popup_form .form_success').hide();
-			$('body').removeClass('_popup_overflow');
+			bodyOverflow();
 		});
 
 		$('[data-menu-burger]').on('click', function(){
 			$(this).toggleClass('_active');
 			$('[data-menu]').toggleClass('_active');
 			$('header').toggleClass('_active');
-			// $('body').toggleClass('_popup_overflow');
+			bodyOverflow();
 		});
 
 	
