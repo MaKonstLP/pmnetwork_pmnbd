@@ -91,7 +91,7 @@
 
             <div class="rest_meta_item">
                 <p class="rest_meta_item-title">Адрес:</p>
-                <a class="rest_meta_item-value item_address" href="#map"
+                <a class="rest_meta_item-value item_address" data-action="roll_to_map"
                    data-target="karta">{{ item.restaurant_address|raw }}</a>
                 {% set firstEl = item.restaurant_metro_stations |first %}
                 {% if firstEl.name is not empty %}

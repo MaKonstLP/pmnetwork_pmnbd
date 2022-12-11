@@ -99,9 +99,8 @@ class ItemController extends BaseFrontendController
 		$this->setSeo($seo);
 
 //		 echo "<pre>";
-//		 print_r($seo);
+//		 print_r($other_rests);
 //		 exit;
-
 
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,

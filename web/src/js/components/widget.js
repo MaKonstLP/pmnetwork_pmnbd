@@ -9,7 +9,7 @@ export default class Widget {
         //if($(window).width() <= 1650){
         $('[data-widget-wrapper]').each(function () {
             let listing_wrap = $(this).find('[data-listing-wrapper]');
-            self.initSwiper(listing_wrap, listing_wrap.find('.swiper-slide').length);
+            self.initSwiper(listing_wrap, (listing_wrap.find('.swiper-slide').length - 4));
         });
         //}
 
@@ -32,10 +32,15 @@ export default class Widget {
 
     initSwiper($container, $items) {
         console.log('items', $items);
-        let swiper = new Swiper($container, {
+        // let swiperOtherRest = this.swiper;
+        // swiperOtherRest.loopDestroy();
+        // swiperOtherRest.loopCreate();
+
+        let swiperOtherRest = new Swiper($container, {
             slidesPerView: 3,
             spaceBetween: 12,
-            loop: ($items < 3 ? false : true),
+            loop: ($items < 4 ? false : true),
+            centeredSlides: ($items < 3 ? false : true),
             navigation: {
                 nextEl: '.listing_widget_arrow._next',
                 prevEl: '.listing_widget_arrow._prev',
@@ -62,10 +67,37 @@ export default class Widget {
                 400: {
                     slidesPerView: ($items < 2 ? $items : 1.08),
                 }
+            },
+            on: {
+                init: function (){
+                    checkArrow($items);
+                    checkPagination($items);
+                    // centeredSlides($items);
+                },
             }
         });
 
+        function checkArrow($items) {
+            var swiperPrev = document.querySelector('.other_rests_wrap .listing_widget_arrow._prev');
+            var swiperNext = document.querySelector('.other_rests_wrap .listing_widget_arrow._next');
+            if ( $items < 4  ) {
+                swiperPrev.style.display = 'none';
+                swiperNext.style.display = 'none';
+            } else {
+                swiperPrev.style.display = 'block';
+                swiperNext.style.display = 'block';
+            }
+        }
+        function checkPagination($items) {
+            var pagination = document.querySelector('.other_rests_wrap .listing_widget_controll');
+            if ( $items < 4  ) {
+                pagination.style.display = 'none';
+            } else {
+                pagination.style.display = 'block';
+            }
+        }
+
         let swiper_var = $container.swiper;
-        this.swiperArr.push(swiper);
+        this.swiperArr.push(swiperOtherRest);
     }
 }
