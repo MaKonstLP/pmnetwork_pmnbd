@@ -182,7 +182,7 @@
 		height: 48px;
 	}
 	@include for-mobile{
-		display: none;
+		display: none !important;
 	}
 	@include for-phone{
 		width: 32px;
