@@ -5,6 +5,8 @@ namespace app\modules\pmnbd\controllers;
 use Yii;
 use backend\modules\pmnbd\models\blog\BlogPost;
 use backend\modules\pmnbd\models\blog\BlogTag;
+// use common\models\blog\BlogPost;
+// use common\models\blog\BlogTag;
 use common\models\Seo;
 use backend\modules\pmnbd\models\blog\BlogPostSubdomen;
 use frontend\modules\pmnbd\components\Breadcrumbs;
@@ -69,7 +71,11 @@ class BlogController extends BaseFrontendController
 	{
         $subdomen = Yii::$app->params['subdomen_id'];
 
-		$post = BlogPost::findWithMedia()->with('blogPostTags')->where(['published' => true, 'alias' => $alias])->one();
+		$post = BlogPost::findWithMedia()
+			->with('blogPostTags')
+			->where(['published' => true, 'alias' => $alias])
+			->andWhere(['collection' => false])
+			->one();
 		if (empty($post)) {
 			throw new NotFoundHttpException();
 		}

@@ -4,6 +4,7 @@ namespace frontend\modules\pmnbd\models;
 
 use common\models\Pages;
 use backend\modules\pmnbd\models\siteobject\BaseMediaEnum;
+// use common\models\siteobject\BaseMediaEnum;
 use common\models\SubdomenPages;
 
 class MediaEnum extends BaseMediaEnum

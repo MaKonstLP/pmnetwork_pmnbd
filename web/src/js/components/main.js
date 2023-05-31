@@ -7,6 +7,52 @@ export default class Main {
 	constructor() {
 		var self = this;
 
+		self.mobileMode = self.getScrollWidth() < 768 ? true : false;
+
+		// === записываем в куки данные для отправки Calltracking в БД горько START ===
+		//запись в куки только внешнего реферера
+		let pageReferrer = '';
+		//проверяем что это внешний реферер, а не переход внутри страниц сайта
+		// if (document.referrer.indexOf(window.location.origin) != -1) { //в этом случае поддомены (например samara.arendazala.net) тоже считаются внешним реферером
+		if (document.referrer.indexOf('birthday-place.ru') == -1) { // отсекаем так же поддомена, как внешний реферер
+			console.log("from external site");
+			if (document.referrer) {
+				pageReferrer = document.referrer;
+			}
+			if (Cookies.get('a_ref_0')) {
+				Cookies.set('a_ref_1', pageReferrer, { expires: 365 });
+			} else {
+				Cookies.set('a_ref_0', pageReferrer, { expires: 365 });
+			}
+		}
+
+		//запись в куки utm_details
+		let currentUrl = '';
+		if (window.location.href) {
+			currentUrl = window.location.href;
+		}
+		let patternUtm = RegExp('utm_details=([^\&]*)', 'g');
+		let utmExist = patternUtm.exec(currentUrl);
+		let utm = {};
+		if (utmExist) {
+			let rows = utmExist[1].split('|');
+
+			for (let i = 0; i < rows.length; i++) {
+				let a = rows[i].split(':');
+				utm[a[0]] = a[1];
+			}
+		}
+
+		if (Object.keys(utm).length != 0) {
+			let utmJson = JSON.stringify(utm);
+			if (Cookies.get('a_utm_0') && Cookies.get('a_utm_0') != '{}') {
+				Cookies.set('a_utm_1', utmJson, { expires: 365 });
+			} else {
+				Cookies.set('a_utm_0', utmJson, { expires: 365 });
+			}
+		}
+		// === записываем в куки данные для отправки Calltracking в БД горько END ===
+
 		function bodyOverflow() {
 			let body = $('body');
 			let lockPaddingValue = window.innerWidth - document.querySelector('body').offsetWidth + 'px';
@@ -47,16 +93,16 @@ export default class Main {
 			console.log('[data-page]', $(this).data('page'));
 
 			const url = new URL(location.href);
-			if ($(this).data('page') + 1 == 1){
+			if ($(this).data('page') + 1 == 1) {
 				url.searchParams.delete('page');
-			}else {
+			} else {
 				url.searchParams.set('page', $(this).data('page') + 1);
 			}
 
 			let parent = $(this).closest('.list-view');
 
 			setTimeout(function () {
-				$('html,body').animate({scrollTop: parent.offset().top - 180}, 400);
+				$('html,body').animate({ scrollTop: parent.offset().top - 180 }, 400);
 			}, 100);
 
 			console.log(parent);
@@ -69,15 +115,15 @@ export default class Main {
 			let popup = $('.popup_wrap').not('.popup_wrap_single-map');
 			popup.addClass('_active');
 			bodyOverflow();
-			
+
 			let dataFormTarget = $(this).data('form-target');
 			if ($(this).data('rest-name')) {
 				let restaurantType = $(this).data('rest-type').toLowerCase();
 				let restaurantName = $(this).data('rest-name');
 				let roomName = $(this).data('room-name');
-				if (!roomName){
+				if (!roomName) {
 					popup.find('.form_title_main').html('Забронировать ' + $.trim(restaurantType) + ' «' + $.trim(restaurantName) + '»');
-				}else{
+				} else {
 					popup.find('.form_title_main').html('Забронировать ' + $.trim(roomName) + ', ' + $.trim(restaurantType) + ' «' + $.trim(restaurantName) + '»');
 				}
 
@@ -97,14 +143,22 @@ export default class Main {
 			bodyOverflow();
 		});
 
-		$('[data-menu-burger]').on('click', function(){
+		$('body').on('click', '[data-close-popup-phone]', function () {
+			$('.popup_wrap').removeClass('_active');
+			$('.popup_wrap .popup_form').show();
+			$('.popup_wrap .popup_img').hide();
+			$('.popup_wrap .popup_form .form_main').show();
+			$('.popup_wrap .popup_form .form_success').hide();
+		});
+
+		$('[data-menu-burger]').on('click', function () {
 			$(this).toggleClass('_active');
 			$('[data-menu]').toggleClass('_active');
 			$('header').toggleClass('_active');
 			bodyOverflow();
 		});
 
-	
+
 		/*$('body').on('click', '[data-gallery-img-view]', function () {
 			 //$('.popup_wrap .popup_img img').attr('src', $(this).attr('src'));
 			 $('.popup_wrap .popup_form').hide();
@@ -120,7 +174,7 @@ export default class Main {
 			$('.popup_phone_wrap').addClass('_active');
 
 			// ==== Gorko-calltracking ====
-			let phone = $(this).closest('.object_book_hidden').find('.popup_real_phone span').text();
+			let phone = $(this).closest('.rest_book_hidden').find('.popup_real_phone span').text();
 			self.sendCalltracking(phone);
 		});
 
@@ -470,8 +524,14 @@ export default class Main {
 				console.log('reachGoal', $(this).data('target'));
 				ym('67719148', 'reachGoal', $(this).data('target'));
 				gtag('event', $(this).data('target'), { 'event_category': 'click' });
+
+				if ($(this).data('target') == 'call') {
+					// ==== Gorko-calltracking ====
+					let phone = $(this).attr('href');
+					self.sendCalltracking(phone);
+				}
 			}
-			if(typeof ym == 'undefined' || typeof gtag == 'undefined') {
+			if (typeof ym == 'undefined' || typeof gtag == 'undefined') {
 				setTimeout(fire, 1000);
 			}
 			else {
@@ -481,49 +541,25 @@ export default class Main {
 
 	}
 
+	getScrollWidth() {
+		return Math.max(
+			document.body.scrollWidth, document.documentElement.scrollWidth,
+			document.body.offsetWidth, document.documentElement.offsetWidth,
+			document.body.clientWidth, document.documentElement.clientWidth
+		);
+	};
+
 	sendCalltracking(phone) {
 		let clientId = '';
 		ga.getAll().forEach((tracker) => {
 			clientId = tracker.get('clientId');
 		})
 
-		let pageReferrer = '';
-		if (document.referrer) {
-			pageReferrer = document.referrer;
-		}
-
-		if (Cookies.get('a_ref_0')) {
-			Cookies.set('a_ref_1', pageReferrer, { expires: 365 });
-		} else {
-			Cookies.set('a_ref_0', pageReferrer, { expires: 365 });
-		}
-
-		//запись в куки utm_details
-		let currentUrl = '';
-		if (window.location.href) {
-			currentUrl = window.location.href;
-		}
-		let patternUtm = RegExp('utm_details=([^\&]*)', 'g');
-		let utmExist = patternUtm.exec(currentUrl);
-		let utm = {};
-		if (utmExist) {
-			let rows = utmExist[1].split('|');
-
-			for (let i = 0; i < rows.length; i++) {
-				let a = rows[i].split(':');
-				utm[a[0]] = a[1];
-			}
-		}
-		let utmJson = JSON.stringify(utm);
-
-		if (Cookies.get('a_utm_0')) {
-			Cookies.set('a_utm_1', utmJson, { expires: 365 });
-		} else {
-			Cookies.set('a_utm_0', utmJson, { expires: 365 });
-		}
-
-
 		const data = new FormData();
+
+		if (this.mobileMode) {
+			data.append('isMobile', 1);
+		}
 
 		data.append('phone', phone);
 		data.append('clientId', clientId);

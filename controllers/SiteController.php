@@ -71,7 +71,7 @@ class SiteController extends BaseFrontendController
 			) {
 				$acc[] = [
 					'alias' => $sliceObj->alias,
-					'plural' => str_replace(" площадок","",Declension::get_num_ending($item['doc_count'], array_map('mb_strtolower', [$typeObj->text, $typeObj->plural_2, $typeObj->plural_5]))),
+					'plural' => str_replace(" площадок", "", Declension::get_num_ending($item['doc_count'], array_map('mb_strtolower', [$typeObj->text, $typeObj->plural_2, $typeObj->plural_5]))),
 					'count' => $item['doc_count']
 				];
 			}
@@ -85,9 +85,14 @@ class SiteController extends BaseFrontendController
 
 		// $items = new ItemsFilterElastic([], 36, 1, false, 'restaurants', new ElasticItems());
 		$items = PremiumMixer::getItemsWithPremium([], 36, 1, false, 'restaurants', new ElasticItems(), false, false, false, false, false, true);
+		$all_items = PremiumMixer::getItemsWithPremium([], 9999, 1, false, 'restaurants', new ElasticItems(), false, false, false, false, false, true);
 		$mainWidget = $this->renderPartial('//components/generic/listing.twig', [
 			'items' => $items->items
 		]);
+
+		// echo ('<pre>');
+		// print_r($all_items);
+		// exit;
 
 		$filtersItemsForSelect = array_filter($this->filter_model, function ($filter) {
 			return in_array($filter->alias, self::MAIN_FILTERS);
@@ -112,7 +117,7 @@ class SiteController extends BaseFrontendController
 			'1000-rub'    => ['name' => 'Недорогие рестораны', 'count' => 0],
 		];
 
-		if(Yii::$app->params['subdomen_id'] == 4400) {
+		if (Yii::$app->params['subdomen_id'] == 4400) {
 			$mainSlices = array_merge($mainSliceMsk, $mainSlices);
 		} else {
 			$mainSlices = array_merge($mainSliceOther, $mainSlices);
@@ -141,6 +146,77 @@ class SiteController extends BaseFrontendController
 
 		$seo = $this->getSeo('index', 1,  $totalRests);
 		$this->setSeo($seo);
+
+		// ===== schemaOrg Product START =====
+		$min_price = 99999;
+		$max_price = 0;
+		$review_count = 0;
+		$total_rating = 0;
+		$rest_with_rating = 0;
+		$average_rating = 0;
+		foreach ($all_items->items as $item) {
+			if (
+				isset($item['restaurant_min_check'])
+				&& !empty($item['restaurant_min_check'])
+				&& isset($item['restaurant_max_check'])
+				&& !empty($item['restaurant_max_check'])
+			) {
+				if ($item['restaurant_min_check'] < $min_price) {
+					$min_price = $item['restaurant_min_check'];
+				}
+				if ($item['restaurant_max_check'] > $max_price) {
+					$max_price = $item['restaurant_max_check'];
+				}
+			}
+
+			if (isset($item['restaurant_rev_ya']['count']) && !empty($item['restaurant_rev_ya']['count'])) {
+				$review_count += preg_replace('/[^0-9]/', '', $item['restaurant_rev_ya']['count']);
+			}
+
+			if (isset($item['restaurant_rev_ya']['rate']) && !empty($item['restaurant_rev_ya']['rate'])) {
+				$total_rating += $item['restaurant_rev_ya']['rate'];
+				$rest_with_rating += 1;
+			}
+		}
+		if ($total_rating != 0) {
+			$average_rating = round($total_rating / $rest_with_rating, 1);
+		}
+
+		$json_str = '';
+		$json_str .= '{
+				"@context": "https://schema.org",
+				"@type": [
+					"Product"
+				],
+				"name": "' . $seo['h1'] . '",
+				"description": "' . $seo['description'] . '"';
+
+		if ($max_price) {
+			$json_str .= ',';
+			$json_str .= '
+				"offers": {
+					"@type": "AggregateOffer",
+					"offerCount": "' . $items->total . '",
+					"priceCurrency": "RUB",
+					"highPrice": "' . $max_price . '",
+					"lowPrice": "' . $min_price . '"
+				}';
+		}
+
+		if ($review_count && $average_rating) {
+			$json_str .= ',';
+			$json_str .= '
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"bestRating": "5",
+					"reviewCount": "' . $review_count . '",
+					"ratingValue": "' . $average_rating . '"
+				}';
+		}
+		$json_str .= '}';
+
+		Yii::$app->params['schema_product'] = $json_str;
+		// ===== schemaOrg Product END =====
 
 		return $this->render('index.twig', [
 			'filters' => $filtersItemsForSelect,

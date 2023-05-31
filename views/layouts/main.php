@@ -41,6 +41,13 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
     <?= Html::csrfMetaTags() ?>
 
+	 <!-- schemaOrg START -->
+	 <?php if (isset(Yii::$app->params['schema_product']) && !empty(Yii::$app->params['schema_product'])) {
+		echo '<script type="application/ld+json">' . Yii::$app->params['schema_product'] . '</script>';
+	 }
+	 ?>
+	 <!-- schemaOrg END -->
+
     <style>
         <?php
             if (file_exists(\Yii::getAlias('@app/modules/pmnbd/web/dist/app-main.min.css'))) {

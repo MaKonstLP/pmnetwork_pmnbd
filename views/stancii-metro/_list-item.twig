@@ -1,0 +1,18 @@
+<div class="item">
+	<div class="item_img">
+		{% if model.image %}
+			<img loading="lazy" src="/upload/pages/header-image/{{model.image}}" alt=""/>
+		{% else %}
+			<img loading="lazy" src="/upload/img/bd/no_photo.png" alt=""/>
+		{% endif %}
+	</div>
+
+	<div class="item_info">
+		<div class="item_top">
+			<a href="/catalog/metro-{{ model.alias }}/">
+				<p class="item_name">{{ model.name }}</p>
+			</a>
+			<div class="item_meta-item">{{model.slicesMetro.restaurant_count}} ресторан{{Declension.end_restaurants(model.slicesMetro.restaurant_count)}}</div>
+		</div>
+	</div>
+</div>

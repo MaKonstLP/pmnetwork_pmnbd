@@ -17,7 +17,10 @@ use common\models\Seo;
 use common\models\Slices;
 use frontend\modules\pmnbd\models\ElasticItems;
 use frontend\modules\pmnbd\models\RestaurantTypeSlice;
+use backend\modules\pmnbd\models\blog\BlogPost;
+use backend\modules\pmnbd\models\blog\BlogPostSlice;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 class ListingController extends BaseFrontendController
 {
@@ -28,6 +31,7 @@ class ListingController extends BaseFrontendController
 		'vmestimost' => ['vmestimost' => 5, 'mesto' => 3, 'dopolnitelno' => 1, 'chek' => 1],
 		'dopolnitelno' => ['dopolnitelno' => 10, 'chek' => 2, 'mesto' => 3, 'vmestimost' => 2],
 		'chek' => ['chek' => 10, 'mesto' => 3, 'dopolnitelno' => 2, 'vmestimost' => 2],
+		'metro' => ['mesto' => 4, 'metro' => 4],
 		//для множественных
 		'any' => ['dopolnitelno' => 2, 'mesto' => 3, 'vmestimost' => 2, 'chek' => 2]
 	];
@@ -42,7 +46,7 @@ class ListingController extends BaseFrontendController
 		if (!parent::beforeAction($action)) {
 			return false;
 		}
-		if(strpos($action->controller->request->pathInfo, 'listing') !== false) {
+		if (strpos($action->controller->request->pathInfo, 'listing') !== false) {
 			throw new \yii\web\NotFoundHttpException();
 		}
 		$this->filter_model = Yii::$app->params['filter_model'];
@@ -53,17 +57,28 @@ class ListingController extends BaseFrontendController
 
 	public function actionSlice($slice)
 	{
-		$slice_obj = new QueryFromSlice($slice);
+		$is_metro = false;
+		if (strpos($slice, 'metro-') !== false) {
+			$is_metro = true;
+		}
 		
+		$slice_obj = new QueryFromSlice($slice, $is_metro);
+
 		if ($slice_obj->flag) {
+			if ($slice_obj->slice_model['type'] == 'metro' &&  $slice_obj->slice_model['description'] != Yii::$app->params['subdomen_id']) {
+				\Yii::$app->response->redirect('/', 301);
+			}
+			
 			$this->view->params['menu'] = $slice;
 			$params = $this->parseGetQuery($slice_obj->params, $this->filter_model, $this->slices_model);
-			
+
 			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
-			if(isset($_GET['zzz'])) {
-				print_r(count($params['params_filter']['mesto'] ?? []) == 1 );die;
+			if (isset($_GET['zzz'])) {
+				print_r(count($params['params_filter']['mesto'] ?? []) == 1);
+				die;
 			}
+
 			return $this->actionListing(
 				$page 			=	$params['page'],
 				$per_page		=	$this->per_page,
@@ -72,12 +87,14 @@ class ListingController extends BaseFrontendController
 				$canonical 		= 	$canonical,
 				$type 			=	$slice,
 				$fastFilters	=	$params['fast_filters'],
-				$itemTypeName   =	(count($params['params_filter']['mesto'] ?? []) == 1 
+				$itemTypeName   =	(count($params['params_filter']['mesto'] ?? []) == 1
 					? (RestaurantTypeSlice::find()->with('restaurantType')->where(['slice_id' => $slice_obj->slice_model])->one()->restaurantType->text ?? "")
 					: ""),
+				$slice_id = $slice_obj->slice_model['id'],
 			);
 		} else {
-			return $this->goHome();
+			// return $this->goHome();
+			\Yii::$app->response->redirect('/', 301);
 		}
 	}
 
@@ -114,11 +131,12 @@ class ListingController extends BaseFrontendController
 		}
 	}
 
-	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [], $itemTypeName = "")
+	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [], $itemTypeName = "", $slice_id = false)
 	{
 		$elastic_model = new ElasticItems;
 		// $items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
 		$items = PremiumMixer::getItemsWithPremium($params_filter, $per_page, $page, false, 'restaurants', $elastic_model, false, false, false, false, false, true);
+		$all_items = PremiumMixer::getItemsWithPremium($params_filter, 9999, 1, false, 'restaurants', $elastic_model, false, false, false, false, false, true);
 
 		$filter = FilterWidget::widget([
 			'filter_active' => $params_filter,
@@ -141,9 +159,97 @@ class ListingController extends BaseFrontendController
 			$seo['text_bottom'] = '';
 		}
 
-//		 echo "<pre>";
-//		 print_r($items->items);
-//		 exit;
+		// ===== вывод на срезах "Подборок ресторанов" START =====
+		$collection_posts = '';
+		if ($type) {
+			$collection_posts = BlogPost::findWithMedia()
+				->with('blogPostTags')
+				->joinWith('blogPostSlices')
+				->where(['published' => true])
+				->andWhere(['collection' => true])
+				->andWhere([BlogPostSlice::tableName() . '.slice_id' => $slice_id])
+				->andWhere([BlogPostSlice::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
+				->all();
+		}
+		// ===== вывод на срезах "Подборок ресторанов" END =====
+
+		// ===== schemaOrg Product START =====
+		$min_price = 99999;
+		$max_price = 0;
+		$review_count = 0;
+		$total_rating = 0;
+		$rest_with_rating = 0;
+		$average_rating = 0;
+		if ($type) {
+			foreach ($all_items->items as $item) {
+				if (
+					isset($item['restaurant_min_check'])
+					&& !empty($item['restaurant_min_check'])
+					&& isset($item['restaurant_max_check'])
+					&& !empty($item['restaurant_max_check'])
+				) {
+					if ($item['restaurant_min_check'] < $min_price) {
+						$min_price = $item['restaurant_min_check'];
+					}
+					if ($item['restaurant_max_check'] > $max_price) {
+						$max_price = $item['restaurant_max_check'];
+					}
+				}
+
+				if (isset($item['restaurant_rev_ya']['count']) && !empty($item['restaurant_rev_ya']['count'])) {
+					$review_count += preg_replace('/[^0-9]/', '', $item['restaurant_rev_ya']['count']);
+				}
+
+				if (isset($item['restaurant_rev_ya']['rate']) && !empty($item['restaurant_rev_ya']['rate'])) {
+					$total_rating += $item['restaurant_rev_ya']['rate'];
+					$rest_with_rating += 1;
+				}
+			}
+			if ($total_rating != 0) {
+				$average_rating = round($total_rating / $rest_with_rating, 1);
+			}
+
+			$json_str = '';
+			$json_str .= '{
+				"@context": "https://schema.org",
+				"@type": [
+					"Product"
+				],
+				"name": "' . $seo['h1'] . '",
+				"description": "' . $seo['description'] . '"';
+
+			if ($max_price) {
+				$json_str .= ',';
+				$json_str .= '
+				"offers": {
+					"@type": "AggregateOffer",
+					"offerCount": "' . $items->total . '",
+					"priceCurrency": "RUB",
+					"highPrice": "' . $max_price . '",
+					"lowPrice": "' . $min_price . '"
+				}';
+			}
+
+			if ($review_count && $average_rating) {
+				$json_str .= ',';
+				$json_str .= '
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"bestRating": "5",
+					"reviewCount": "' . $review_count . '",
+					"ratingValue": "' . $average_rating . '"
+				}';
+			}
+			$json_str .= '}';
+
+			Yii::$app->params['schema_product'] = $json_str;
+		}
+		// ===== schemaOrg Product END =====
+
+
+		// echo "<pre>";
+		// print_r($items->items);
+		// exit;
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(
@@ -156,6 +262,7 @@ class ListingController extends BaseFrontendController
 			'main_flag' => $main_flag,
 			'fastFilters' => $fastFilters,
 			'itemTypeName' => $itemTypeName,
+			'collection_posts' => $collection_posts,
 		));
 	}
 
@@ -163,16 +270,15 @@ class ListingController extends BaseFrontendController
 	{
 		$params = $this->parseGetQuery(json_decode($_GET['filter'], true), $this->filter_model, $this->slices_model);
 
-
 		$elastic_model = new ElasticItems;
 		// $items = new ItemsFilterElastic($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model,'','','','','','','', $check_sort = $params['sort']);
 		$items = PremiumMixer::getItemsWithPremium($params['params_filter'], $this->per_page, $params['page'], false, 'restaurants', $elastic_model, false, false, false, false, false, true, $params['sort']);
 
-//		if (!empty($params['sort']))
-//            if ($params['sort'] == '-check')
-//                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_DESC);
-//            else
-//                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_ASC);
+		//		if (!empty($params['sort']))
+		//            if ($params['sort'] == '-check')
+		//                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_DESC);
+		//            else
+		//                ArrayHelper::multisort($items->items, 'restaurant_min_check', SORT_ASC);
 
 
 		$pagination = PaginationWidgetPrevNext::widget([
@@ -182,6 +288,23 @@ class ListingController extends BaseFrontendController
 
 		$slice_url = ParamsFromQuery::isSlice(json_decode($_GET['filter'], true), $this->slices_model);
 		$seo_type = $slice_url ? $slice_url : 'listing';
+
+		// ===== вывод на срезах "Подборок ресторанов" START =====
+		$collection_posts = '';
+		if ($slice_url) {
+			$slice_obj = new QueryFromSlice($slice_url);
+			$slice_id = $slice_obj->slice_model['id'];
+
+			$collection_posts = BlogPost::findWithMedia()
+				->with('blogPostTags')
+				->joinWith('blogPostSlices')
+				->where(['published' => true])
+				->andWhere(['collection' => true])
+				->andWhere([BlogPostSlice::tableName() . '.slice_id' => $slice_id])
+				->andWhere([BlogPostSlice::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
+				->all();
+		}
+		// ===== вывод на срезах "Подборок ресторанов" END =====
 
 		$seo = $this->getSeo($seo_type, $params['page'], $items->total);
 
@@ -216,12 +339,15 @@ class ListingController extends BaseFrontendController
 			'fast_filters' => $this->renderPartial('//components/generic/listing_tags.twig', array(
 				'fastFilters' => $params['fast_filters'],
 			)),
+			'collection_posts' => $this->renderPartial('//components/generic/listing_collections.twig', array(
+				'collection_posts' => $collection_posts,
+			)),
 			'pagination' => $pagination,
 			'url' => $params['listing_url'],
 			'title' => $title,
 			'text_top' => $text_top,
 			'text_bottom' => $text_bottom,
-			'seo_title' => $seo['title']
+			'seo_title' => $seo['title'],
 		]);
 	}
 
@@ -232,23 +358,23 @@ class ListingController extends BaseFrontendController
 		return $slice_url;
 	}
 
-//	private function sortListing($items, $sort){
-//	    if ($sort == '-check'){
-//            foreach ($items->items as $item){
-//                ArrayHelper::multisort($item['rooms'], 'price', SORT_ASC);
-//                $item['check'] = $item['rooms'][0]['price'];
-//            }
-//            ArrayHelper::multisort($items->items , 'check', SORT_ASC);
-//        }else{
-//            foreach ($items->items as $item){
-//                ArrayHelper::multisort($item['rooms'], 'price', SORT_DESC);
-//                $item['check'] = $item['rooms'][0]['price'];
-//            }
-//            ArrayHelper::multisort($items->items , 'check', SORT_DESC);
-//        }
-//
-//	    return $items;
-//    }
+	//	private function sortListing($items, $sort){
+	//	    if ($sort == '-check'){
+	//            foreach ($items->items as $item){
+	//                ArrayHelper::multisort($item['rooms'], 'price', SORT_ASC);
+	//                $item['check'] = $item['rooms'][0]['price'];
+	//            }
+	//            ArrayHelper::multisort($items->items , 'check', SORT_ASC);
+	//        }else{
+	//            foreach ($items->items as $item){
+	//                ArrayHelper::multisort($item['rooms'], 'price', SORT_DESC);
+	//                $item['check'] = $item['rooms'][0]['price'];
+	//            }
+	//            ArrayHelper::multisort($items->items , 'check', SORT_DESC);
+	//        }
+	//
+	//	    return $items;
+	//    }
 
 	private function parseGetQuery($getQuery, $filter_model, $slices_model)
 	{
@@ -259,9 +385,9 @@ class ListingController extends BaseFrontendController
 			$return['page'] = 1;
 		}
 
-        if (isset($getQuery['sort'])) {
-            $return['sort'] = $getQuery['sort'];
-        }
+		if (isset($getQuery['sort'])) {
+			$return['sort'] = $getQuery['sort'];
+		}
 
 		$temp_params = new ParamsFromQuery($getQuery, $filter_model, $slices_model);
 		$return['params_api'] = $temp_params->params_api;
@@ -279,7 +405,7 @@ class ListingController extends BaseFrontendController
 				//получаем массив по названию этого фильтра
 				$fastFilters = self::FAST_FILTERS[$filterName] ?? [];
 				$collectedSlices = array_reduce($slices_model, function ($acc, $slice) use ($fastFilters, $filter_model, $temp_params) {
-					if($slice->alias == $temp_params->slice_alias) return $acc;
+					if ($slice->alias == $temp_params->slice_alias) return $acc;
 					$sliceFilterParams = $slice->getFilterParams();
 					$temp_params = new ParamsFromQuery($sliceFilterParams, $this->filter_model, $this->slices_model);
 					//если в срезе есть ресты

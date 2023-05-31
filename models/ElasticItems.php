@@ -21,6 +21,7 @@ use common\models\RestaurantsPremium;
 use common\models\MetroStations;
 use common\models\MetroLines;
 use common\components\MetroUpdate;
+use backend\modules\pmnbd\models\Metros;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
 {
@@ -136,6 +137,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 						'price' => ['type' => 'integer'],
 						'capacity_reception' => ['type' => 'integer'],
 						'capacity' => ['type' => 'integer'],
+						'capacity_min' => ['type' => 'integer'],
 						'type' => ['type' => 'integer'],
 						'rent_only' => ['type' => 'integer'],
 						'banquet_price' => ['type' => 'integer'],
@@ -166,6 +168,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 					'restaurant_metro_stations'     => ['type' => 'nested', 'properties' => [
 						'id'                            => ['type' => 'integer'],
 						'name'                          => ['type' => 'text'],
+						'alias'                         => ['type' => 'text'],
 						'latitude'                      => ['type' => 'text'],
 						'longitude'                     => ['type' => 'text'],
 					]],
@@ -288,6 +291,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			'metroLines' => $metroLines
 		];
 
+		$metros_with_same_station = Metros::find()
+			->where(['LIKE', 'same_station_table_id', ','])
+			->all();
+
 
 		$connectionSite = new \yii\db\Connection($params['site_connection_config']);
 		$connectionSite->open();
@@ -299,12 +306,12 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$rest_count = count($restaurants);
 		$rest_iter = 0;
 		foreach ($restaurants as $restaurant) {
-			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium);
+			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station);
 			$all_res .= $res . ' | ';
-			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
+			 echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
 
-		self::subdomenCheck($connection_core);
+		// self::subdomenCheck($connection_core);
 
 		echo 'Обновление индекса ' . self::index() . ' ' . self::type() . ' завершено<br>';
 		return true;
@@ -330,7 +337,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		);
 	}
 
-	public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium)
+	public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station)
 	{
 		$isExist = false;
 
@@ -350,6 +357,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$restaurant_spec_rest = explode(',', $restaurant->restaurants_spec);
 			if (count(array_intersect($restaurant_spec_white_list, $restaurant_spec_rest)) === 0) {
 				return 'Неподходящий тип мероприятия';
+			}
+
+			if (!$restaurant->active) {
+				return 'Не активен';
 			}
 
 			if (!$restaurant->commission) {
@@ -394,7 +405,16 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$record->restaurant_extra_services = $restaurant->extra_services;
 		$record->restaurant_payment = $restaurant->payment;
 		$record->restaurant_special = $restaurant->special;
-		$record->restaurant_phone = $restaurant->phone;
+		
+		switch ($restaurant->gorko_id) {
+			case 483343:
+				$record->restaurant_phone = '+7 963 716-59-17';
+				break;
+			default:
+				$record->restaurant_phone = $restaurant->phone;
+				break;
+		}
+
 		$restaurant->rating ? $record->restaurant_rating = $restaurant->rating : $record->restaurant_rating = 90;
 
 
@@ -431,9 +451,29 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 				$metroStation = [];
 				$metroStation['id'] = (int) $allLocations['metroStations'][$currentStationId]['table_id'];
 				$metroStation['name'] = $allLocations['metroStations'][$currentStationId]['name'];
+				$metroStation['link'] = $allLocations['metroStations'][$currentStationId]['alias'];
 				$metroStation['latitude'] = $allLocations['metroStations'][$currentStationId]['latitude'];
 				$metroStation['longitude'] = $allLocations['metroStations'][$currentStationId]['longitude'];
-				array_push($metroStations, $metroStation);
+
+				//проверка, что нет станция метро с одинаковым названием
+				$double_station = false;
+				foreach ($metros_with_same_station as $metro_with_same_station) {
+					$same_table_ids = explode(',', $metro_with_same_station['same_station_table_id']);
+					if (in_array($metroStation['id'], $same_table_ids)) {
+						$metroStation['id'] = $same_table_ids[0];
+
+						foreach ($metroStations as $metro_station) {
+							if ($metro_station['id'] == $metroStation['id']) {
+								$double_station = true;
+							}
+						}
+					}
+				}
+
+				// array_push($metroStations, $metroStation);
+				if (!$double_station) {
+					array_push($metroStations, $metroStation);
+				}
 			}
 			$record->restaurant_metro_stations = $metroStations;
 
@@ -516,7 +556,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$record->restaurant_premium = 0;
 		if ($premium)
 			$record->restaurant_premium = 1;
-			
+
 
 		//Тип помещения
 		$restaurant_types = [];
@@ -584,9 +624,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 				\Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $room->gorko_id, 'slug' => $room_arr['slug']])->execute();
 			}
 
-            // dj не должен попадать в залы
-            if ($room->id == '33324')
-                continue;
+			// dj не должен попадать в залы
+			if ($room->id == '33324')
+				continue;
 
 			$room_arr['id'] = $room->id;
 			$room_arr['gorko_id'] = $room->gorko_id;
@@ -594,6 +634,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$room_arr['price'] = $room->price;
 			$room_arr['capacity_reception'] = $room->capacity_reception;
 			$room_arr['capacity'] = $room->capacity;
+			$room_arr['capacity_min'] = $room->capacity_min;
 			$room_arr['type'] = $room->type;
 			$room_arr['rent_only'] = $room->rent_only;
 			$room_arr['banquet_price'] = $room->banquet_price;
@@ -672,6 +713,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
 			array_push($rooms, $room_arr);
 		}
+		if (empty($rooms)) return 'Нет активных залов';
 		$record->rooms = $rooms;
 
 		$record->restaurant_min_check = ($min_price < 1000000) ? $min_price : 0;
@@ -686,6 +728,14 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			}
 		} catch (\Exception $e) {
 			$result = $e;
+		}
+
+		$model = RestaurantsModule::findOne(['id' => $restaurant->gorko_id]);
+
+		if (!$model) {
+			$model = new RestaurantsModule();
+			$model->id = $restaurant->gorko_id;
+			$model->save();
 		}
 
 		return $result;

@@ -1,4 +1,4 @@
-<div class="filter_select">
+<div class="filter_select" {% if label == 'metro' %}style="display:none;"{% endif %}>
 	<p class="filter_label" data-filter-label>{{filter_item.name}}</p>
 	<div class="filter_select_block" data-type="{{label}}" data-filter-select-block>
         <div class="filter_select_current" data-filter-select-current>

@@ -6,6 +6,8 @@ use Yii;
 use backend\modules\pmnbd\models\blog\BlogPost;
 use backend\modules\pmnbd\models\blog\BlogTag;
 use backend\modules\pmnbd\models\blog\BlogPostSubdomen;
+// use common\models\blog\BlogPost;
+// use common\models\blog\BlogTag;
 use common\models\Seo;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use yii\data\ActiveDataProvider;
@@ -89,8 +91,10 @@ class CollectionController extends BaseFrontendController
 
 		$post = BlogPost::findWithMedia()
 			->with('blogPostTags')
+			->joinWith('blogPostSubdomens')
 			->where(['published' => true, 'alias' => $alias])
 			->andWhere(['collection' => true])
+			->andWhere([BlogPostSubdomen::tableName() . '.subdomen_id' => $subdomen])
 			->one();
 		if (empty($post)) {
 			throw new NotFoundHttpException();

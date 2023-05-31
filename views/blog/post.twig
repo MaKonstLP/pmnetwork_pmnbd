@@ -53,7 +53,7 @@
 							{% set counter = counter + 1 %}
 							<div class="blog_item swiper-slide">
 								<div class="blog_img">
-									<a href="{{ similarPost.getUrlCollection() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
+									<a href="{{ similarPost.getUrl() }}"><img src="{{ similarPost.getFileData('image').src }}"></a>
 								</div>
 								<div class="blog_text">
 									<p class="blog_date">{{similarPost.getRusDate()}}</p>

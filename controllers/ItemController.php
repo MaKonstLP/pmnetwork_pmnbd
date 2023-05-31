@@ -78,11 +78,11 @@ class ItemController extends BaseFrontendController
 				return array_merge($acc, $rest['rooms']);
 			}, []);
 
-			// echo "<pre>";
-			// print_r($room);
-			// exit;
+			if ($rest_item->restaurant_premium) Yii::$app->params['premium_rest'] = true;
 
-			if($rest_item->restaurant_premium) Yii::$app->params['premium_rest'] = true;
+			// ===== schemaOrg Product START =====
+			$this->setSchema($rest_item, $room);
+			// ===== schemaOrg Product END =====
 
 			return $this->render('index.twig', array(
 				'item' => $room,
@@ -98,9 +98,13 @@ class ItemController extends BaseFrontendController
 		$seo['address'] = $rest_item->restaurant_address;
 		$this->setSeo($seo);
 
-//		 echo "<pre>";
-//		 print_r($other_rests);
-//		 exit;
+		// ===== schemaOrg Product START =====
+		$this->setSchema($rest_item);
+		// ===== schemaOrg Product END =====
+
+		// echo ('<pre>');
+		// print_r($rest_item);
+		// exit;
 
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
@@ -117,5 +121,53 @@ class ItemController extends BaseFrontendController
 		$this->view->title = $seo['title'];
 		$this->view->params['desc'] = $seo['description'];
 		$this->view->params['kw'] = $seo['keywords'];
+	}
+
+	private function setSchema($rest, $room = false)
+	{
+		$name = (isset($room) && !empty($room)) ? $room["name"] . " в ресторане '" . $rest->restaurant_name . "'" : $rest->restaurant_name;
+
+		$json_str = '';
+		$json_str .= '{
+				"@context": "https://schema.org",
+				"@type": [
+					"Apartment",
+					"Product"
+				],
+				"name": "' . $name . '"';
+
+		if (isset($room) && !empty($room)) {
+			$json_str .= ',';
+			$json_str .= '
+				"offers": {
+					"@type": "AggregateOffer",
+					"priceCurrency": "RUB",
+					"highPrice": "' . $room['price'] . '",
+					"lowPrice": "' . $room['price'] . '"
+				}';
+		} elseif ($rest->restaurant_max_check) {
+			$json_str .= ',';
+			$json_str .= '
+				"offers": {
+					"@type": "AggregateOffer",
+					"priceCurrency": "RUB",
+					"highPrice": "' . $rest->restaurant_max_check . '",
+					"lowPrice": "' . $rest->restaurant_min_check . '"
+				}';
+		}
+
+		if (isset($rest->restaurant_rev_ya['count']) && $rest->restaurant_rev_ya['count'] && $rest->restaurant_rev_ya['rate']) {
+			$json_str .= ',';
+			$json_str .= '
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"bestRating": "5",
+					"reviewCount": "' . preg_replace('/[^0-9]/', '', $rest->restaurant_rev_ya['count']) . '",
+					"ratingValue": "' . $rest->restaurant_rev_ya['rate'] . '"
+				}';
+		}
+		$json_str .= '}';
+
+		Yii::$app->params['schema_product'] = $json_str;
 	}
 }

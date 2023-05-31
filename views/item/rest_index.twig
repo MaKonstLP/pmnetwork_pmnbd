@@ -66,7 +66,7 @@
                     </div>
                     <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                         <div class="popup_phone">
-                            <div class="form_close" data-close-popup></div>
+                            <div class="form_close" data-close-popup-phone></div>
                             <p class="popup_phone_title">Ресторан <span
                                         itemprop="name">{{ item.restaurant_name }}</span></p>
                             <div class="popup_phone_present">
@@ -93,10 +93,23 @@
                 <p class="rest_meta_item-title">Адрес:</p>
                 <a class="rest_meta_item-value item_address" data-action="roll_to_map"
                    data-target="karta">{{ item.restaurant_address|raw }}</a>
-                {% set firstEl = item.restaurant_metro_stations |first %}
+                {# {% set firstEl = item.restaurant_metro_stations |first %}
                 {% if firstEl.name is not empty %}
                     <div class="rest_meta_item-value item_metro">{{ firstEl.name }}</div>
-                {% endif %}
+                {% endif %} #}
+
+					 {% if item.restaurant_metro_stations %}
+					 	{% set metroList = '' %}
+						{% for metro in item.restaurant_metro_stations %}
+							{% if loop.first %}
+								{% set metroList = metroList ~ '<a href="/catalog/metro-' ~ metro.link ~ '/">' ~ metro.name ~ '</a>' %}
+							{% else %}
+								{% set metroList = metroList ~ ', ' ~ '<a href="/catalog/metro-' ~ metro.link ~ '/">' ~ metro.name ~ '</a>' %}
+							{% endif %}
+						{% endfor %}
+					 	
+						<div class="rest_meta_item-value item_metro">{{ metroList|raw }}</div>
+					 {% endif %}
             </div>
 
             <div class="rest_meta_item _mobile">
@@ -298,7 +311,7 @@
                 </div>
                 <div class="object_meta_item">
                     <div class="item_btn">
-                        <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button"
+                        <a href="tel:{{ item.restaurant_phone }}" class="item_btn-phone _button"
                            data-target="call">
                             Позвонить
                         </a>
@@ -397,14 +410,18 @@
                 </div>
             {% endif %}
         </div>
+        <pre style='display:none'>
+            {{ dump(seo)}}
+        </pre>
         {% if seo.text_1 %}
             <div class="rest_desc_text">
-                <div class="rest_desc_item seo_text" data-seo-text>
-                    <p class="rest_desc_title">Описание</p>
+                {# <div class="rest_desc_item seo_text" data-seo-text> #}
+                <div class="rest_desc_item seo_text">
+                    {#<p class="rest_desc_title">Описание</p>#}
                     <div class="rest_desc_value">{{ seo.text_1|raw }}</div>
-                    <div class="seo_text_control" data-seo-control>
+                    {# <div class="seo_text_control" data-seo-control>
                         <p class="_link">Показать полностью</p>
-                    </div>
+                    </div> #}
                 </div>
             </div>
         {% endif %}
@@ -533,7 +550,7 @@
     <div class="content_block">
         <div class="item__review-yandex">
             <h2 class="item__review-title">Отзывы о заведении</h2>
-            <div style="width:auto;height:500px;overflow:hidden;position:relative;">
+            <div style="width:auto;height:1000px;overflow:hidden;position:relative;">
                 <iframe style="width:100%;height:100%;border:1px solid #e6e6e6;border-radius:8px;box-sizing:border-box"
                         data-src="https://yandex.ru/maps-reviews-widget/{{ item.restaurant_rev_ya.id }}?comments"></iframe>
 
@@ -588,7 +605,7 @@
 
 <div class="display_bottom">
     <div class="item_btn">
-        <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
+        <a href="tel:{{ item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
             Позвонить
         </a>
         <button class="item_btn-book _button" data-rest-name="{{ item.restaurant_name }}"

@@ -1,0 +1,24 @@
+<h2>Подборки ресторанов</h2>
+<div class="content_block">
+	<div class="listing_widget_arrow _prev"></div>
+	<div class="listing_widget_arrow _next"></div>
+	<div class="swiper-container" data-other-blogs-swiper>
+		<div class="swiper-wrapper" data-other-blogs-list>
+			{% for post in collection_posts %}
+				<div class="blog_item swiper-slide">
+					<div class="blog_img">
+						<a href="{{ post.getUrlCollection() }}"><img src="{{ post.getFileData('image').src }}"></a>
+					</div>
+					<div class="blog_text">
+						<a href="{{ post.getUrlCollection() }}">
+							<p class="blog_title">{{ post.name }}</p>
+						</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<div class="listing_widget_controll">
+			<div class="listing_widget_pagination"></div>
+		</div>
+	</div>
+</div>

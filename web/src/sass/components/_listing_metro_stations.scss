@@ -1,0 +1,56 @@
+[data-page-type="metro-station"] {
+	.items_list_listing {
+		.list-view {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: left;
+			-webkit-column-gap: 16px;
+			-moz-column-gap: 16px;
+			column-gap: 16px;
+			row-gap: 16px;
+
+			.item {
+				width: calc((100% - 48px) / 4);
+
+				@include for-notdesc {
+					width: calc((100% - 16px) / 2);
+				}
+
+				@include for-mobile {
+					width: 100%;
+				}
+
+				.item_info {
+					padding-bottom: 16px;
+
+					.item_top {
+						min-height: auto;
+					}
+				}
+			}
+
+			.pagination_wrapper {
+				width: 100%;
+
+				.pagination {
+					display: flex;
+					justify-content: center;
+					align-items: baseline;
+					margin: 20px 0 60px;
+					width: 100%;
+					list-style-type: none;
+
+					.next.disabled,
+					.prev.disabled {
+						display: none;
+					}
+
+					.items_pagination_item._active {
+						color: #333;
+						pointer-events: none;
+					}
+				}
+			}
+		}
+	}
+}

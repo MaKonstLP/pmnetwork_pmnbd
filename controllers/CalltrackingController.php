@@ -24,12 +24,13 @@ class CalltrackingController extends Controller
 
 			$payload['phone'] = preg_replace('~[^\d\+]~', '', $_POST['phone']);
 			$payload['channel'] = 'birthday-place';
-			$payload['site'] = $_SERVER['HTTP_HOST'];
+			$payload['site'] = 'birthday-place.ru';
+			$payload['isMobile'] = $_POST['isMobile'] ?? 0;
 			$payload['gaClientId'] = $_POST['clientId'];
 			$payload['refFirst'] = $_COOKIE['a_ref_0'] ?? '';
 			$payload['refLast'] = $_COOKIE['a_ref_1'] ?? '';
-			$payload['utmFirst'] = $_COOKIE['a_utm_0'] ?? '';
-			$payload['utmLast'] = $_COOKIE['a_utm_1'] ?? '';
+			$payload['utmFirst'] = $_COOKIE['a_utm_0'] ?? '{}';
+			$payload['utmLast'] = $_COOKIE['a_utm_1'] ?? '{}';
 
 			$payload = json_encode($payload);
 

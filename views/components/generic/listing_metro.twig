@@ -1,0 +1,16 @@
+{% for item in items %}
+	<div class="item">
+		<div class="item_img">
+			<img loading="lazy" src="/upload/img/bd/no_photo.png" alt=""/>
+		</div>
+
+		<div class="item_info">
+			<div class="item_top">
+				<a href="/catalog/metro-{{ item.alias }}/">
+					<p class="item_name">{{ item.name }}</p>
+				</a>
+				<div class="item_meta-item">{{item.slicesMetro.restaurant_count}} ресторан{{Declension.end_restaurants(item.slicesMetro.restaurant_count)}}</div>
+			</div>
+		</div>
+	</div>
+{% endfor %}

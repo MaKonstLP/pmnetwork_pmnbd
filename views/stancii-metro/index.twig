@@ -1,0 +1,13 @@
+{{ use('yii/widgets/Pjax') }}
+{{ use('yii/widgets/ListView') }}
+<div data-page-type="metro-station">
+	<div class="content_block" data-listing-title>
+		{{ this.render('//components/generic/title.twig', {'seo':seo}) | raw }}
+	</div>
+
+	<div class="items_list_listing items_list_listing_metro content_block">
+		{{ pjax_begin({'id' : 'metro-listing','enablePushState':false}) }}
+		{{ list_view_widget(listConfig) }}
+		{{ pjax_end()  }}
+	</div>
+</div>
