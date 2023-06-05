@@ -67,12 +67,16 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			'restaurant_max_check',
 			'restaurant_avg_check',
 			'restaurant_premium',
+			'rent_room_only_min',
+			'rest_banquet_price',
+			'banquet_price_person_min',
 		];
 	}
 
 	public static function index()
 	{
 		return 'pmn_bd_restaurants';
+//		return 'pmn_bd_dev_restaurants';
 	}
 
 	public static function type()
@@ -151,6 +155,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 						'features' => ['type' => 'text'],
 						'cover_url' => ['type' => 'text'],
 						'payment_model' => ['type' => 'text'],
+						'payment_model_id' => ['type' => 'integer'],
+						'banquet_price_person' => ['type' => 'integer'],
+						'rent_room_only' => ['type' => 'integer'],
+						'banquet_price_min' => ['type' => 'integer'],
 						'images' => ['type' => 'nested', 'properties' => [
 							'id' => ['type' => 'integer'],
 							'sort' => ['type' => 'integer'],
@@ -175,6 +183,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 					'restaurant_min_check' => ['type' => 'integer'],
 					'restaurant_max_check' => ['type' => 'integer'],
 					'restaurant_avg_check' => ['type' => 'integer'],
+					'rent_room_only_min' => ['type' => 'integer'],
+					'banquet_price_person_min' => ['type' => 'integer'],
+					'rest_banquet_price' => ['type' => 'integer'],
 				]
 			],
 		];
@@ -606,6 +617,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$max_price = 0;
 		$sum_price = 0;
 		$count_room = 0;
+        $banquet_price_person_min = 1000000;
+        $rent_room_only_min = 1000000;
+        $banquet_price_min = 1000000;
 
 		foreach ($restaurant->rooms as $idx => $room) {
 
@@ -647,6 +661,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$room_arr['restaurant_main_type'] = $record->restaurant_main_type;
 			$room_arr['features'] = $room->features;
 			$room_arr['cover_url'] = $room->cover_url;
+			$room_arr['banquet_price_person'] = $room->banquet_price_person;
+			$room_arr['rent_room_only'] = $room->rent_room_only;
+			$room_arr['banquet_price_min'] = $room->banquet_price_min;
+			$room_arr['payment_model_id'] = $room->payment_model;
 			switch ($room->payment_model) {
 				case 1:
 					$room_arr['payment_model'] = 'Только за еду и напитки';
@@ -716,8 +734,26 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		if (empty($rooms)) return 'Нет активных залов';
 		$record->rooms = $rooms;
 
+		foreach ($record->rooms as $room) {
+
+		    if ($room['rent_room_only'] < $rent_room_only_min and $room['rent_room_only'] > 0) {
+                $rent_room_only_min = $room['rent_room_only'];
+            }
+
+            if ($room['banquet_price_person'] < $banquet_price_person_min and $room['banquet_price_person'] > 0) {
+                $banquet_price_person_min = $room['banquet_price_person'];
+            }
+
+            if ($room['banquet_price_min'] < $banquet_price_min and $room['banquet_price_min'] > 0) {
+                $banquet_price_min = $room['banquet_price_min'];
+            }
+		}
+
 		$record->restaurant_min_check = ($min_price < 1000000) ? $min_price : 0;
 		$record->restaurant_max_check = $max_price;
+		$record->rent_room_only_min = $rent_room_only_min == 1000000 ? 0 : $rent_room_only_min;
+        $record->banquet_price_person_min = $banquet_price_person_min == 1000000 ? 0 : $banquet_price_person_min;
+        $record->rest_banquet_price = $banquet_price_min == 1000000 ? 0 : $banquet_price_min;
 		$record->restaurant_avg_check = (!empty($sum_price) and !empty($count_room)) ? floor($sum_price / $count_room) : 0;
 
 		try {

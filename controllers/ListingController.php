@@ -247,9 +247,9 @@ class ListingController extends BaseFrontendController
 		// ===== schemaOrg Product END =====
 
 
-		// echo "<pre>";
-		// print_r($items->items);
-		// exit;
+//		 echo "<pre>";
+//		 print_r($items->items);
+//		 exit;
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(

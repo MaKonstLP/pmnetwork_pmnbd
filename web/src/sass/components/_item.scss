@@ -28,7 +28,7 @@
 	text-transform: uppercase;
 	padding-left: 24px;
 	margin: 12px auto;
-}
+  }
 }
 
 .object_head {
@@ -186,16 +186,17 @@
     margin-right: 11px;
 
     .object_fake_phone {
+      position: relative;
       font-size: 24px;
       line-height: 32px;
       font-weight: 600;
     }
 
     .object_real_phone {
-      display: none;
       font-size: 24px;
       line-height: 32px;
       font-weight: 600;
+      color: #1A2824;
     }
   }
 
@@ -241,8 +242,26 @@
 
 .object_desc_wrap {
   display: flex;
-
   height: 540px;
+
+  .room_desc_item {
+    .room_price {
+      flex-direction: row;
+      column-gap: 26px;
+
+      @include for-phone {
+        display: none;
+      }
+    }
+
+    .room_desc_title {
+      margin: 0px;
+
+      @include for-phone {
+        display: none;
+      }
+    }
+  }
 
   &.content_block {
     margin-top: 32px;
@@ -267,6 +286,11 @@
   .object_meta._mobile {
     display: none;
     margin-top: 16px;
+
+    .room_price_banket_info {
+      flex-direction: row;
+      column-gap: 16px;
+    }
 
     .object_meta_item:last-child {
       margin-top: 0;
@@ -404,6 +428,11 @@
   padding: 24px 0 0 0;
   background-color: $clrBackground;
   border: 1px solid #dedede;
+
+  .blur_phone {
+    width: 72px;
+  }
+
   @include for-pad {
     width: 98%;
     margin: 0 12px;
@@ -868,10 +897,6 @@
       border-bottom: none;
       margin-left: 18px;
     }
-    /* @include for-phone{
-        border-bottom: none;
-        margin-left: 18px;
-    }*/
 
     &:before {
       content: url(/upload/img/item_geo.svg);
@@ -1252,22 +1277,106 @@
     display: none;
   }
 
-  .rest_top_row{
+  .prices_block {
+    display: flex;
+    flex-direction: row;
+    column-gap: 24px;
+
+    @include for-mobile {
+      flex-direction: column;
+      column-gap: 0px;
+      row-gap: 4px;
+      margin-bottom: 14px;
+    }
+  }
+
+  .prices_block_title {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    color: $clrGrey;
+  }
+
+  .with_banket_items {
+    display: flex;
+    column-gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .with_banket_item {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    color: #1A2824;
+  }
+
+  .item_price {
+    font-weight: 700;
+  }
+
+  .rest_top_row {
     //display: flex;
     //flex-direction: row;
     //flex-wrap: nowrap;
     //align-items: baseline;
     //justify-content: center;
     //gap: 0 58px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    width: 100%;
-    justify-content: center;
-    gap: 10px 0;
+    display: flex;
+    flex-direction: column;
+    //width: 100%;
+    width: 1135px;
+
+    .rest_meta_item {
+      padding-right: 16px;
+    }
+
+    .rest_top_overline, .rest_top_underline {
+      display: flex;
+      justify-content: space-between;
+
+      @include for-mobile {
+        flex-direction: column;
+      }
+    }
+
+    .rest_top_overline {
+      padding-bottom: 16px;
+
+      @include for-mobile {
+        flex-basis: 50%;
+        padding-bottom: 0px;
+        padding-right: 16px;
+      }
+    }
+
+    .rest_top_underline {
+      border-top: 1px solid $clrLightGrey;
+      padding-top: 16px;
+
+      .right_block {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        row-gap: 14px;
+      }
+
+      @include for-mobile {
+        flex-basis: 50%;
+        border-top: none;
+        border-left: 1px solid $clrLightGrey;
+        padding-top: 0px;
+        padding-left: 16px;
+      }
+    }
 
     @include for-notdesc{
       grid-template-columns: 1fr 1fr;
       gap: 10px 0;
+      width: unset;
+    }
+
+    @include for-mobile {
+      flex-direction: row;
     }
   }
 
@@ -1292,6 +1401,7 @@
   }
 
   .rest_meta_item{
+
     @include for-notdesc{
       &:nth-child(1){order: 1};
       &:nth-child(2){order: 2};
@@ -1308,14 +1418,29 @@
     font-size: 15px;
     line-height: 24px;
     color: #1A2824;
-    margin-bottom: 2px;
+    margin-right: 12px;
   }
 
   .rest_meta_item-price, .rest_meta_item-phone{
     font-weight: 700;
-    font-size: 24px;
-    line-height: 32px;
+    font-size: 20px;
+    line-height: 24px;
     color: #1A2824;
+    position: relative;
+  }
+
+  .object_fake_phone {
+    border-bottom: 1px dashed #1A2824;
+
+    @include for-mobile {
+      white-space: nowrap;
+    }
+  }
+
+  .object_real_phone {
+    @include for-mobile {
+      white-space: nowrap;
+    }
   }
 
   .rest_meta_item-value{
@@ -1331,6 +1456,7 @@
     margin-bottom: 2px;
     position: relative;
     cursor: pointer;
+    margin-left: 18px;
 
     &:before{
       content: url('/upload/img/item_geo.svg');
@@ -1339,10 +1465,14 @@
     }
   }
 
-  .item_metro:before{
-    content: url('/upload/img/item_metro.svg');
-    margin-right: 6px;
-    margin-left: -18px;
+  .item_metro {
+    margin-left: 18px;
+
+    &:before{
+      content: url('/upload/img/item_metro.svg');
+      margin-right: 6px;
+      margin-left: -18px;
+    }
   }
 
   .object_book_hidden_button{
@@ -1361,9 +1491,10 @@
     justify-content: center;
     align-items: center;
     padding: 9px 48px 11px;
+    height: 40px;
     background: linear-gradient(0deg, #FFC24A, #FFC24A), linear-gradient(0deg, #B1C86F, #B1C86F), linear-gradient(0deg, #D64582, #D64582), linear-gradient(97.87deg, #A70C72 -6.24%, #E50799 104.4%), #29EDB2;
     border-radius: 4px;
-    margin-top: 26px;
+    //margin-top: 26px;
   }
 
   .rest_meta_item._mobile{
@@ -1396,6 +1527,10 @@
 
     .object_meta{
       padding: 0;
+    }
+
+    .item_btn {
+      margin-top: 8px;
     }
 
     .rest_top_row{
@@ -1535,9 +1670,15 @@
     gap: 8px 26px;
     .room_desc_item{
       display: flex;
-      flex-direction: row;
+      //flex-direction: row;
+      flex-direction: column;
       column-gap: 4px;
     }
+
+    .room_desc_item_price {
+      flex-direction: column;
+    }
+
     .room_desc_title,.room_desc_value{
       line-height: 18px;
     }
@@ -1577,5 +1718,51 @@
     .item_btn{
       display: none;
     }
+  }
+}
+
+.room_price {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  row-gap: 4px;
+
+  .room_price_banket_info {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 16px;
+
+    @include for-mobile {
+      flex-direction: column;
+    }
+  }
+
+  .room_price_subtitle {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    color: $clrGrey;
+  }
+
+  .room_price_block {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    color: #1A2824;
+  }
+
+  .room_price_text {
+    font-weight: 700;
+  }
+}
+
+.rest_desc_value {
+  & > p:last-of-type {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  table {
+    
   }
 }

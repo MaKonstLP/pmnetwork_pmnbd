@@ -156,26 +156,66 @@
                 {% endif %}
             </div>
             <div class="item_bot">
-                <div class="item_price">
-                    {% if item.restaurant_min_check and item.restaurant_min_check != 0 %}
-                        от {{ item.restaurant_min_check }} ₽/чел. <br>
-                        {# min ({{ item.restaurant_min_check }})<br> #}
-                        {# max ({{ item.restaurant_max_check }})<br> #}
-                        {# avg ({{ item.restaurant_avg_check }})<br> #}
+                <div class="item_bot_wrap">
+                    <div class="item_bot_title">
+                        <img src="/upload/img/item_price.svg" alt="">
+                        <span>Стоимость аренды</span>
+                    </div>
+                    {% if (item.rent_room_only_min or item.restaurant_min_check ) %}
+                        <div class="item_bot_prices">
+                            <div class="with_banket">
+                                <div class="item_bot_prices_title">
+                                    <span>С банкетом:</span>
+                                </div>
+                                <div class="with_banket_items">
+                                    {% if (item.rent_room_only_min and item.rent_room_only_min != 0) %}
+                                        <div class="with_banket_item">
+                                            Зал: <span class="item_price"> {{ item.rent_room_only_min }} ₽</span>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if (item.restaurant_min_check and item.restaurant_min_check != 0) %}
+                                        <div class="with_banket_item">
+                                            Банкет: <span class="item_price">от {{ item.restaurant_min_check }} ₽/чел.</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if (item.rent_room_only_min and item.rent_room_only_min != 0) %}
+                                <div class="without_food">
+                                    <div class="item_bot_prices_title">
+                                        <span>Без еды:</span>
+                                    </div>
+                                    <div class="without_food_items">
+                                        <div class="without_food_item">
+                                            <span class="item_price">{{ item.rent_room_only_min }} ₽ за закрытие зала</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        По запросу
                     {% endif %}
                 </div>
 
-                {% if item.restaurant_rev_ya.rate and item.restaurant_rev_ya.count %}
-                    <div class="item_rating">
-                        <img src="/upload/img/item_star.svg" alt="Оценка {{ item.restaurant_name }}">
-                        <div class="item_rating-rate">
-                            {{ item.restaurant_rev_ya.rate }}
-                        </div>
-                        <div class="item_rating-count">
-                            {{ item.restaurant_rev_ya.count }}
-                        </div>
-                    </div>
-                {% endif %}
+{#                <div class="item_price">#}
+{#                    {% if item.restaurant_min_check and item.restaurant_min_check != 0 %}#}
+{#                        от {{ item.restaurant_min_check }} ₽/чел. <br>#}
+{#                    {% endif %}#}
+{#                </div>#}
+
+{#                {% if item.restaurant_rev_ya.rate and item.restaurant_rev_ya.count %}#}
+{#                    <div class="item_rating">#}
+{#                        <img src="/upload/img/item_star.svg" alt="Оценка {{ item.restaurant_name }}">#}
+{#                        <div class="item_rating-rate">#}
+{#                            {{ item.restaurant_rev_ya.rate }}#}
+{#                        </div>#}
+{#                        <div class="item_rating-count">#}
+{#                            {{ item.restaurant_rev_ya.count }}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endif %}#}
                 <div class="item_btn">
                     <a href="tel:{{ item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
                         Позвонить

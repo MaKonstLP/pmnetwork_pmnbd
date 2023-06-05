@@ -59,6 +59,14 @@ export default class Item {
 			$('.object_book_hidden').addClass('_active');
 		});
 
+		$('[data-show-phone]').on('click', function() {
+			let blur_phone = $(this).find('.object_fake_phone');
+			let real_phone = $(this).find('.object_real_phone');
+
+			blur_phone.toggleClass('hidden');
+			real_phone.toggleClass('hidden');
+		});
+
 		$('[data-order]').on('click', function () {
 			let map_offset_top = $('.form_wrapper').offset().top;
 			let map_height = $('.form_wrapper').height();

@@ -57,10 +57,60 @@
     <div class="content_block object_desc_wrap">
 
         <div class="object_meta _mobile">
-            <div class="object_meta_item">
-                <p class="object_meta_title">Средний чек:</p>
-                <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу' }}</p>
-            </div>
+{#            <div class="object_meta_item">#}
+{#                <p class="object_meta_title">Средний чек:</p>#}
+{#                <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу' }}</p>#}
+{#            </div>#}
+            {% if item.price %}
+{#                <div class="room_desc_item">#}
+                    <p class="room_desc_title">Стоимость:</p>
+                    <div class="room_price">
+                        {% if item.payment_model == 0 or item.payment_model == 2 %}
+                            <div class="room_price_banket">
+                                <span class="room_price_subtitle">C банкетом:</span>
+                                <div class="room_price_banket_info">
+                                    {% if item.rent_room_only %}
+                                        <div class="room_price_block">
+                                            Зал:
+                                            {% if item.rent_room_only == 0 %}
+                                                <span class="room_price_text">бесплатно</span>
+                                            {% else %}
+                                                <span class="room_price_text">{{ item.rent_room_only }} ₽</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if item.price and item.price > 1 %}
+                                        <div class="room_price_block">
+                                            Банкет:
+                                            <span class="room_price_text">от {{ item.price  }} ₽/чел.</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% elseif item.payment_model == 1 %}
+                            <div class="room_price_banket">
+                                <span class="room_price_subtitle">C банкетом:</span>
+                                <div class="room_price_banket_info">
+                                    {% if item.banquet_price_person and item.banquet_price_person > 1 %}
+                                        <div class="room_price_block">
+                                            Банкет:
+                                            <span class="room_price_text">от {{ item.banquet_price_person }} ₽/чел.</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if (item.rent_only and item.rent_room_only > 1) %}
+                            <div class="room_price_food">
+                                <span class="room_price_subtitle">Без еды</span>
+                                <div class="room_price_text">{{ item.rent_room_only }} ₽ за закрытие зала</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {#                                                <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>#}
+{#                </div>#}
+            {% endif %}
             <div class="object_meta_item">
                 <div class="item_btn">
                     <a href="tel:{{ rest_item.restaurant_phone }}" class="item_btn-phone _button" data-target="call">
@@ -110,7 +160,7 @@
 {#        </dl>#}
 
 
-                <div class="object_desc">
+        <div class="object_desc">
             <p class="object_desc_item">
                 <span class="object_desc_title">Адрес:<span class="dots"></span></span>
                 <span class="object_desc_value object_desc_address" data-action="roll_to_map">{{ rest_item.restaurant_address }}</span>
@@ -144,6 +194,56 @@
                 <span class="object_desc_title">Отдельный вход:<span class="dots"></span></span><span
                         class="object_desc_value">{{ item.separate_entrance==0 ? 'нет' : 'да' }}</span>
             </p>
+            {% if item.price %}
+                <div class="room_desc_item">
+                    <p class="room_desc_title">Стоимость:</p>
+                    <div class="room_price">
+                        {% if item.payment_model == 0 or item.payment_model == 2 %}
+                            <div class="room_price_banket">
+                                <span class="room_price_subtitle">C банкетом:</span>
+                                <div class="room_price_banket_info">
+                                    {% if item.rent_room_only %}
+                                        <div class="room_price_block">
+                                            Зал:
+                                            {% if item.rent_room_only == 0 %}
+                                                <span class="room_price_text">бесплатно</span>
+                                            {% else %}
+                                                <span class="room_price_text">{{ item.rent_room_only }} ₽</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if item.price and item.price > 0 %}
+                                        <div class="room_price_block">
+                                            Банкет:
+                                            <span class="room_price_text">от {{ item.price  }} ₽/чел.</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% elseif item.payment_model == 1 %}
+                            <div class="room_price_banket">
+                                <span class="room_price_subtitle">C банкетом:</span>
+                                <div class="room_price_banket_info">
+                                    {% if item.banquet_price_person and item.banquet_price_person > 0 %}
+                                        <div class="room_price_block">
+                                            Банкет:
+                                            <span class="room_price_text">от {{ item.banquet_price_person }} ₽/чел.</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if (item.rent_only and item.rent_room_only > 0) %}
+                            <div class="room_price_food">
+                                <span class="room_price_subtitle">Без еды</span>
+                                <div class="room_price_text">{{ item.rent_room_only }} ₽ за закрытие зала</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {#                                                <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>#}
+                </div>
+            {% endif %}
             <!--p>{{ item.features }}</p-->
             <!--p>Anstar House Vatutinki - это уникальное место для проведения идеальной свадьбы. На территории комплекса имеется живописный сад, где возможно организовать выездную церемонию и фотосессию.</p>
             <p>В большом доме на берегу озера жених и невеста смогут провести утренние сборы, а также комфортно разместиться гости.</p>
@@ -151,19 +251,26 @@
         </div>
         <div class="object_contacts">
             <div class="object_meta">
-                <div class="object_meta_item">
-                    <p class="object_meta_title">Средний чек:</p>
-                    <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу' }}</p>
-                </div>
+{#                <div class="object_meta_item">#}
+{#                    <p class="object_meta_title">Средний чек:</p>#}
+{#                    <p class="object_meta_value">{{ item.price ? 'от '~item.price~' ₽/чел.' : 'по запросу' }}</p>#}
+{#                </div>#}
                 <div class="object_meta_item">
                     <p class="object_meta_title">Забронировать по телефону:</p>
                     <div class="object_book_hidden">
-                        <p class="object_book_phone object_meta_value">
-                            <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>
+                        <p class="object_book_phone object_meta_value" data-show-phone data-target="lid_pokazat_nomer">
+                                <span class="object_fake_phone rest_meta_item-phone">
+                                    {{ rest_item.restaurant_phone }}
+                                    <span class="blur_phone"></span>
+                                </span>
+                            <a href="tel:{{ rest_item.restaurant_phone }}" class="hidden rest_meta_item-phone object_real_phone">{{ rest_item.restaurant_phone }}</a>
                         </p>
-                        <div class="object_book_hidden_button" data-popup-phone data-popup-phone
-                             data-target="lid_pokazat_nomer">Показать номер
-                        </div>
+{#                        <p class="object_book_phone object_meta_value">#}
+{#                            <span class="object_fake_phone">+7 xxx xxx-xx-xx</span>#}
+{#                        </p>#}
+{#                        <div class="object_book_hidden_button" data-popup-phone data-popup-phone#}
+{#                             data-target="lid_pokazat_nomer">Показать номер#}
+{#                        </div>#}
                         <div class="popup_wrap popup_phone_wrap" data-popup-phone-wrap>
                             <div class="popup_phone">
                                 <div class="form_close" data-close-popup-phone></div>
@@ -221,7 +328,51 @@
                                         {% if same_object.price %}
                                             <div class="room_desc_item">
                                                 <p class="room_desc_title">Стоимость:</p>
-                                                <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>
+                                                <div class="room_price">
+                                                    {% if same_object.payment_model == 0 or same_object.payment_model == 2 %}
+                                                        <div class="room_price_banket">
+                                                            <span class="room_price_subtitle">C банкетом:</span>
+                                                            <div class="room_price_banket_info">
+                                                                {% if same_object.rent_room_only %}
+                                                                    <div class="room_price_block">
+                                                                        Зал:
+                                                                        {% if same_object.rent_room_only == 0 %}
+                                                                            <span class="room_price_text">бесплатно</span>
+                                                                        {% else %}
+                                                                            <span class="room_price_text">{{ same_object.rent_room_only }} ₽</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                {% endif %}
+                                                                {% if same_object.price and same_object.price > 0 %}
+                                                                    <div class="room_price_block">
+                                                                        Банкет:
+                                                                        <span class="room_price_text">от {{ same_object.price  }} ₽/чел.</span>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% elseif same_object.payment_model == 1 %}
+                                                        <div class="room_price_banket">
+                                                            <span class="room_price_subtitle">C банкетом:</span>
+                                                            <div class="room_price_banket_info">
+                                                                {% if same_object.banquet_price_person and same_object.banquet_price_person > 0 %}
+                                                                    <div class="room_price_block">
+                                                                        Банкет:
+                                                                        <span class="room_price_text">от {{ same_object.banquet_price_person }} ₽/чел.</span>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+
+                                                    {% if (same_object.rent_only and same_object.rent_room_only > 0) %}
+                                                        <div class="room_price_food">
+                                                            <span class="room_price_subtitle">Без еды</span>
+                                                            <div class="room_price_text">{{ same_object.rent_room_only }} ₽ за закрытие зала</div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+{#                                                <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>#}
                                             </div>
                                         {% endif %}
                                         {% if same_object.payment_model %}

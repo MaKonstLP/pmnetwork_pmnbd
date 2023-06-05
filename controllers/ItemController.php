@@ -84,6 +84,10 @@ class ItemController extends BaseFrontendController
 			$this->setSchema($rest_item, $room);
 			// ===== schemaOrg Product END =====
 
+//            echo '<pre>';
+//            print_r($same_objects);
+//            die();
+
 			return $this->render('index.twig', array(
 				'item' => $room,
 				'rest_item' => $rest_item,
@@ -102,9 +106,9 @@ class ItemController extends BaseFrontendController
 		$this->setSchema($rest_item);
 		// ===== schemaOrg Product END =====
 
-		// echo ('<pre>');
-		// print_r($rest_item);
-		// exit;
+//        echo '<pre>';
+//        print_r($rooms);
+//        die();
 
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,

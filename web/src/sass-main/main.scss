@@ -35,6 +35,25 @@ body._overflow .main_wrap {
   filter: blur(4px);
 }
 
+.hidden {
+  display: none;
+  z-index: -1;
+}
+
+.blur_phone {
+  cursor: pointer;
+  position: absolute;
+  top: 0px;
+  right: -3px;
+  height: 100%;
+  width: 64px;
+  display: inline-block;
+  background: linear-gradient(to right,rgba(248,248,248,0) 3%,rgba(248,248,248,1));
+  filter: blur(2.5px);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+}
+
 ul {
   //margin-left: 20px;
   margin-top: 10px;
