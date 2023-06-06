@@ -111,11 +111,25 @@ export default class Item {
 
 		$(document).ready(function(){
 			scrollTracking();
+			self.setHeightBlockPrice();
 		});
 
 	}
 
+	setHeightBlockPrice() {
+		let wrap = $('[data-listing-list]');
+		let items = wrap.find('.item');
+		let fixedHeight = 0;
 
+		items.each(function (index, element) {
+			let height = $(this).find('.item_bot').outerHeight();
+			fixedHeight = height > fixedHeight ? height : fixedHeight;
+		})
+
+		items.each(function (index, element) {
+			$(this).find('.item_bot').css('height', fixedHeight);
+		})
+	}
 
 	reviewInit(){
 		let self = this;

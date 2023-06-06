@@ -48,7 +48,7 @@ body._overflow .main_wrap {
   height: 100%;
   width: 64px;
   display: inline-block;
-  background: linear-gradient(to right,rgba(248,248,248,0) 3%,rgba(248,248,248,1));
+  background: linear-gradient(to right,rgba(248,248,248,0) 3%, $clrBg);
   filter: blur(2.5px);
   backdrop-filter: blur(2px);
   z-index: 1000;

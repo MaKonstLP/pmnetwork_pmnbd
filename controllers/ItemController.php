@@ -106,21 +106,46 @@ class ItemController extends BaseFrontendController
 		$this->setSchema($rest_item);
 		// ===== schemaOrg Product END =====
 
+
+
+        preg_match_all('/<table[^>]*>(.*?)<\/table>/si', $seo['text_top'], $tables);
+        $menu = $this->htmlTableToArray($tables[0][0]);
+//        $seo['text_1'] = preg_replace('/<table[^>]*>(.*?)<\/table>/si', '',  $seo['text_top']);
 //        echo '<pre>';
-//        print_r($rooms);
+//        print_r($menu);
 //        die();
 
-		return $this->render('rest_index.twig', array(
+        return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => ($filtered = array_filter($rooms_price_arr)) ? min($filtered) : 0,
 			'rooms_capacity' => $rooms_capacity_arr,
 			'seo' => $seo,
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
+            'menu' => $menu
 		));
 	}
 
-	private function setSeo($seo)
+    public function htmlTableToArray($html) {
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        $dom = new \DOMDocument();
+        $dom->loadHTML($html);
+        $table = $dom->getElementsByTagName('table')->item(0);
+        $rows = $table->getElementsByTagName('tr');
+        $result = array();
+        foreach ($rows as $row) {
+            $cols = $row->getElementsByTagName('td');
+            $rowData = array();
+            foreach ($cols as $col) {
+                $rowData[] = trim($col->nodeValue);
+            }
+            $result[] = $rowData;
+        }
+        return $result;
+    }
+
+
+    private function setSeo($seo)
 	{
 		$this->view->title = $seo['title'];
 		$this->view->params['desc'] = $seo['description'];

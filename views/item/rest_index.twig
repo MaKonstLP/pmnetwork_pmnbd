@@ -578,12 +578,30 @@
         <pre style='display:none'>
             {{ dump(seo)}}
         </pre>
+{#        <style>#}
+{#            .seo_menu{#}
+{#                display: grid;#}
+{#                grid-template-columns: 1fr 1fr 1fr 1fr;#}
+{#                gap: 20px;#}
+{#            }#}
+{#        </style>#}
         {% if seo.text_1 %}
             <div class="rest_desc_text">
                 {# <div class="rest_desc_item seo_text" data-seo-text> #}
                 <div class="rest_desc_item seo_text">
                     {#<p class="rest_desc_title">Описание</p>#}
-                    <div class="rest_desc_value">{{ seo.text_1|raw }}</div>
+                    <div class="rest_desc_value">
+                        {{ seo.text_1|raw }}
+{#                        <div class="seo_menu">#}
+{#                            {% for items in menu %}#}
+{#                                    {% for item in items %}#}
+{#                                        <div class="menu_item">#}
+{#                                            {{ item }}#}
+{#                                        </div>#}
+{#                                    {% endfor %}#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+                    </div>
                     {# <div class="seo_text_control" data-seo-control>
                         <p class="_link">Показать полностью</p>
                     </div> #}
@@ -624,6 +642,12 @@
                                     <p class="room_desc_title">Вместимость:</p>
                                     <p class="room_desc_value">{{ same_object.capacity }} человек</p>
                                 </div>
+                                {% if same_object.payment_model %}
+                                    <div class="room_desc_item">
+                                        <p class="room_desc_title">Схема оплаты:</p>
+                                        <p class="room_desc_value">{{ same_object.payment_model }}</p>
+                                    </div>
+                                {% endif %}
                                 {% if same_object.price %}
                                     <div class="room_desc_item rooms_desc_item_price">
                                         <p class="room_desc_title">Стоимость:</p>
@@ -672,12 +696,6 @@
                                             {% endif %}
                                         </div>
 {#                                        <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>#}
-                                    </div>
-                                {% endif %}
-                                {% if same_object.payment_model %}
-                                    <div class="room_desc_item">
-                                        <p class="room_desc_title">Схема оплаты:</p>
-                                        <p class="room_desc_value">{{ same_object.payment_model }}</p>
                                     </div>
                                 {% endif %}
                             </div>

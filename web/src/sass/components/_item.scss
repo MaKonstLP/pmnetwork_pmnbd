@@ -1,4 +1,5 @@
 [data-page-type="item"] {
+
   .form_title_main {
     font-size: 30px;
   }
@@ -429,8 +430,17 @@
   background-color: $clrBackground;
   border: 1px solid #dedede;
 
+  .object_fake_phone {
+    border-bottom: 1px dashed #1A2824;
+
+    @include for-mobile {
+      white-space: nowrap;
+    }
+  }
+
   .blur_phone {
-    width: 72px;
+    width: 75px;
+    right: -1px;
   }
 
   @include for-pad {
