@@ -1503,6 +1503,10 @@
     line-height: 24px;
     color: #1A2824;
     max-width: 368px;
+
+    @include for-phone {
+      max-width: unset;
+    }
   }
 
   .item_address{
