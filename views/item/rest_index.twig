@@ -578,13 +578,6 @@
         <pre style='display:none'>
             {{ dump(seo)}}
         </pre>
-{#        <style>#}
-{#            .seo_menu{#}
-{#                display: grid;#}
-{#                grid-template-columns: 1fr 1fr 1fr 1fr;#}
-{#                gap: 20px;#}
-{#            }#}
-{#        </style>#}
         {% if seo.text_1 %}
             <div class="rest_desc_text">
                 {# <div class="rest_desc_item seo_text" data-seo-text> #}
@@ -592,15 +585,6 @@
                     {#<p class="rest_desc_title">Описание</p>#}
                     <div class="rest_desc_value">
                         {{ seo.text_1|raw }}
-{#                        <div class="seo_menu">#}
-{#                            {% for items in menu %}#}
-{#                                    {% for item in items %}#}
-{#                                        <div class="menu_item">#}
-{#                                            {{ item }}#}
-{#                                        </div>#}
-{#                                    {% endfor %}#}
-{#                            {% endfor %}#}
-{#                        </div>#}
                     </div>
                     {# <div class="seo_text_control" data-seo-control>
                         <p class="_link">Показать полностью</p>

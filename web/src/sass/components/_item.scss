@@ -1003,6 +1003,50 @@
   /*p {
     margin: 0;
   }*/
+
+  .rest_menu {
+    color: #1A2824;
+
+    p {
+      text-transform: lowercase;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 24px;
+      padding-right: 10px;
+
+      em {
+        text-transform: lowercase;
+        font-style: normal;
+        display: block;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $clrGrey;
+      }
+
+      em:first-letter {
+        text-transform: capitalize;
+      }
+    }
+
+    p:first-letter {
+      text-transform: capitalize;
+    }
+
+    .rest_menu_title {
+      strong {
+        font-weight: 700;
+        font-size: 17px;
+        line-height: 24px;
+      }
+    }
+
+    @include for-mobile {
+      tr:not(.rest_menu_title) td:last-child p {
+        text-align: end;
+      }
+    }
+  }
 }
 
 .rest_desc_value {
@@ -1458,6 +1502,7 @@
     font-size: 15px;
     line-height: 24px;
     color: #1A2824;
+    max-width: 368px;
   }
 
   .item_address{
@@ -1767,9 +1812,14 @@
 }
 
 .rest_desc_value {
-  & > p:last-of-type {
+  & > p strong {
     font-size: 24px;
     line-height: 32px;
+
+    @include for-mobile {
+      font-size: 20px;
+      line-height: 24px;
+    }
   }
 
   table {

@@ -114,6 +114,52 @@ export default class Item {
 			self.setHeightBlockPrice();
 		});
 
+		$('.seo_text table strong').each(function () {
+			$(this).closest('tr').addClass('rest_menu_title');
+		})
+
+		$('.seo_text table').addClass('rest_menu');
+
+		// таблицы меню - столбцы друг под другом при ресайзе
+		let table = $('.rest_menu tbody');
+		// var originalElementHTML = $('.rest_menu').html();
+		let tableWrapper = table.parent();
+		$( ".hello" ).clone().appendTo( table.parent() );
+		let copyFlag = true;
+		$(window).on("resize", function() {
+			if ($(window).width() < 690 && copyFlag) {
+				var originalElement = $('.rest_menu');
+				var clonedElement = originalElement.clone();
+				clonedElement.insertAfter(originalElement);
+
+				originalElement.find('tbody tr').each( function () {
+					$(this).find('td').each( function (index, element) {
+						if (index > 1) {
+							$(this).remove();
+						}
+						if ($(element).text().trim() == '')
+							$(element).remove();
+					})
+				})
+
+				clonedElement.find('tbody tr').each( function () {
+					$(this).find('td').each( function (index, element) {
+						if (index < 2) {
+							$(this).remove();
+						}
+						if ($(element).text().trim() == '')
+							$(element).remove();
+					})
+				})
+
+				copyFlag = false;
+			} else {
+				// console.log('originalElementHTML', originalElementHTML);
+				// $('.rest_menu').empty();
+				// $('.rest_menu').html(originalElementHTML);
+			}
+		}).resize();
+
 	}
 
 	setHeightBlockPrice() {
