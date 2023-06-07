@@ -325,6 +325,12 @@
                                             <p class="room_desc_title">Вместимость:</p>
                                             <p class="room_desc_value">{{ same_object.capacity }} человек</p>
                                         </div>
+                                        {% if same_object.payment_model %}
+                                            <div class="room_desc_item">
+                                                <p class="room_desc_title">Схема оплаты:</p>
+                                                <p class="room_desc_value">{{ same_object.payment_model }}</p>
+                                            </div>
+                                        {% endif %}
                                         {% if same_object.price %}
                                             <div class="room_desc_item">
                                                 <p class="room_desc_title">Стоимость:</p>
@@ -373,12 +379,6 @@
                                                     {% endif %}
                                                 </div>
 {#                                                <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>#}
-                                            </div>
-                                        {% endif %}
-                                        {% if same_object.payment_model %}
-                                            <div class="room_desc_item">
-                                                <p class="room_desc_title">Схема оплаты:</p>
-                                                <p class="room_desc_value">{{ same_object.payment_model }}</p>
                                             </div>
                                         {% endif %}
                                     </div>

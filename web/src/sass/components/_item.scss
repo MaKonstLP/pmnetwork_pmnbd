@@ -432,6 +432,7 @@
 
   .object_fake_phone {
     border-bottom: 1px dashed #1A2824;
+    cursor: pointer;
 
     @include for-mobile {
       white-space: nowrap;
@@ -439,8 +440,8 @@
   }
 
   .blur_phone {
-    width: 75px;
-    right: -1px;
+    width: 78px;
+    right: -5px;
   }
 
   @include for-pad {
@@ -1485,6 +1486,7 @@
 
   .object_fake_phone {
     border-bottom: 1px dashed #1A2824;
+    cursor: pointer;
 
     @include for-mobile {
       white-space: nowrap;
@@ -1792,7 +1794,7 @@
     column-gap: 16px;
 
     @include for-mobile {
-      flex-direction: column;
+      //flex-direction: column;
     }
   }
 

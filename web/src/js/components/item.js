@@ -63,8 +63,8 @@ export default class Item {
 			let blur_phone = $(this).find('.object_fake_phone');
 			let real_phone = $(this).find('.object_real_phone');
 
-			blur_phone.toggleClass('hidden');
-			real_phone.toggleClass('hidden');
+			blur_phone.addClass('hidden');
+			real_phone.removeClass('hidden');
 		});
 
 		$('[data-order]').on('click', function () {
