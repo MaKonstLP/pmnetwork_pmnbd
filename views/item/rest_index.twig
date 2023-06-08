@@ -38,21 +38,16 @@
                     <p class="rest_meta_item-title">Адрес:</p>
                     <a class="rest_meta_item-value item_address" data-action="roll_to_map"
                        data-target="karta">{{ item.restaurant_address|raw }}</a>
-                    {% set firstEl = item.restaurant_metro_stations |first %}
+                    {# {% set firstEl = item.restaurant_metro_stations |first %} #}
 {#                    {% if firstEl.name is not empty %}#}
 {#                        <div class="rest_meta_item-value item_metro">{{ firstEl.name }}</div>#}
 {#                    {% endif %}#}
-                    {% if item.restaurant_metro_stations %}
-                        {% set metroList = '' %}
-                        {% for metro in item.restaurant_metro_stations %}
-                            {% if loop.first %}
-                                {% set metroList = metroList ~ '<a href="/catalog/metro-' ~ metro.link ~ '/">' ~ metro.name ~ '</a>' %}
-                            {% else %}
-                                {% set metroList = metroList ~ ', ' ~ '<a href="/catalog/metro-' ~ metro.link ~ '/">' ~ metro.name ~ '</a>' %}
-                            {% endif %}
-                        {% endfor %}
-
-                        <div class="rest_meta_item-value item_metro">{{ metroList|raw }}</div>
+						  {% if item.restaurant_metro_stations %}
+						  		<div class="rest_meta_item-value item_metro">
+									{% for metro in item.restaurant_metro_stations %}
+										<a class="item_meta-item__metro-link" href="/catalog/metro-{{metro.link}}/">{{ metro.name }}{{ loop.last ? '' : ',' }}</a>
+									{% endfor %}
+								</div>
                     {% endif %}
                 </div>
 
@@ -77,41 +72,88 @@
             <div class="rest_top_underline">
                 <div class="left_block">
                     <div class="rest_meta_item">
-                        <p class="rest_meta_item-title">Стоимость:</p>
-                        {% if (item.rent_room_only_min or item.restaurant_min_check ) %}
-                            <div class="prices_block">
-                                <div class="with_banket">
-                                    <div class="prices_block_title">
-                                        <span>С банкетом:</span>
-                                    </div>
-                                    <div class="with_banket_items">
-                                        {% if (item.rent_room_only_min and item.rent_room_only_min > 1) %}
-                                            <div class="with_banket_item">
-                                                Зал: <span class="item_price">от {{ item.rent_room_only_min }} ₽</span>
+                        {% if count_rooms == 1 %}
+                            {% if item.rooms[0].price or item.rooms[0].rent_room_only %}
+                                <div class="room_desc_item rooms_desc_item_price">
+                                    <p class="room_desc_title">Стоимость:</p>
+                                    <div class="room_price">
+                                        {% if item.rooms[0].payment_model_id == 0 or item.rooms[0].payment_model_id == 2 %}
+                                            <div class="room_price_banket">
+                                                <span class="room_price_subtitle">C банкетом:</span>
+                                                <div class="room_price_banket_info">
+                                                    {% if item.rooms[0].rent_room_only and item.rooms[0].rent_room_only > 1%}
+                                                        <div class="room_price_block">
+                                                            Зал: <span class="room_price_text">{{ item.rooms[0].rent_room_only }} ₽</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if item.rooms[0].price and item.rooms[0].price > 0 %}
+                                                        <div class="room_price_block">
+                                                            Банкет:
+                                                            <span class="room_price_text">от {{ item.rooms[0].price  }} ₽/чел.</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% elseif item.rooms[0].payment_model_id == 1 %}
+                                            <div class="room_price_banket">
+                                                <span class="room_price_subtitle">C банкетом:</span>
+                                                <div class="room_price_banket_info">
+                                                    {% if item.rooms[0].banquet_price_person and item.rooms[0].banquet_price_person > 0 %}
+                                                        <div class="room_price_block">
+                                                            Банкет:
+                                                            <span class="room_price_text">от {{ item.rooms[0].banquet_price_person }} ₽/чел.</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         {% endif %}
-                                        {% if (item.restaurant_min_check and item.restaurant_min_check > 1) %}
-                                            <div class="with_banket_item">
-                                                Банкет: <span class="item_price">от {{ item.restaurant_min_check }} ₽/чел.</span>
+
+                                        {% if (item.rooms[0].rent_only and item.rooms[0].rent_room_only > 0) %}
+                                            <div class="room_price_food">
+                                                <span class="room_price_subtitle">Без еды</span>
+                                                <div class="room_price_text">{{ item.rooms[0].rent_room_only }} ₽ за закрытие зала</div>
                                             </div>
                                         {% endif %}
                                     </div>
                                 </div>
-                                {% if (item.rent_room_only_min and item.rent_room_only_min > 1) %}
-                                    <div class="without_food">
+                            {% endif %}
+                        {% else %}
+                            <p class="rest_meta_item-title">Стоимость:</p>
+                            {% if (item.rent_room_only_min or item.restaurant_min_check ) %}
+                                <div class="prices_block">
+                                    <div class="with_banket">
                                         <div class="prices_block_title">
-                                            <span>Без еды:</span>
+                                            <span>С банкетом:</span>
                                         </div>
-                                        <div class="without_food_items">
-                                            <div class="without_food_item">
-                                                <span class="item_price">от {{ item.rent_room_only_min }} ₽ за закрытие зала</span>
-                                            </div>
+                                        <div class="with_banket_items">
+                                            {% if (item.rent_room_only_min and item.rent_room_only_min > 1) %}
+                                                <div class="with_banket_item">
+                                                    Зал: <span class="item_price">от {{ item.rent_room_only_min }} ₽</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if (item.restaurant_min_check and item.restaurant_min_check > 1) %}
+                                                <div class="with_banket_item">
+                                                    Банкет: <span class="item_price">от {{ item.restaurant_min_check }} ₽/чел.</span>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            По запросу
+                                    {% if (item.rent_room_only_min and item.rent_room_only_min > 1) %}
+                                        <div class="without_food">
+                                            <div class="prices_block_title">
+                                                <span>Без еды:</span>
+                                            </div>
+                                            <div class="without_food_items">
+                                                <div class="without_food_item">
+                                                    <span class="item_price">от {{ item.rent_room_only_min }} ₽ за закрытие зала</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                По запросу
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -437,41 +479,88 @@
             <div class="object_meta _mobile">
                 <div class="object_meta_item">
                     <p class="object_meta_title">Стоимость:</p>
-{#                    <p class="object_meta_value">{{ min_price ? 'от '~min_price~' ₽/чел.' : 'по запросу' }}</p>#}
-                    {% if (item.rent_room_only_min or item.restaurant_min_check ) %}
-                        <div class="prices_block">
-                            <div class="with_banket">
-                                <div class="prices_block_title">
-                                    <span>С банкетом:</span>
-                                </div>
-                                <div class="with_banket_items">
-                                    {% if (item.rent_room_only_min and item.rent_room_only_min != 0) %}
-                                        <div class="with_banket_item">
-                                            Зал: <span class="item_price">от {{ item.rent_room_only_min }} ₽</span>
+                    {% if count_rooms == 1 %}
+                        {% if item.rooms[0].price or item.rooms[0].rent_room_only %}
+                            <div class="room_desc_item rooms_desc_item_price">
+                                <p class="room_desc_title">Стоимость:</p>
+                                <div class="room_price">
+                                    {% if item.rooms[0].payment_model_id == 0 or item.rooms[0].payment_model_id == 2 %}
+                                        <div class="room_price_banket">
+                                            <span class="room_price_subtitle">C банкетом:</span>
+                                            <div class="room_price_banket_info">
+                                                {% if item.rooms[0].rent_room_only and item.rooms[0].rent_room_only > 1%}
+                                                    <div class="room_price_block">
+                                                        Зал: <span class="room_price_text">{{ item.rooms[0].rent_room_only }} ₽</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if item.rooms[0].price and item.rooms[0].price > 0 %}
+                                                    <div class="room_price_block">
+                                                        Банкет:
+                                                        <span class="room_price_text">от {{ item.rooms[0].price  }} ₽/чел.</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% elseif item.rooms[0].payment_model_id == 1 %}
+                                        <div class="room_price_banket">
+                                            <span class="room_price_subtitle">C банкетом:</span>
+                                            <div class="room_price_banket_info">
+                                                {% if item.rooms[0].banquet_price_person and item.rooms[0].banquet_price_person > 0 %}
+                                                    <div class="room_price_block">
+                                                        Банкет:
+                                                        <span class="room_price_text">от {{ item.rooms[0].banquet_price_person }} ₽/чел.</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     {% endif %}
-                                    {% if (item.restaurant_min_check and item.restaurant_min_check != 0) %}
-                                        <div class="with_banket_item">
-                                            Банкет: <span class="item_price">от {{ item.restaurant_min_check }} ₽/чел.</span>
+
+                                    {% if (item.rooms[0].rent_only and item.rooms[0].rent_room_only > 0) %}
+                                        <div class="room_price_food">
+                                            <span class="room_price_subtitle">Без еды</span>
+                                            <div class="room_price_text">{{ item.rooms[0].rent_room_only }} ₽ за закрытие зала</div>
                                         </div>
                                     {% endif %}
                                 </div>
                             </div>
-                            {% if (item.rent_room_only_min and item.rent_room_only_min != 0) %}
-                                <div class="without_food">
+                        {% endif %}
+                    {% else %}
+                        <p class="rest_meta_item-title">Стоимость:</p>
+                        {% if (item.rent_room_only_min or item.restaurant_min_check ) %}
+                            <div class="prices_block">
+                                <div class="with_banket">
                                     <div class="prices_block_title">
-                                        <span>Без еды:</span>
+                                        <span>С банкетом:</span>
                                     </div>
-                                    <div class="without_food_items">
-                                        <div class="without_food_item">
-                                            <span class="item_price">от {{ item.rent_room_only_min }} ₽ за закрытие зала</span>
-                                        </div>
+                                    <div class="with_banket_items">
+                                        {% if (item.rent_room_only_min and item.rent_room_only_min > 1) %}
+                                            <div class="with_banket_item">
+                                                Зал: <span class="item_price">от {{ item.rent_room_only_min }} ₽</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if (item.restaurant_min_check and item.restaurant_min_check > 1) %}
+                                            <div class="with_banket_item">
+                                                Банкет: <span class="item_price">от {{ item.restaurant_min_check }} ₽/чел.</span>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        По запросу
+                                {% if (item.rent_room_only_min and item.rent_room_only_min > 1) %}
+                                    <div class="without_food">
+                                        <div class="prices_block_title">
+                                            <span>Без еды:</span>
+                                        </div>
+                                        <div class="without_food_items">
+                                            <div class="without_food_item">
+                                                <span class="item_price">от {{ item.rent_room_only_min }} ₽ за закрытие зала</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            По запросу
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div class="object_meta_item">
@@ -507,9 +596,16 @@
                     <p class="rest_meta_item-title">Адрес:</p>
                     <a class="rest_meta_item-value item_address" href="#map"
                        data-target="karta">{{ item.restaurant_address|raw }}</a>
-                    {% set firstEl = item.restaurant_metro_stations |first %}
+                    {# {% set firstEl = item.restaurant_metro_stations |first %}
                     {% if firstEl.name is not empty %}
                         <div class="rest_meta_item-value item_metro">{{ firstEl.name }}</div>
+                    {% endif %} #}
+						  {% if item.restaurant_metro_stations %}
+						  		<div class="rest_meta_item-value item_metro">
+									{% for metro in item.restaurant_metro_stations %}
+										<a class="item_meta-item__metro-link" href="/catalog/metro-{{metro.link}}/">{{ metro.name }}{{ loop.last ? '' : ',' }}</a>
+									{% endfor %}
+								</div>
                     {% endif %}
                 </div>
             </div>
@@ -632,11 +728,11 @@
                                         <p class="room_desc_value">{{ same_object.payment_model }}</p>
                                     </div>
                                 {% endif %}
-                                {% if same_object.price %}
+                                {% if same_object.price or same_object.rent_room_only %}
                                     <div class="room_desc_item rooms_desc_item_price">
                                         <p class="room_desc_title">Стоимость:</p>
                                         <div class="room_price">
-                                            {% if same_object.payment_model == 0 or same_object.payment_model == 2 %}
+                                            {% if same_object.payment_model_id == 0 or same_object.payment_model_id == 2 %}
                                                 <div class="room_price_banket">
                                                     <span class="room_price_subtitle">C банкетом:</span>
                                                     <div class="room_price_banket_info">
@@ -658,7 +754,7 @@
                                                         {% endif %}
                                                     </div>
                                                 </div>
-                                            {% elseif same_object.payment_model == 1 %}
+                                            {% elseif same_object.payment_model_id == 1 %}
                                                 <div class="room_price_banket">
                                                     <span class="room_price_subtitle">C банкетом:</span>
                                                     <div class="room_price_banket_info">
@@ -679,7 +775,6 @@
                                                 </div>
                                             {% endif %}
                                         </div>
-{#                                        <p class="room_desc_value">{{ same_object.price }} ₽/чел.</p>#}
                                     </div>
                                 {% endif %}
                             </div>

@@ -202,6 +202,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                 <?php foreach ($featureArr as $type_alias => $meta): ?>
                     <a href="/catalog/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
                 <?php endforeach; ?>
+                <a href="/stancii-metro/" class="header_nav-link">Метро</a>
                 <a href="/blog/" class="header_nav-link">Блог</a>
                 <?php if ($this->params['collectionCount'] > 0): ?>
                     <a href="/collection/" class="header_nav-link">Подборки</a>
@@ -229,7 +230,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
         <?= $content ?>
     </div>
 
-    <footer<?= Yii::$app->controller->action->id == 'post' ? ' class="__bgWhite"' : ''; ?>>
+    <footer <?= Yii::$app->controller->action->id == 'post' ? ' class="__bgWhite"' : ''; ?>>
         <div class="footer_wrap">
             <div class="footer_row">
                 <div class="footer_block _left">
@@ -281,6 +282,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                     <?php if ($this->params['collectionCount'] > 0): ?>
                                         <li class="footer_nav_wrap-sub_el"><a href="/collection/">Подборки</a></li>
                                     <?php endif; ?>
+												<li class="footer_nav_wrap-sub_el"><a href="/stancii-metro/">Метро</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -1382,7 +1382,7 @@
     width: 1135px;
 
     .rest_meta_item {
-      padding-right: 16px;
+      //padding-right: 16px;
     }
 
     .rest_top_overline, .rest_top_underline {
@@ -1531,7 +1531,7 @@
 
     &:before{
       content: url('/upload/img/item_metro.svg');
-      margin-right: 6px;
+      margin-right: 2px;
       margin-left: -18px;
     }
   }

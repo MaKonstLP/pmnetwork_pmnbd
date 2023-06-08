@@ -85,7 +85,7 @@ class ItemController extends BaseFrontendController
 			// ===== schemaOrg Product END =====
 
 //            echo '<pre>';
-//            print_r($same_objects);
+//            print_r($room);
 //            die();
 
 			return $this->render('index.twig', array(
@@ -106,6 +106,10 @@ class ItemController extends BaseFrontendController
 		$this->setSchema($rest_item);
 		// ===== schemaOrg Product END =====
 
+//            echo '<pre>';
+//            print_r($rest_item);
+//            die();
+
         return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => ($filtered = array_filter($rooms_price_arr)) ? min($filtered) : 0,
@@ -113,6 +117,7 @@ class ItemController extends BaseFrontendController
 			'seo' => $seo,
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
+            'count_rooms' => count($rest_item['rooms'])
 		));
 	}
 

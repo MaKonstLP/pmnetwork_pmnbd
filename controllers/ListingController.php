@@ -247,9 +247,9 @@ class ListingController extends BaseFrontendController
 		// ===== schemaOrg Product END =====
 
 
-//		 echo "<pre>";
-//		 print_r($items->items);
-//		 exit;
+		//  echo "<pre>";
+		//  print_r($items->items);
+		//  exit;
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(
@@ -395,6 +395,9 @@ class ListingController extends BaseFrontendController
 		$return['listing_url'] = $temp_params->listing_url;
 		$return['canonical'] = $temp_params->canonical;
 
+		// echo ('<pre>');
+		// print_r($temp_params->listing_url . Yii::$app->params['subdomen_id']);
+		// exit;
 		//получаем ссылки для блока тэгов
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
 			$temp_params->listing_url . Yii::$app->params['subdomen_id'],
@@ -449,7 +452,7 @@ class ListingController extends BaseFrontendController
 					return array_merge($acc, $slicesToAdd);
 				}, []);
 			},
-			360
+			365 * 24 * 60 * 60
 		);
 		$return['fast_filters'] = array_map("unserialize", array_unique(array_map("serialize", $return['fast_filters'])));
 

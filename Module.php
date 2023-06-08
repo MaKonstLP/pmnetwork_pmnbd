@@ -120,7 +120,7 @@ class Module extends \yii\base\Module
             'kafe' => ['name' => 'Кафе', 'type' => 'kind','count' => 0],
             'loft' => ['name' => 'Лофты', 'type' => 'kind','count' => 0],
             'veranda' => ['name' => 'Веранды', 'type' => 'kind','count' => 0],
-            'otel' => ['name' => 'Отели', 'type' => 'kind','count' => 0],
+            // 'otel' => ['name' => 'Отели', 'type' => 'kind','count' => 0],
             'za-gorodom' => ['name' => 'За городом', 'type' => 'feature','count' => 0],
             'svoy-alko' => ['name' => 'Со своим алкоголем', 'type' => 'feature','count' => 0],
         ];

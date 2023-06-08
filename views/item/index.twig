@@ -181,9 +181,9 @@
                 <span class="object_desc_title">Светлый зал:<span class="dots"></span></span><span
                         class="object_desc_value">{{ item.bright_room==0 ? 'нет' : 'да' }}</span>
             </p>
-             <p class="object_desc_item">
-               <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">только за еду и напитки</span>
-            </p>
+{#             <p class="object_desc_item">#}
+{#               <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span class="object_desc_value">только за еду и напитки</span>#}
+{#            </p>#}
             {% if item.payment_model %}
                 <p class="object_desc_item">
                     <span class="object_desc_title">Схема оплаты:<span class="dots"></span></span><span
@@ -194,11 +194,11 @@
                 <span class="object_desc_title">Отдельный вход:<span class="dots"></span></span><span
                         class="object_desc_value">{{ item.separate_entrance==0 ? 'нет' : 'да' }}</span>
             </p>
-            {% if item.price %}
+            {% if item.price or item.rent_room_only %}
                 <div class="room_desc_item">
                     <p class="room_desc_title">Стоимость:</p>
                     <div class="room_price">
-                        {% if item.payment_model == 0 or item.payment_model == 2 %}
+                        {% if item.payment_model_id == 0 or item.payment_model_id == 2 %}
                             <div class="room_price_banket">
                                 <span class="room_price_subtitle">C банкетом:</span>
                                 <div class="room_price_banket_info">
@@ -220,7 +220,7 @@
                                     {% endif %}
                                 </div>
                             </div>
-                        {% elseif item.payment_model == 1 %}
+                        {% elseif item.payment_model_id == 1 %}
                             <div class="room_price_banket">
                                 <span class="room_price_subtitle">C банкетом:</span>
                                 <div class="room_price_banket_info">

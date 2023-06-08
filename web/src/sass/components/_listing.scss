@@ -264,6 +264,20 @@
 					}
 				}
 
+				.item_meta-item__metro-link {
+					font-weight: 400;
+					font-size: 13px;
+					line-height: 20px;
+					color: #1a2824;
+					cursor: pointer;
+					text-decoration: underline;
+					text-decoration-style: dashed;
+					text-decoration-thickness: 1px;
+					text-underline-offset: 4px;
+					text-decoration-color: rgba(26, 40, 36, 0.3);
+					margin-right: 5px;
+				}
+
 				.item_rating {
 					//display: none;
 				}
@@ -292,7 +306,7 @@
 				.item_price {
 					white-space: nowrap;
 					font-weight: 700;
-					font-size: 20px;
+					font-size: 14px;
 					line-height: 24px;
 					color: #1a2824;
 					.item_meta_label {
@@ -351,7 +365,7 @@
 						font-weight: 700;
 						font-size: 15px;
 						line-height: 24px;
-						color: #1A2824;
+						color: #1a2824;
 					}
 				}
 
