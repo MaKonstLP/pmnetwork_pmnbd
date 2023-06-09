@@ -189,20 +189,27 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
             <div class="header_nav"
                  data-menu>
                 <?php
-                $kindArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                $kindArr = array_filter(Yii::$app->params['header_slices'], function ($meta) {
                     return $meta['type'] == 'kind';
                 }); ?>
                 <?php foreach ($kindArr as $alias => $meta): ?>
                     <a href="/catalog/<?= $alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
                 <?php endforeach; ?>
                 <?php
-                $featureArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                $featureArr = array_filter(Yii::$app->params['header_slices'], function ($meta) {
                     return $meta['type'] == 'feature';
                 }); ?>
                 <?php foreach ($featureArr as $type_alias => $meta): ?>
                     <a href="/catalog/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
                 <?php endforeach; ?>
-                <a href="/stancii-metro/" class="header_nav-link">Метро</a>
+					 <?php
+                $metroArr = array_filter(Yii::$app->params['header_slices'], function ($meta) {
+                    return $meta['type'] == 'metro';
+                }); ?>
+					 <?php foreach ($metroArr as $type_alias => $meta): ?>
+                    <a href="/catalog/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
+                <?php endforeach; ?>
+                <!-- <a href="/stancii-metro/" class="header_nav-link">Метро</a> -->
                 <a href="/blog/" class="header_nav-link">Блог</a>
                 <?php if ($this->params['collectionCount'] > 0): ?>
                     <a href="/collection/" class="header_nav-link">Подборки</a>
@@ -282,7 +289,9 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                     <?php if ($this->params['collectionCount'] > 0): ?>
                                         <li class="footer_nav_wrap-sub_el"><a href="/collection/">Подборки</a></li>
                                     <?php endif; ?>
-												<li class="footer_nav_wrap-sub_el"><a href="/stancii-metro/">Метро</a></li>
+												<?php if (isset(Yii::$app->params['header_slices']['stancii-metro']) && !empty(Yii::$app->params['header_slices']['stancii-metro'])): ?>
+													<li class="footer_nav_wrap-sub_el"><a href="/stancii-metro/">Метро</a></li>
+												<?php endif; ?>
                                 </ul>
                             </li>
                         </ul>

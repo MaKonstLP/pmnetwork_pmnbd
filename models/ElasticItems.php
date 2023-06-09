@@ -22,11 +22,6 @@ use common\models\MetroStations;
 use common\models\MetroLines;
 use common\components\MetroUpdate;
 use backend\modules\pmnbd\models\Metros;
-use common\models\Slices;
-use common\models\SlicesMetroExtra;
-use frontend\components\QueryFromSlice;
-use frontend\modules\pmnbd\components\UpdateFilterItems;
-use common\models\elastic\ItemsFilterElastic;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
 {
@@ -327,8 +322,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			 echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
 
-		// self::subdomenCheck($connection_core);
-		self::refreshNumberOfRestaurantInMetroSlices();
+		self::subdomenCheck($connection_core);
 
 		echo 'Обновление индекса ' . self::index() . ' ' . self::type() . ' завершено<br>';
 		return true;
@@ -922,42 +916,5 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$query = self::find()->query($final_query)->limit(0);
 
 		return $query->search()['hits']['total'];
-	}
-
-	//* Обновление количества ресторанов на срезах "метро" в зависимости от города 
-	public static function refreshNumberOfRestaurantInMetroSlices()
-	{
-		$filter_model = Yii::$app->params['filter_model'];
-		$slices_model = Slices::find()->where(['type' => 'metro'])->all();
-		$elastic_model = new ElasticItems;
-		$subdomens = Subdomen::find()->all();
-
-		foreach ($subdomens as $subdomen) {
-			//задаем параметр id города для выбора количества ресторанов в этом городе
-			Yii::$app->params['subdomen_id'] = $subdomen->city_id;
-
-			foreach ($slices_model as $slice) {
-				//проверяем, что метро находится в этом городе
-				if ($slice->description == $subdomen->city_id) {
-					$metro_table_id = json_decode($slice->params, true)['metro'];
-					$slice_obj = new QueryFromSlice($slice->alias, true);
-					$params = UpdateFilterItems::parseGetQuery($slice_obj->params, $filter_model, $slices_model);
-					$items = new ItemsFilterElastic($params['params_filter'], 1, 1, false, 'restaurants', $elastic_model);
-
-					if (SlicesMetroExtra::find()->where(['slices_id' => $slice->id])->exists()) {
-						$totalItem = SlicesMetroExtra::find()->where(['slices_id' => $slice->id])->one();
-					} else {
-						$totalItem = new SlicesMetroExtra();
-						$totalItem->slices_id = $slice->id;
-					}
-
-					$totalItem->metro_table_id = $metro_table_id;
-					$totalItem->restaurant_count = $items->total;
-					$totalItem->save();
-				}
-			}
-		}
-
-		echo 'Количество ресторанов у всех срезов метро обновлено';
 	}
 }

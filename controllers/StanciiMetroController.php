@@ -28,6 +28,9 @@ class StanciiMetroController extends Controller
 			->asArray()
 			->all();
 
+		if (empty($metro_stations)) {
+			throw new \yii\web\NotFoundHttpException();
+		}
 
 		$new_arr_metro = [];
 		foreach ($metro_stations as $station) {
