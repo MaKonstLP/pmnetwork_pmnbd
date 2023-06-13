@@ -180,7 +180,7 @@ class ListingController extends BaseFrontendController
 		$total_rating = 0;
 		$rest_with_rating = 0;
 		$average_rating = 0;
-		if ($type) {
+		if ($type || count($params_filter) === 0) {//выводится на срезах и каталоге(/catalog/)
 			foreach ($all_items->items as $item) {
 				if (
 					isset($item['restaurant_min_check'])

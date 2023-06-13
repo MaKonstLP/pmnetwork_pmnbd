@@ -1663,45 +1663,61 @@
   }
 }
 
+.room_object_slider {
+	position: relative;
+	overflow: hidden;
+	flex: 0 0 auto;
+
+	@include for-mobile {
+		flex: 0 0 248px;
+	}
+
+	@include for-phone {
+		flex: 0 0 100%;
+	}
+}
+
 .room_object_img{
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   column-gap: 8px;
+
+  .room_object_img_item{
+	width: 248px;
+	min-height: 242px;
+	height: 100%;
+	img{
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  background-position: center;
+	}
+ 
+	@include for-notdesc{
+	  width: 248px;
+	  min-height: 166px;
+	//   &:nth-child(2), &:nth-child(3){
+	// 	 display: none;
+	//   }
+	}
+	@include for-pad{
+	  &:nth-child(2){
+		 display: none;
+	  }
+	  &:nth-child(3){
+		 display: block;
+	  }
+	}
+ 
+	@include for-phone{
+	  width: 100%;
+	  height: 208px;
+	}
+ }
 }
 
-.room_object_img_item{
-  width: 248px;
-  min-height: 242px;
-  height: 100%;
-  img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background-position: center;
-  }
 
-  @include for-notdesc{
-    width: 248px;
-    min-height: 166px;
-    &:nth-child(2), &:nth-child(3){
-      display: none;
-    }
-  }
-  @include for-pad{
-    &:nth-child(2){
-      display: none;
-    }
-    &:nth-child(3){
-      display: block;
-    }
-  }
-
-  @include for-phone{
-    width: 100%;
-    height: 208px;
-  }
-}
 
 .room_object-meta{
   display: flex;
