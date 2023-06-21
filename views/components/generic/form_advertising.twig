@@ -1,0 +1,74 @@
+<div class="form_wrapper">
+    <div class="form_close" data-close-popup>
+
+    </div>
+
+    <div class="form_main">
+
+{#        <div class="form_title">#}
+{#            <p class="form_title_main">{{ title ? title : 'Поможем выбрать зал на день рождения'}}</p>#}
+{#        </div>#}
+
+        <form class="form_block" action="/ajax/form-advertising/" data-form-target="{{target}}">
+            <input type="hidden" name="type" value="{{ type ? type : 'main'}}" />
+            <div class="form_inputs">
+
+                <div class="input_wrapper">
+                    <input type="text" name="name" data-required placeholder="Как Вас зовут?" class="not_check_approove"/>
+                </div>
+
+                <div class="input_wrapper">
+                    <input type="text" name="position" data-required placeholder="Должность" autocomplete="off"/>
+                </div>
+
+                <div class="input_wrapper">
+                    <input type="text" name="phone" data-required placeholder="Номер телефона" autocomplete="off"/>
+                </div>
+
+                <div class="input_wrapper ">
+                    <input type="email" name="email" data-required placeholder="Email" />
+                </div>
+                {#				<div class="input_wrapper">#}
+                {#					<input type="text" name="email" placeholder="Email" />#}
+                {#					<input type="text" name="email" placeholder="Электронная почта" />#}
+                {#				</div>#}
+                {# <div class="input_wrapper date_wrapper">
+                    <input type="text" name="date" readonly placeholder="Желаемая дата" class="not_check_approove"/>
+                    <div class="input_wrapper_date_wrapper" style="display: none;">
+
+                    </div>
+                </div> #}
+{#                <div class="input_wrapper _big_width">#}
+{#                    <input type="text" name="name_room" placeholder="Название площадки" />#}
+{#                </div>#}
+                <div class="input_wrapper">
+                    <input type="text" name="name_room" data-required placeholder="Название площадки" />
+                </div>
+
+                <div class="input_wrapper">
+                    <input type="text" name="city" data-required placeholder="Город" />
+                </div>
+            </div>
+
+            {% if venue_id is defined %}
+                <input type="hidden" name="venue_id" value="{{venue_id}}" />
+            {% endif %}
+
+            <div class="form_submit">
+                <button class="_button" data-target="{{ btn_target ? btn_target : '' }}" >Отправить</button>
+                <div class="form_policy checkbox_item _active" data-action="form_checkbox">
+                    <input type="checkbox" name="policy" class="personalData" checked="">
+                    <p class="checkbox_pseudo" >Я согласен с <a target="_blank" href="{{app.params.siteProtocol}}://{{app.params.siteAddress}}/politika/">политикой обработки персональных данных</a></p>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="form_success">
+        <p class="form_title_main" data-form-result-title>Заявка успешно отправлена</p>
+        <p data-form-result-body>Спасибо за проявленный интерес. Мы свяжемся с вами в течение рабочего дня, чтобы обсудить детали.</p>
+        <p class="form_close_bottom" data-close-popup>Спасибо, закрыть</p>
+    </div>
+
+</div>

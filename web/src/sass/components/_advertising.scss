@@ -1,0 +1,40 @@
+[data-page-type="advertising"] {
+  .advertising-title {
+    text-align: center;
+  }
+
+  .advertising-text {
+    margin: 0px auto;
+    margin-top: 24px;
+    margin-bottom: 60px;
+    max-width: 1440px;
+    padding: 0px 12px;
+
+    p {
+      text-align: center;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 120%;
+    }
+
+    p:not(:last-child) {
+      margin-bottom: 6px;
+    }
+
+    @include for-lowdesc {
+      margin-bottom: 0px;
+
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .form_wrapper {
+    background: unset;
+  }
+
+  .form_main {
+    justify-content: center;
+  }
+}

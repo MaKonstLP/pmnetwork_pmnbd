@@ -1,1 +1,14 @@
-<h1>реклама</h1>
+<div data-page-type="advertising">
+    <div class="advertising-container">
+        <div class="advertising-info">
+            <h1 class="advertising-title">{{ h1 }}</h1>
+            <div class="advertising-text">
+                {{ text1|raw }}
+            </div>
+        </div>
+
+        <div class="form_wrapper">
+            {{ this.render('//components/generic/form_advertising.twig', {'type' : 'advertising'}) | raw }}
+        </div>
+    </div>
+</div>

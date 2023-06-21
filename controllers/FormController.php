@@ -88,4 +88,41 @@ class FormController extends Controller
 
         return $resp;
     }
+
+    public function actionFormAdvertising() {
+        $from = Yii::$app->params['senderEmail'];
+//        $to = ['anonim050900@gmail.com'];
+        $to = ['birthday-place@yandex.ru', 'ab@liderpoiska.ru'];
+        $sub = 'Заявка со страницы рекламы на birthday-place.ru';
+
+        $msg = '';
+        $resp = [];
+        $resp['name'] = $_POST['name'];
+        $resp['phone'] = $_POST['phone'];
+
+        if(isset($_POST['name']))
+            $msg.='Имя: '.$_POST['name'].'<br>';
+        if(isset($_POST['position']))
+            $msg.='Должность: '.$_POST['position'].'<br>';
+        if(isset($_POST['phone']))
+            $msg.='Номер: '.$_POST['phone'].'<br>';
+        if(isset($_POST['email']))
+            $msg.='Email: '.$_POST['email'].'<br>';
+        if(isset($_POST['name_room']))
+            $msg.='Название площадки: '.$_POST['name_room'].'<br>';
+        if(isset($_POST['city']))
+            $msg.='Город: '.$_POST['city'].'<br>';
+
+        $message  = Yii::$app->mailer->compose()
+            ->setFrom($from)
+            ->setTo($to)
+            ->setSubject($sub)
+            ->setCharset('utf-8')
+            ->setHtmlBody($msg);
+
+        $message->send();
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $resp;
+    }
 }

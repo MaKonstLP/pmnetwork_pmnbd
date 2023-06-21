@@ -244,15 +244,16 @@ class SiteController extends BaseFrontendController
 
     public function actionAdvertising($page) {
 
-//	    echo '1';die;
-
         if (!($pageObj = Pages::findOne(['type' => $page]))) {
             throw new NotFoundHttpException();
         }
         $seo = $this->getSeo($page);
         $this->setSeo($seo);
 
-        return $this->render('advertising.twig', ['html' => $pageObj->seoObject->text1]);
+        return $this->render('advertising.twig', [
+            'h1' => $pageObj->seoObject->heading,
+            'text1' => $pageObj->seoObject->text1
+        ]);
     }
 
 	public function actionFilterSubmit()
