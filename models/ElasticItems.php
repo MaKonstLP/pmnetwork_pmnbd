@@ -5,6 +5,7 @@ namespace frontend\modules\pmnbd\models;
 use Yii;
 use common\models\Restaurants;
 use common\models\RestaurantsModule;
+use common\models\RoomsModule;
 use common\models\RestaurantsTypes;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -772,6 +773,19 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$model = new RestaurantsModule();
 			$model->id = $restaurant->gorko_id;
 			$model->save();
+		}
+
+		foreach ($record->rooms as $room) {
+			$model = RoomsModule::findOne(['gorko_id' => $room['gorko_id']]);
+
+			if (!$model) {
+				$model = new RoomsModule();
+				$model->id = $room['id'];
+				$model->gorko_id = $room['gorko_id'];
+				$model->name = $room['name'];
+				$model->restaurant_id = $room['restaurant_id'];
+				$model->save();
+			}
 		}
 
 		return $result;
