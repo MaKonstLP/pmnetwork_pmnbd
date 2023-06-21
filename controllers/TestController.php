@@ -130,7 +130,7 @@ class TestController extends BaseFrontendController
 		exit; */
 
 		//* ======== обновление таблицы "restaurants_yandex" в общей БД START ========
-		/* $connection = new \yii\db\Connection([
+		$connection = new \yii\db\Connection([
 			'username' => 'root',
 			'password' => 'GxU25UseYmeVcsn5Xhzy',
 			'charset'  => 'utf8mb4',
@@ -140,38 +140,38 @@ class TestController extends BaseFrontendController
 		Yii::$app->set('db', $connection);
 
 		//* добавление новых рестов
-		// $restaurants_ya_model = RestaurantsYandex::find()->all();
+		$restaurants_ya_model = RestaurantsYandex::find()->all();
 
-		// $restaurants = Restaurants::find()
-		// 	->with('yandexReview')
-		// 	->where(['>', 'id', 15984])
-		// 	->limit(100000)
-		// 	->all();
+		$restaurants = Restaurants::find()
+			->with('yandexReview')
+			->where(['>', 'id', 15984])
+			->limit(100000)
+			->all();
 
-		// foreach ($restaurants as $key => $rest) {
-		// 	$rest_ya_exist = false;
-		// 	foreach ($restaurants_ya_model as $key => $rest_ya) {
-		// 		if ($rest->id == $rest_ya->id) {
-		// 			$rest_ya_exist = true;
-		// 		}
-		// 	}
+		foreach ($restaurants as $key => $rest) {
+			$rest_ya_exist = false;
+			foreach ($restaurants_ya_model as $key => $rest_ya) {
+				if ($rest->gorko_id == $rest_ya->gorko_id) {
+					$rest_ya_exist = true;
+				}
+			}
 
-		// 	if (!$rest_ya_exist) {
-		// 		$model = new RestaurantsYandex();
-		// 		$model->gorko_id = $rest->gorko_id;
-		// 		$model->name = $rest->name;
-		// 		$model->address = $rest->address;
-		// 		$model->latitude = $rest->latitude;
-		// 		$model->longitude = $rest->longitude;
-		// 		$model->district = $rest->district;
-		// 		$model->parent_district = $rest->parent_district;
-		// 		$model->city_id = $rest->city_id;
-		// 		$model->phone = $rest->phone;
-		// 		$model->commission = $rest->commission;
-		// 		$model->active = $rest->active;
-		// 		$model->save();
-		// 	}
-		// } */
+			if (!$rest_ya_exist) {
+				$model = new RestaurantsYandex();
+				$model->gorko_id = $rest->gorko_id;
+				$model->name = $rest->name;
+				$model->address = $rest->address;
+				$model->latitude = $rest->latitude;
+				$model->longitude = $rest->longitude;
+				$model->district = $rest->district;
+				$model->parent_district = $rest->parent_district;
+				$model->city_id = $rest->city_id;
+				$model->phone = $rest->phone;
+				$model->commission = $rest->commission;
+				$model->active = $rest->active;
+				$model->save();
+			}
+		}
 		//* ======== обновление таблицы "restaurants_yandex" в общей БД END ========
 
 
