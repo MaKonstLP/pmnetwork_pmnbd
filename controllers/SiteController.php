@@ -242,6 +242,19 @@ class SiteController extends BaseFrontendController
 		return $this->render('page.twig', ['html' => $pageObj->seoObject->text1]);
 	}
 
+    public function actionAdvertising($page) {
+
+//	    echo '1';die;
+
+        if (!($pageObj = Pages::findOne(['type' => $page]))) {
+            throw new NotFoundHttpException();
+        }
+        $seo = $this->getSeo($page);
+        $this->setSeo($seo);
+
+        return $this->render('advertising.twig', ['html' => $pageObj->seoObject->text1]);
+    }
+
 	public function actionFilterSubmit()
 	{
 		if (!Yii::$app->request->isAjax) throw new NotFoundHttpException();

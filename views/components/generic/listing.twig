@@ -173,7 +173,6 @@
                     {% if count_rooms == 1 %}
                         {% if item.rooms[0].price or item.rooms[0].rent_room_only %}
                             <div class="room_desc_item rooms_desc_item_price">
-                                <p class="room_desc_title">Стоимость:</p>
                                 <div class="room_price">
                                     {% if item.rooms[0].payment_model_id == 0 or item.rooms[0].payment_model_id == 2 %}
                                         <div class="room_price_banket">

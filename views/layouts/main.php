@@ -253,6 +253,10 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                         <a target="_blank"
                            href="<?= Yii::$app->params['siteProtocol'] . '://' . Yii::$app->params['siteAddress'] ?>/politika/"
                            class="footer_pc _link">Политика конфиденциальности</a>
+                        <br>
+<!--                        <a target="_blank"-->
+<!--                           href="--><?//= Yii::$app->params['siteProtocol'] . '://' . Yii::$app->params['siteAddress'] ?><!--/advertising/"-->
+<!--                           class="footer_pc _link">Реклама на сайте</a>-->
                     </div>
                     <div class="footer_nav">
                         <ul class="footer_nav_wrap">
