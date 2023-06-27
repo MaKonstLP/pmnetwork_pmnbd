@@ -300,21 +300,25 @@
                 <div class="room_objects_wrap">
                     {% for same_object in same_objects %}
                         <div class="room_object">
-                            <div class="room_object_img">
-                                <div class="room_object_img_item">
-                                    {# <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}"> #}
-                                    <img loading="lazy"
-                                         src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
-                                </div>
-                                <div class="room_object_img_item">
-                                    <img loading="lazy"
-                                         src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
-                                </div>
-                                <div class="room_object_img_item">
-                                    <img loading="lazy"
-                                         src="{{ same_object.images[2] ? Declension.get_image_src(same_object.images[2].subpath~'=w445-h302-n-l95') : (same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
-                                </div>
-                            </div>
+									<div class="room_object_slider" data-room-slider>
+										<div class="room_object_img swiper-wrapper">
+											<div class="room_object_img_item swiper-slide">
+													{# <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}"> #}
+													<img loading="lazy"
+														src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
+											</div>
+											<div class="room_object_img_item swiper-slide">
+													<img loading="lazy"
+														src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
+											</div>
+											<div class="room_object_img_item swiper-slide">
+													<img loading="lazy"
+														src="{{ same_object.images[2] ? Declension.get_image_src(same_object.images[2].subpath~'=w445-h302-n-l95') : (same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
+											</div>
+										</div>
+										<div class="swiper-pagination item-gallery-pagination"></div>
+									</div>
+
                             <div class="room_object_desc">
                                 <div class="room_object_desc-top">
                                     <div class="room_object_desc-title"><a
