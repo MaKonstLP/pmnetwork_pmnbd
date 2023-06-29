@@ -10,6 +10,10 @@ use common\models\Restaurants;
 use common\models\MetroStations;
 use common\models\RestaurantsYandex;
 use common\models\RestaurantsModule;
+use common\models\RestaurantSlug;
+use common\models\RestaurantsLocation;
+use common\models\RestaurantsTypes;
+use common\models\RestaurantsPremium;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
 use common\components\AsyncRenewRestaurants;
@@ -35,6 +39,10 @@ use common\models\elastic\ItemsFilterElastic;
 use backend\modules\pmnbd\models\siteobject\SiteObject;
 use backend\modules\pmnbd\models\siteobject\SiteObjectSeo;
 use common\models\Pages;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class TestController extends BaseFrontendController
 {
@@ -130,7 +138,7 @@ class TestController extends BaseFrontendController
 		exit; */
 
 		//* ======== обновление таблицы "restaurants_yandex" в общей БД START ========
-		$connection = new \yii\db\Connection([
+		/* $connection = new \yii\db\Connection([
 			'username' => 'root',
 			'password' => 'GxU25UseYmeVcsn5Xhzy',
 			'charset'  => 'utf8mb4',
@@ -171,7 +179,7 @@ class TestController extends BaseFrontendController
 				$model->active = $rest->active;
 				$model->save();
 			}
-		}
+		} */
 		//* ======== обновление таблицы "restaurants_yandex" в общей БД END ========
 
 
@@ -197,31 +205,246 @@ class TestController extends BaseFrontendController
 
 
 		// $metros = Metros::find()->where(['LIKE', 'same_station_table_id', '%,%'])->all();
-		$metros = Metros::find()
+		/* $metros = Metros::find()
 			->where(['LIKE', 'same_station_table_id', ','])
 			->all();
 
-			foreach ($metros as $key => $metro) {
-				$same_table_ids = explode(',', $metro['same_station_table_id']);
-				if (in_array(2822, $same_table_ids)) {
-					echo ('<pre>');
-					print_r(2222);
-					exit;
-				}
-
+		foreach ($metros as $key => $metro) {
+			$same_table_ids = explode(',', $metro['same_station_table_id']);
+			if (in_array(2822, $same_table_ids)) {
 				echo ('<pre>');
-				print_r($same_table_ids);
+				print_r(2222);
 				exit;
 			}
-		echo ('<pre>');
-		print_r($metros);
-		exit;
 
-
+			echo ('<pre>');
+			print_r($same_table_ids);
+			exit;
+		} */
 
 		// echo ('<pre>');
 		// print_r($metros_cities);
 		// exit;
+
+
+
+
+
+		//** ======== выгрузка рестов по всем городоам в таблицу excel START ========
+		/* $connection = new \yii\db\Connection([
+			'username' => 'root',
+			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurants = Restaurants::find()
+			->with('subdomen')
+			->with('rooms')
+			// ->where(['>', 'id', 15984])
+			// ->offset(3000)
+			// ->offset(6000)
+			// ->offset(9000)
+			// ->offset(12000)
+			->offset(15000)
+			->limit(3000)
+			->all();
+
+		$connection->close();
+
+
+		$restaurants_location = RestaurantsLocation::find()
+			->limit(100000)
+			->asArray()
+			->all();
+		$restaurants_location = ArrayHelper::index($restaurants_location, 'value');
+
+		$restaurants_type = RestaurantsTypes::find()
+			->limit(100000)
+			->asArray()
+			->all();
+		$restaurants_type = ArrayHelper::index($restaurants_type, 'value');
+
+		$connection = new \yii\db\Connection([
+			'username' => 'root',
+			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn_bd'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurants_premium = RestaurantsPremium::find()
+			->where(['>', 'finish', time()])
+			->limit(100000)
+			->asArray()
+			->all();
+		$restaurants_premium = ArrayHelper::index($restaurants_premium, 'gorko_id');
+
+		$connection->close();
+
+
+		// $spreadsheet = new Spreadsheet();
+		// Путь к существующему файлу Excel
+		$filePath = '/var/www/pmnetwork_dev/frontend/modules/pmnbd/web/upload/restaurants.xlsx';
+		// Загрузка существующего файла
+		$spreadsheet = IOFactory::load($filePath);
+		foreach ($restaurants as $rest) {
+			$premium = isset($restaurants_premium[$rest->gorko_id]);
+			if (!$premium) {
+				$restaurant_spec_white_list = [9];
+				$restaurant_spec_rest = explode(',', $rest->restaurants_spec);
+				if (count(array_intersect($restaurant_spec_white_list, $restaurant_spec_rest)) === 0) {
+					continue;
+				}
+
+				if (!$rest->active) {
+					continue;
+				}
+
+				if (!$rest->commission) {
+					continue;
+				}
+			}
+
+			$url = '';
+			if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $rest->gorko_id])->one()) {
+				if ($rest['subdomen']['city_id'] == 4400) {
+					$url = 'https://birthday-place.ru/catalog/restoran-' . $row['slug'] . '/';
+				} else {
+					$url = 'https://' . $rest['subdomen']['alias'] . '.birthday-place.ru/catalog/restoran-' . $row['slug'] . '/';
+				}
+			}
+
+			$prices = '';
+			$capacity = '';
+			$room_names = '';
+			foreach ($rest['rooms'] as $key => $room) {
+				if (($key + 1) == count($rest['rooms'])) {
+					$prices .= $key + 1 . ' - ' . $room['price'];
+					$capacity .= $key + 1 . ' - ' . $room['capacity'];
+					$room_names .= $room['gorko_id'] . ': «' . $room['name'] . '», «' . $rest['name'] . '» на день рождения';
+				} else {
+					$prices .= $key + 1 . ' - ' . $room['price'] . ' || ';
+					$capacity .= $key + 1 . ' - ' . $room['capacity'] . ' || ';
+					$room_names .= $room['gorko_id'] . ': «' . $room['name'] . '», «' . $rest['name'] . '» на день рождения || ';
+				}
+			}
+
+			//Тип помещения
+			$types = '';
+			$restaurant_types_rest = explode(',', $rest->type);
+			foreach ($restaurant_types_rest as $key =>  $types_rest) {
+				if (!empty($types_rest)) {
+					if (($key + 1) == count($restaurant_types_rest)) {
+						$types .= $restaurants_type[$types_rest]['text'];
+					} else {
+						$types .= $restaurants_type[$types_rest]['text'] . ' || ';
+					}
+				}
+			}
+
+			//Тип локации
+			$location = '';
+			$restaurant_location_rest = explode(',', $rest->location);
+			foreach ($restaurant_location_rest as $key =>  $location_rest) {
+				if (!empty($location_rest)) {
+					if (($key + 1) == count($restaurant_location_rest)) {
+						$location .= $restaurants_location[$location_rest]['text'];
+					} else {
+						$location .= $restaurants_location[$location_rest]['text'] . ' || ';
+					}
+				}
+			}
+
+			$sheet = $spreadsheet->getSheetByName($rest['subdomen']['name']);
+
+			if (empty($sheet)) {
+				$new_sheet = $spreadsheet->createSheet();
+				$new_sheet->setTitle($rest['subdomen']['name']);
+				$new_sheet = $spreadsheet->getSheetByName($rest['subdomen']['name']);
+
+				// Задание ширины ячейки
+				$columnDimension = $new_sheet->getColumnDimension('A');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('B');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('C');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('D');
+				$columnDimension->setWidth(12); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('E');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('F');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('G');
+				$columnDimension->setWidth(50); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('H');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('I');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('J');
+				$columnDimension->setWidth(25); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('K');
+				$columnDimension->setWidth(10); // Установите необходимую ширину
+				$columnDimension = $new_sheet->getColumnDimension('L');
+				$columnDimension->setWidth(60); // Установите необходимую ширину
+
+				$new_sheet->setCellValue('A1', 'Название реста');
+				$new_sheet->setCellValue('B1', 'URL');
+				$new_sheet->setCellValue('C1', 'Чек');
+				$new_sheet->setCellValue('D1', 'Кол-во залов');
+				$new_sheet->setCellValue('E1', 'Вместимость по залам');
+				$new_sheet->setCellValue('F1', 'Адрес');
+				$new_sheet->setCellValue('G1', 'Кухня');
+				$new_sheet->setCellValue('H1', 'Тип помещения');
+				$new_sheet->setCellValue('I1', 'Расположение');
+				$new_sheet->setCellValue('J1', 'Алкоголь');
+				$new_sheet->setCellValue('K1', 'Gorko-ID');
+				$new_sheet->setCellValue('L1', 'название залов');
+
+				$new_sheet->setCellValue('A2', $rest['name']);
+				$new_sheet->setCellValue('B2', $url);
+				$new_sheet->setCellValue('C2', $prices);
+				$new_sheet->setCellValue('D2', count($rest['rooms']));
+				$new_sheet->setCellValue('E2', $capacity);
+				$new_sheet->setCellValue('F2', $rest['address']);
+				$new_sheet->setCellValue('G2', $rest['cuisine']);
+				$new_sheet->setCellValue('H2', $types);
+				$new_sheet->setCellValue('I2', $location);
+				$new_sheet->setCellValue('J2', $rest['own_alcohol']);
+				$new_sheet->setCellValue('K2', $rest['gorko_id']);
+				$new_sheet->setCellValue('L2', $room_names);
+			} else {
+				$highest_row = $sheet->getHighestRow();
+
+				$sheet->setCellValue('A' . ($highest_row + 1), $rest['name']);
+				$sheet->setCellValue('B' . ($highest_row + 1), $url);
+				$sheet->setCellValue('C' . ($highest_row + 1), $prices);
+				$sheet->setCellValue('D' . ($highest_row + 1), count($rest['rooms']));
+				$sheet->setCellValue('E' . ($highest_row + 1), $capacity);
+				$sheet->setCellValue('F' . ($highest_row + 1), $rest['address']);
+				$sheet->setCellValue('G' . ($highest_row + 1), $rest['cuisine']);
+				$sheet->setCellValue('H' . ($highest_row + 1), $types);
+				$sheet->setCellValue('I' . ($highest_row + 1), $location);
+				$sheet->setCellValue('J' . ($highest_row + 1), $rest['own_alcohol']);
+				$sheet->setCellValue('K' . ($highest_row + 1), $rest['gorko_id']);
+				$sheet->setCellValue('L' . ($highest_row + 1), $room_names);
+			}
+		} */
+
+		/* $writer = new Xlsx($spreadsheet);
+		// $writer->save('/var/www/pmnetwork_dev/frontend/modules/pmnbd/web/upload/hello_world.xlsx');
+		$writer->save($filePath); */
+
+
+		echo ('<pre>');
+		print_r(4444);
+		exit;
+
+		//** ======== выгрузка рестов по всем городоам в таблицу excel END ========
 
 
 

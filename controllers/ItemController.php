@@ -14,7 +14,6 @@ class ItemController extends BaseFrontendController
 
 	public function actionIndex($restSlug, $roomSlug = null)
 	{
-
 		$model = ElasticItems::find()->query([
 			'bool' => [
 				'must' => [
@@ -106,9 +105,9 @@ class ItemController extends BaseFrontendController
 		$this->setSchema($rest_item);
 		// ===== schemaOrg Product END =====
 
-//            echo '<pre>';
-//            print_r($rest_item);
-//            die();
+		// echo ('<pre>');
+		// print_r($rest_item);
+		// exit;
 
         return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
