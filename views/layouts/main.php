@@ -207,7 +207,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     return $meta['type'] == 'metro';
                 }); ?>
 					 <?php foreach ($metroArr as $type_alias => $meta): ?>
-                    <a href="/catalog/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
+                    <a href="/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
                 <?php endforeach; ?>
                 <!-- <a href="/stancii-metro/" class="header_nav-link">Метро</a> -->
                 <a href="/blog/" class="header_nav-link">Блог</a>

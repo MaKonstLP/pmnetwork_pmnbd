@@ -14,6 +14,7 @@ use common\models\RestaurantSlug;
 use common\models\RestaurantsLocation;
 use common\models\RestaurantsTypes;
 use common\models\RestaurantsPremium;
+use common\models\YandexReview;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
 use common\components\AsyncRenewRestaurants;
@@ -439,17 +440,55 @@ class TestController extends BaseFrontendController
 		// $writer->save('/var/www/pmnetwork_dev/frontend/modules/pmnbd/web/upload/hello_world.xlsx');
 		$writer->save($filePath); */
 
-
-		echo ('<pre>');
-		print_r(4444);
-		exit;
-
 		//** ======== выгрузка рестов по всем городоам в таблицу excel END ========
+
+
+		/* $connection = new \yii\db\Connection([
+			'username' => 'root',
+			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurant_ya_reviews = YandexReview::find()->all();
+
+
+		foreach ($restaurant_ya_reviews as $ya_review) {
+			$ya_review->save();
+		} */
+
 
 
 
 
 		echo 1111;
+	}
+
+	//** ======== обновление отзывов с Яндекс карт ========
+	//* (запускать через консольную утилиту /var/www/pmnetwork/console/controllers/GorkoconsoleController.php)
+	public function actionYandexReviewUpdate()
+	{
+		$connection = new \yii\db\Connection([
+			'username' => 'root',
+			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurant_ya_reviews = YandexReview::find()
+			->all();
+		$connection->close();
+
+		foreach ($restaurant_ya_reviews as $ya_review) {
+			$ya_review->save();
+		}
+
+		echo ('Обновление отзывов с яндекса завершено!');
+		exit;
 	}
 
 	public function actionAll()
