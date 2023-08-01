@@ -208,7 +208,7 @@
                                     {% if (item.rooms[0].rent_only and item.rooms[0].rent_room_only > 0) %}
                                         <div class="room_price_food">
                                             <span class="room_price_subtitle">Без еды:</span>
-                                            <div class="room_price_text">{{ item.rooms[0].rent_room_only }} ₽{{ item.rooms[0].rent_room_only > 3000 ? '' : '/час'}} за закрытие зала</div>
+                                            <div class="room_price_text">от {{ item.rooms[0].rent_room_only }} ₽{{ item.rooms[0].rent_room_only > 3000 ? '' : '/час'}} за закрытие зала</div>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -242,7 +242,7 @@
                                         </div>
                                         <div class="without_food_items">
                                             <div class="without_food_item">
-                                                <span class="item_price">{{ item.rent_room_only_min }} ₽{{ item.rent_room_only_min > 3000 ? '' : '/час'}} за закрытие зала</span>
+                                                <span class="item_price">от {{ item.rent_room_only_min }} ₽{{ item.rent_room_only_min > 3000 ? '' : '/час'}} за закрытие зала</span>
                                             </div>
                                         </div>
                                     </div>
