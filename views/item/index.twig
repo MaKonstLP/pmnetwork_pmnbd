@@ -4,7 +4,7 @@
 {{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'~item.slug~'/'}) }}
 {{ this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.images[0].subpath)}) }}
 <div data-page-type="item">
-
+    {#<pre style="display:none" 333333333333333333333>{{dump(seo)}}</pre>#}
     <div class="content_block" data-listing-title>
         {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'room_id':item.gorko_id}) | raw }}
     </div>
@@ -292,7 +292,13 @@
             </div>
         </div>
     </div>
-
+    {% if seo.text_1 %}
+        <div class="content_block object_text_1">
+            <div class="rest_desc_item seo_text">
+                {{seo.text_1|raw}}
+            </div>
+        </div>
+    {% endif %}
     {% if same_objects %}
         <div class="rest_rooms_wrap">
             <div class="content_block room_objects">

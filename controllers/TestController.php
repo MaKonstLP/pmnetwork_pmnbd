@@ -471,8 +471,8 @@ class TestController extends BaseFrontendController
 	public function actionYandexReviewUpdate()
 	{
 		$connection = new \yii\db\Connection([
-			'username' => 'root',
-			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'username' => 'pmnetwork',
+			'password' => 'P6L19tiZhPtfgseN',
 			'charset'  => 'utf8mb4',
 			'dsn' => 'mysql:host=localhost;dbname=pmn'
 		]);
@@ -766,8 +766,8 @@ class TestController extends BaseFrontendController
 	{
 		//** ======== Обновление списка станций метро START ======== 
 		$connection = new \yii\db\Connection([
-			'username' => 'root',
-			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'username' => 'pmnetwork',
+			'password' => 'P6L19tiZhPtfgseN',
 			'charset'  => 'utf8mb4',
 			'dsn' => 'mysql:host=localhost;dbname=pmn'
 		]);
@@ -796,8 +796,8 @@ class TestController extends BaseFrontendController
 		}
 
 		$connection = new \yii\db\Connection([
-			'username' => 'root',
-			'password' => 'GxU25UseYmeVcsn5Xhzy',
+			'username' => 'pmnetwork',
+			'password' => 'P6L19tiZhPtfgseN',
 			'charset'  => 'utf8mb4',
 			'dsn' => 'mysql:host=localhost;dbname=pmn_bd'
 		]);
