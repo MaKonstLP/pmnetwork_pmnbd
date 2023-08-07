@@ -52,7 +52,7 @@ class Breadcrumbs
             self::get_restaurant_crumbs($rest),
             [[
                 'type' => 'single',
-                'link' => "/catalog/restoran-$rest->restaurant_slug/",
+                'link' => "/catalog/$rest->restaurant_slug/",
                 'name' => "«{$rest->restaurant_name}»"
             ]]
         );

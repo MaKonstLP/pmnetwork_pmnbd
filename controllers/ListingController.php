@@ -93,8 +93,9 @@ class ListingController extends BaseFrontendController
 				$slice_id = $slice_obj->slice_model['id'],
 			);
 		} else {
-			// return $this->goHome();
-			\Yii::$app->response->redirect('/', 301);
+			// \Yii::$app->response->redirect('/', 301);
+
+			return Yii::$app->runAction('item/index', ['restSlug'=>$slice]);
 		}
 	}
 

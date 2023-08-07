@@ -461,6 +461,78 @@ class TestController extends BaseFrontendController
 
 
 
+		/* //формируем таблицу с редиректами со старых урлов реста на новые
+		$connection = new \yii\db\Connection([
+			'username' => 'pmnetwork',
+			'password' => 'P6L19tiZhPtfgseN',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurants = Restaurants::find()
+			->all();
+
+		$restaurants_types = RestaurantsTypes::find()
+			->limit(100000)
+			->asArray()
+			->all();
+		$restaurants_types = ArrayHelper::index($restaurants_types, 'value');
+
+		$connection->close();
+
+		$connection = new \yii\db\Connection([
+			'username' => 'pmnetwork',
+			'password' => 'P6L19tiZhPtfgseN',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn_bd'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$rests_slug = RestaurantSlug::find()->all();
+
+		$connection->close();
+
+		foreach ($rests_slug as $slug) {
+			if (!(new \yii\db\Query())->select('redirect_to')->from('restaurants_redirect')->where(['redirect_from' => 'restoran-' . $slug['slug']])->one()) {
+				foreach ($restaurants as $restaurant) {
+					if (!empty($restaurant) && $restaurant['gorko_id'] == $slug['gorko_id']) {
+						$restaurant_types = [];
+						$restaurant_types_rest = explode(',', $restaurant['type']);
+						foreach ($restaurant_types_rest as $value) {
+							$restaurant_types_arr = [];
+							$restaurant_types_arr['id'] = $value;
+							$restaurant_types_arr['name'] = isset($restaurants_types[$value]['text']) ? $restaurants_types[$value]['text'] : '';
+							array_push($restaurant_types, $restaurant_types_arr);
+						}
+
+						$MAIN_REST_TYPE_ORDER = [3, 1];
+						$restMainTypeIdsOrder = array_combine($MAIN_REST_TYPE_ORDER, $MAIN_REST_TYPE_ORDER);
+
+						foreach ($restaurant_types as $type) {
+							if (in_array($type['id'], $restMainTypeIdsOrder)) {
+								$restMainTypeIdsOrder[intval($type['id'])] = $type;
+							} else {
+								$restMainTypeIdsOrder[] = $type;
+							}
+						}
+
+						$restaurant_main_type = array_reduce($restMainTypeIdsOrder, function ($acc, $type) {
+							return (empty($acc) && isset($type['name']) ? $type['name'] : $acc);
+						}, '') ?: 'Ресторан';
+
+						if ($restaurant_main_type != 'Ресторан' && $restaurant_main_type != 'Кафе') {
+							\Yii::$app->db->createCommand()
+								->insert('restaurants_redirect', ['redirect_from' => 'restoran-' . $slug['slug'], 'redirect_to' => $slug['slug']])
+								->execute();
+						}
+					}
+				}
+			}
+		} */
+
 
 
 		echo 1111;

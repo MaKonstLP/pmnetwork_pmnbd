@@ -15,7 +15,7 @@
                 <p class="item_pro_text">pro</p>
             </div>
         {% endif %}
-        <a href="/catalog/restoran-{{ item.restaurant_slug }}/">
+        <a href="/catalog/{{ item.restaurant_slug }}/">
             {# <img loading="lazy" src="{{item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100') : '/upload/img/bd/no_photo.png'}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/> #}
             <div class="item_img swiper" data-item-gallery>
                 <div class="swiper-wrapper">
@@ -73,7 +73,7 @@
 
         <div class="item_info">
             <div class="item_top">
-                <a href="/catalog/restoran-{{ item.restaurant_slug }}/">
+                <a href="/catalog/{{ item.restaurant_slug }}/">
                     <p class="item_name">{{ itemTypeName ? itemTypeName~' ' : '' }}{{ item.restaurant_name }}</p>
                 </a>
                 {% if item.restaurant_rev_ya.rate and item.restaurant_rev_ya.count %}
@@ -101,7 +101,7 @@
                 <div class="item_meta-item" data-single-map
                      data-map_img="{{ Declension.get_image_src(item.restaurant_images[0].subpath~'=w710-h472-n-l95') }}"
                      data-map_rest_name="{{ item.restaurant_name }}"
-                     data-map_rest_href="/catalog/restoran-{{ item.restaurant_slug }}/"
+                     data-map_rest_href="/catalog/{{ item.restaurant_slug }}/"
                      data-map_rest_address="{{ item.restaurant_address }}"
                      data-map_dot_x="{{ item.restaurant_latitude }}"
                      data-map_dot_y="{{ item.restaurant_longitude }}">

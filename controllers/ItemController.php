@@ -8,6 +8,7 @@ use common\models\Seo;
 use frontend\modules\pmnbd\components\Breadcrumbs;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\NotFoundHttpException;
+use frontend\modules\pmnbd\models\RestaurantRedirect;
 
 class ItemController extends BaseFrontendController
 {
@@ -32,9 +33,21 @@ class ItemController extends BaseFrontendController
 			]
 		])->one();
 
+		//проверяем не старый ли это урл и нет ли для него редиректа
 		if (empty($rest_item)) {
+			$redirect = RestaurantRedirect::find()->where(['redirect_from' => $restSlug])->one();
+
+			if ($redirect) {
+				if (!empty($roomSlug)) {
+					return $this->redirect(Yii::$app->params['siteProtocol'] . '://' . Yii::$app->params['domen'] .'/catalog/' . $redirect->redirect_to . '/' . $roomSlug . '/', 301);
+				} else {
+					return $this->redirect(Yii::$app->params['siteProtocol'] . '://' .  Yii::$app->params['domen'] .'/catalog/' . $redirect->redirect_to . '/', 301);
+				}
+			}
+
 			throw new NotFoundHttpException();
 		}
+
 		$rooms = $rest_item['rooms'];
 		$rooms_price_arr = [];
 		$rooms_capacity_arr = [];
@@ -83,9 +96,9 @@ class ItemController extends BaseFrontendController
 			$this->setSchema($rest_item, $room);
 			// ===== schemaOrg Product END =====
 
-//            echo '<pre>';
-//            print_r($room);
-//            die();
+			//            echo '<pre>';
+			//            print_r($room);
+			//            die();
 
 			return $this->render('index.twig', array(
 				'item' => $room,
@@ -105,22 +118,22 @@ class ItemController extends BaseFrontendController
 		$this->setSchema($rest_item);
 		// ===== schemaOrg Product END =====
 
-//		 echo ('<pre>');
-//		 print_r($rest_item);
-//		 exit;
+		//		 echo ('<pre>');
+		//		 print_r($rest_item);
+		//		 exit;
 
-        return $this->render('rest_index.twig', array(
+		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
 			'min_price' => ($filtered = array_filter($rooms_price_arr)) ? min($filtered) : 0,
 			'rooms_capacity' => $rooms_capacity_arr,
 			'seo' => $seo,
 			'same_objects' => $rooms,
 			'other_rests' => $other_rests,
-            'count_rooms' => count($rest_item['rooms'])
+			'count_rooms' => count($rest_item['rooms'])
 		));
 	}
 
-    private function setSeo($seo)
+	private function setSeo($seo)
 	{
 		$this->view->title = $seo['title'];
 		$this->view->params['desc'] = $seo['description'];

@@ -1,7 +1,7 @@
 {{ this.registerMetaTag({'property':'og:title','content':seo.h1|raw}) }}
 {{ this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)}) }}
 {{ this.registerMetaTag({'property':'og:type','content':'website'}) }}
-{{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'~item.slug~'/'}) }}
+{{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/'~item.restaurant_slug~'/'~item.slug~'/'}) }}
 {{ this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.images[0].subpath)}) }}
 <div data-page-type="item">
     {#<pre style="display:none" 333333333333333333333>{{dump(seo)}}</pre>#}
@@ -328,7 +328,7 @@
                             <div class="room_object_desc">
                                 <div class="room_object_desc-top">
                                     <div class="room_object_desc-title"><a
-                                                href="/catalog/restoran-{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
+                                                href="/catalog/{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
                                     </div>
                                     <div class="room_object-meta">
                                         <div class="room_desc_item">
@@ -417,7 +417,7 @@
                     <img loading="lazy" class="map_img" src="{{ Declension.get_image_src(item.images[0].subpath~'=w710-h472-n-l95') }}">
                 </div>
 
-                <a href="/catalog/restoran-{{ rest_item.restaurant_slug }}/"
+                <a href="/catalog/{{ rest_item.restaurant_slug }}/"
                    class="map_rest_name">{{ rest_item.restaurant_name }}</a>
                 <p class="map_rest_address">{{ rest_item.restaurant_address }}</p>
                 <p class="map_close">Спасибо, закрыть</p>
@@ -440,14 +440,14 @@
                         <div class="swiper-slide">
                             <div class="other_object ">
                                 <div class="other_object_img">
-                                    <a href="/catalog/restoran-{{ other_room.restaurant_slug }}/{{ other_room.slug }}/">
+                                    <a href="/catalog/{{ other_room.restaurant_slug }}/{{ other_room.slug }}/">
                                         <img loading="lazy"
                                         src="{{ other_room.images ? Declension.get_image_src(other_room.images[0].subpath~'=w305-h200-s-l95') : '/upload/img/bd/no_photo_s.png' }}">
                                     </a>
                                 </div>
-                                <div class="title"><a href="/catalog/restoran-{{ other_room.restaurant_slug }}/{{ other_room.slug }}/">{{ other_room.name }}</a></div>
+                                <div class="title"><a href="/catalog/{{ other_room.restaurant_slug }}/{{ other_room.slug }}/">{{ other_room.name }}</a></div>
                                 <div class="restaurant_name">
-                                    <a href="/catalog/restoran-{{ other_room.restaurant_slug }}/">{{ other_room.restaurant_name }}</a></div>
+                                    <a href="/catalog/{{ other_room.restaurant_slug }}/">{{ other_room.restaurant_name }}</a></div>
                                 <div class="object_meta_item">
                                     {% if other_room.capacity %}
                                         <div class="object_desc_item">

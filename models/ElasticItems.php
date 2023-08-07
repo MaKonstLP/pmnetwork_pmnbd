@@ -23,6 +23,7 @@ use common\models\MetroStations;
 use common\models\MetroLines;
 use common\components\MetroUpdate;
 use backend\modules\pmnbd\models\Metros;
+use frontend\modules\pmnbd\models\RestaurantRedirect;
 
 class ElasticItems extends \yii\elasticsearch\ActiveRecord
 {
@@ -320,7 +321,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		foreach ($restaurants as $restaurant) {
 			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station);
 			$all_res .= $res . ' | ';
-			 echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
+			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
 
 		self::subdomenCheck($connection_core);
@@ -417,7 +418,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$record->restaurant_extra_services = $restaurant->extra_services;
 		$record->restaurant_payment = $restaurant->payment;
 		$record->restaurant_special = $restaurant->special;
-		
+
 		switch ($restaurant->gorko_id) {
 			case 483343:
 				$record->restaurant_phone = '+7 963 716-59-17';
@@ -608,12 +609,31 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		}
 		$record->restaurant_location = $restaurant_location;
 
-		if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $restaurant->gorko_id])->one()) {
+
+		/* if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $restaurant->gorko_id])->one()) {
 			$record->restaurant_slug = $row['slug'];
 		} else {
 			$record->restaurant_slug = self::getTransliterationForUrl($restaurant->name);
 			\Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $restaurant->gorko_id, 'slug' => $record->restaurant_slug])->execute();
+		} */
+		//меняем урлы и добавляем редиректы со старых урлов.
+		//Если у реста основной тип не "Ресторан" или "Кафе", то в слаг записываем имя реста, иначе добавляем к имени префикс: "restoran-"
+		if ($record->restaurant_main_type != 'Ресторан' && $record->restaurant_main_type != 'Кафе') {
+			if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $restaurant->gorko_id])->one()) {
+				$record->restaurant_slug = $row['slug'];
+			} else {
+				$record->restaurant_slug = self::getTransliterationForUrl($restaurant->name);
+				\Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $restaurant->gorko_id, 'slug' => $record->restaurant_slug])->execute();
+			}
+		} else {
+			if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $restaurant->gorko_id])->one()) {
+				$record->restaurant_slug = $row['slug'];
+			} else {
+				$record->restaurant_slug = 'restoran-' . self::getTransliterationForUrl($restaurant->name);
+				\Yii::$app->db->createCommand()->insert('restaurant_slug', ['gorko_id' => $restaurant->gorko_id, 'slug' => $record->restaurant_slug])->execute();
+			}
 		}
+
 
 		//Св-ва залов
 		$rooms = [];
@@ -621,9 +641,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$max_price = 0;
 		$sum_price = 0;
 		$count_room = 0;
-        $banquet_price_person_min = 1000000;
-        $rent_room_only_min = 1000000;
-        $banquet_price_min = 1000000;
+		$banquet_price_person_min = 1000000;
+		$rent_room_only_min = 1000000;
+		$banquet_price_min = 1000000;
 
 		foreach ($restaurant->rooms as $idx => $room) {
 
@@ -740,24 +760,24 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
 		foreach ($record->rooms as $room) {
 
-		    if ($room['rent_room_only'] < $rent_room_only_min and $room['rent_room_only'] > 0) {
-                $rent_room_only_min = $room['rent_room_only'];
-            }
+			if ($room['rent_room_only'] < $rent_room_only_min and $room['rent_room_only'] > 0) {
+				$rent_room_only_min = $room['rent_room_only'];
+			}
 
-            if ($room['banquet_price_person'] < $banquet_price_person_min and $room['banquet_price_person'] > 0) {
-                $banquet_price_person_min = $room['banquet_price_person'];
-            }
+			if ($room['banquet_price_person'] < $banquet_price_person_min and $room['banquet_price_person'] > 0) {
+				$banquet_price_person_min = $room['banquet_price_person'];
+			}
 
-            if ($room['banquet_price_min'] < $banquet_price_min and $room['banquet_price_min'] > 0) {
-                $banquet_price_min = $room['banquet_price_min'];
-            }
+			if ($room['banquet_price_min'] < $banquet_price_min and $room['banquet_price_min'] > 0) {
+				$banquet_price_min = $room['banquet_price_min'];
+			}
 		}
 
 		$record->restaurant_min_check = ($min_price < 1000000) ? $min_price : 0;
 		$record->restaurant_max_check = $max_price;
 		$record->rent_room_only_min = $rent_room_only_min == 1000000 ? 0 : $rent_room_only_min;
-        $record->banquet_price_person_min = $banquet_price_person_min == 1000000 ? 0 : $banquet_price_person_min;
-        $record->rest_banquet_price = $banquet_price_min == 1000000 ? 0 : $banquet_price_min;
+		$record->banquet_price_person_min = $banquet_price_person_min == 1000000 ? 0 : $banquet_price_person_min;
+		$record->rest_banquet_price = $banquet_price_min == 1000000 ? 0 : $banquet_price_min;
 		$record->restaurant_avg_check = (!empty($sum_price) and !empty($count_room)) ? floor($sum_price / $count_room) : 0;
 
 		try {

@@ -1,7 +1,7 @@
 {{ this.registerMetaTag({'property':'og:title','content':seo.h1|raw}) }}
 {{ this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)}) }}
 {{ this.registerMetaTag({'property':'og:type','content':'website'}) }}
-{{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/restoran-'~item.restaurant_slug~'/'}) }}
+{{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/'~item.restaurant_slug~'/'}) }}
 {{ this.registerMetaTag({'property':'og:image','content':(item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath) : '/upload/img/bd/no_photo.png')}) }}
 <div data-page-type="item">
     <div class="content_block" data-listing-title>
@@ -64,7 +64,7 @@
                         помещени{{ Declension.get_num_ending(rooms_capacity|length,['е','я','й']) }}:
                         {% for slug, capacity in rooms_capacity %}
                             <a
-                            href="/catalog/restoran-{{ item.restaurant_slug }}/{{ slug }}/">{{ capacity }}</a>{{ loop.last ? '' : ', ' }}
+                            href="/catalog/{{ item.restaurant_slug }}/{{ slug }}/">{{ capacity }}</a>{{ loop.last ? '' : ', ' }}
                         {% endfor %}
                         человек</p>
                 </div>
@@ -587,7 +587,7 @@
                         помещени{{ Declension.get_num_ending(rooms_capacity|length,['е','я','й']) }}:
                         {% for slug, capacity in rooms_capacity %}
                             <a
-                            href="/catalog/restoran-{{ item.restaurant_slug }}/{{ slug }}/">{{ capacity }}</a>{{ loop.last ? '' : ', ' }}
+                            href="/catalog/{{ item.restaurant_slug }}/{{ slug }}/">{{ capacity }}</a>{{ loop.last ? '' : ', ' }}
                         {% endfor %}
                         человек</p>
                 </div>
@@ -723,7 +723,7 @@
                     <div class="room_object_desc">
                         <div class="room_object_desc-top">
                             <div class="room_object_desc-title"><a
-                                        href="/catalog/restoran-{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
+                                        href="/catalog/{{ item.restaurant_slug }}/{{ same_object.slug }}/">{{ same_object.name }}</a>
                             </div>
                             <div class="room_object-meta">
                                 <div class="room_desc_item">
@@ -830,7 +830,7 @@
                      src="{{ Declension.get_image_src(item.restaurant_images[0].subpath~'=w710-h472-n-l95') }}">
             </div>
 
-            <a href="/catalog/restoran-{{ item.restaurant_slug }}/"
+            <a href="/catalog/{{ item.restaurant_slug }}/"
                class="map_rest_name">{{ item.restaurant_name }}</a>
             <p class="map_rest_address">{{ item.restaurant_address }}</p>
             <p class="map_close">Спасибо, закрыть</p>
