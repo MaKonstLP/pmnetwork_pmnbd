@@ -13,7 +13,10 @@ use common\models\Filter;
 use frontend\components\ParamsFromQuery;
 use frontend\components\QueryFromSlice;
 use frontend\modules\pmnbd\models\ElasticItems;
-use common\models\blog\BlogPost;
+// use common\models\blog\BlogPost;
+use backend\modules\pmnbd\models\blog\BlogPost;
+use backend\modules\pmnbd\models\blog\BlogPostSubdomen;
+use backend\modules\pmnbd\models\Metros;
 
 class SitemapController extends Controller
 {
@@ -49,18 +52,43 @@ class SitemapController extends Controller
 		$rests = new ItemsFilterElastic([], 9999, 1, false, 'restaurants', $elastic_model);
 
 		$blogPosts = [];
-        if (\Yii::$app->params['subdomen_alias'] == 'msk') {
-            $blogPosts = BlogPost::findWithMedia()
-                ->where(['published' => 1])
-                ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
-        }
+		/* if (\Yii::$app->params['subdomen_alias'] == 'msk') {
+			$blogPosts = BlogPost::findWithMedia()
+				->where(['published' => 1])
+				->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])->all();
+		} */
+
+		if (\Yii::$app->params['subdomen_alias'] == 'msk') {
+			$blogPosts = BlogPost::findWithMedia()
+				->where(['published' => true])
+				->andWhere(['not', ['collection' => true]])
+				->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])
+				->all();
+		}
+
+		$collections = BlogPost::findWithMedia()
+			->joinWith('blogPostSubdomens')
+			->where(['published' => true, 'collection' => true])
+			->andWhere([BlogPostSubdomen::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
+			->orderBy(['published_at' => SORT_DESC])
+			->all();
+
+		$metro_stations = Metros::find()
+			->joinWith('slicesMetro')
+			->where(['city_id' => Yii::$app->params['subdomen_id']])
+			->andWhere(['>', 'slices_metro_extra.restaurant_count', 0])
+			->orderBy(['name' => SORT_ASC])
+			->asArray()
+			->all();
 
 		return $this->renderPartial('sitemap.twig', [
 			'isMain' => Yii::$app->params['subdomen_id'] == 4400,
 			'host' => $host,
 			'slices' => $slices,
 			'rests' => $rests->items,
-			'posts' => $blogPosts
+			'posts' => $blogPosts,
+			'collections' => $collections,
+			'metro_stations' => $metro_stations,
 		]);
 	}
 }

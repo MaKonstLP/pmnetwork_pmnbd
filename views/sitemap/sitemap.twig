@@ -16,6 +16,28 @@
 			</url>
 		{% endfor %}
 	{% endif %}
+
+	{% if collections %}
+		<url>
+			<loc>{{host}}/collection/</loc>
+		</url>
+		{% for collection in collections %}
+			<url>
+				<loc>{{host}}/collection/{{collection.alias}}/</loc>
+			</url>
+		{% endfor %}
+	{% endif %}
+
+	{% if metro_stations %}
+		<url>
+			<loc>{{host}}/stancii-metro/</loc>
+		</url>
+		{% for metro in metro_stations %}
+			<url>
+				<loc>{{host}}/catalog/metro-{{metro.alias}}/</loc>
+			</url>
+		{% endfor %}
+	{% endif %}
 	
 	<url>
 		<loc>{{host}}/catalog/</loc>
@@ -29,11 +51,11 @@
 
 	{% for rest in rests %}
 		<url>
-			<loc>{{host}}/catalog/restoran-{{rest.restaurant_slug}}/</loc>
+			<loc>{{host}}/catalog/{{rest.restaurant_slug}}/</loc>
 		</url>
 		{% for room in rest.rooms %}
 		<url>
-			<loc>{{host}}/catalog/restoran-{{rest.restaurant_slug}}/{{room.slug}}/</loc>
+			<loc>{{host}}/catalog/{{rest.restaurant_slug}}/{{room.slug}}/</loc>
 		</url>
 		{% endfor %}
 	{% endfor %}
