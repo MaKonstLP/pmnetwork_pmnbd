@@ -7,9 +7,10 @@ use yii\web\Controller;
 use frontend\widgets\FilterWidget;
 use frontend\widgets\PaginationWidgetPrevNext;
 use frontend\components\ParamsFromQuery;
-use frontend\components\QueryFromSlice;
+// use frontend\components\QueryFromSlice;
 use frontend\components\PremiumMixer;
 use frontend\modules\pmnbd\components\Breadcrumbs;
+use frontend\modules\pmnbd\components\QueryFromSlice;
 use common\models\elastic\ItemsFilterElastic;
 use common\models\Filter;
 use common\models\RestaurantsTypes;
@@ -52,6 +53,12 @@ class ListingController extends BaseFrontendController
 		$this->filter_model = Yii::$app->params['filter_model'];
 		$this->slices_model = Yii::$app->params['slices_model'];
 
+		$page = \Yii::$app->request->getQueryParam('page');
+		if (isset($page) && ($page == 0 || $page == 1)) {
+			$url = Url::current(['page' => null, 'q' => null]);
+			\Yii::$app->response->redirect(Url::to($url, 'https'), 301);
+		}
+
 		return true;
 	}
 
@@ -90,7 +97,7 @@ class ListingController extends BaseFrontendController
 				$itemTypeName   =	(count($params['params_filter']['mesto'] ?? []) == 1
 					? (RestaurantTypeSlice::find()->with('restaurantType')->where(['slice_id' => $slice_obj->slice_model])->one()->restaurantType->text ?? "")
 					: ""),
-				$slice_id = $slice_obj->slice_model['id'],
+				$slice_id = $slice_obj->slice_model['id']
 			);
 		} else {
 			// \Yii::$app->response->redirect('/', 301);

@@ -49,6 +49,22 @@ class ItemController extends BaseFrontendController
 		}
 
 		$rooms = $rest_item['rooms'];
+
+		if($rest_item['restaurant_gorko_id'] == 466745){
+			$sorted_rooms = [];
+			$sorted_rooms_mask = [
+				266817 => 0,
+				266815 => 1,
+				233873 => 2,
+				290777 => 3,
+			];
+			foreach ($rooms as $key => $value) {
+				$sorted_rooms[$sorted_rooms_mask[$value['gorko_id']]] = $value;
+			}
+			$rooms = $sorted_rooms;
+			ksort($rooms);
+		}
+
 		$rooms_price_arr = [];
 		$rooms_capacity_arr = [];
 		$rooms_type_arr = [];

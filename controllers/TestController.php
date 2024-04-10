@@ -15,6 +15,7 @@ use common\models\RestaurantsLocation;
 use common\models\RestaurantsTypes;
 use common\models\RestaurantsPremium;
 use common\models\YandexReview;
+use common\models\RoomsSpec;
 use frontend\modules\pmnbd\models\ElasticItems;
 use yii\web\Controller;
 use common\components\AsyncRenewRestaurants;
@@ -534,12 +535,89 @@ class TestController extends BaseFrontendController
 		} */
 
 
+		/* $connection = new \yii\db\Connection([
+			'username' => 'pmnetwork',
+			'password' => 'P6L19tiZhPtfgseN',
+			'charset'  => 'utf8mb4',
+			'dsn' => 'mysql:host=localhost;dbname=pmn'
+		]);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+
+		$restaurants = Restaurants::find()
+			->with('rooms')
+			->where(['id' => 7080])
+			->limit(100000)
+			->all();
+
+		$rooms_spec_module = RoomsSpec::find()
+			->limit(100000)
+			->asArray()
+			->all();
+
+		$test = [];
+		foreach ($restaurants[0]->rooms as $key => $room) {
+			$room_spec_white_list = 9; //день рождения
+			$not_suitable_room = true;
+
+			foreach ($rooms_spec_module as $rooms_spec) {
+				if ($room['gorko_id'] == $rooms_spec['gorko_id'] && $room_spec_white_list == $rooms_spec['spec_id']) {
+					$not_suitable_room = false;
+					break;
+				}
+			}
+
+			if ($not_suitable_room) {
+				$test['notSuitable'][] = $room['name'];
+			} else {
+				$test['suitable'][] = $room['name'];
+			}
+		}
+
+		echo ('<pre>');
+		print_r($test);
+		exit; */
+
+
+		// SubdomenFilteritem::deactivate();
+		/* $counterActive = 0;
+		$counterInactive = 0;
+		foreach (Subdomen::find()->all() as $key => $subdomen) {
+			$rest_total = self::find()
+				->limit(0)
+				->query(
+					['bool' => ['must' => ['match' => ['restaurant_city_id' => $subdomen->city_id]]]]
+				)
+				->search();
+			$isActive = $rest_total['hits']['total'] > 9;
+			$subdomen->active = $isActive;
+			// $subdomen->save();
+			if ($subdomen->active) {
+				// foreach (FilterItems::find()->all() as $filterItem) {
+				// $hits = self::getFilterItemsHitsForCity($filterItem, $subdomen->city_id);
+				// $where = ['subdomen_id' => $subdomen->id, 'filter_items_id' => $filterItem->id];
+				// $subdomenFilterItem = SubdomenFilteritem::find()->where($where)->one() ?? new SubdomenFilteritem($where);
+				// $subdomenFilterItem->hits = $hits;
+				// $subdomenFilterItem->is_valid = 1;
+				// $subdomenFilterItem->save();
+				// $hits > 0 ? $counterActive++ : $counterInactive++;
+				// }
+			}
+		} */
+
+
+		echo ('<pre>');
+		print_r(3333);
+		exit;
+
+
 
 		echo 1111;
 	}
 
 	//** ======== обновление отзывов с Яндекс карт ========
-	//* (запускать через консольную утилиту /var/www/pmnetwork/console/controllers/GorkoconsoleController.php)
+	//* (запускать через консольную утилиту /var/www/pmnetwork_dev/console/controllers/GorkoconsoleController.php)
 	public function actionYandexReviewUpdate()
 	{
 		$connection = new \yii\db\Connection([
@@ -552,6 +630,7 @@ class TestController extends BaseFrontendController
 		Yii::$app->set('db', $connection);
 
 		$restaurant_ya_reviews = YandexReview::find()
+			->where(['not', ['rev_ya_id' => null]])
 			->all();
 		$connection->close();
 

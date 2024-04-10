@@ -57,7 +57,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     </style>
 </head>
 
-<body>
+<body data-channel-id="4">
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     var fired = false;

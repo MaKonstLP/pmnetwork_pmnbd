@@ -79,7 +79,6 @@ export default class Filter{
 
 		let data = { 'filter' : JSON.stringify(self.state) }
 		
-		console.log('filter111', data);
 		this.promise = new Promise(function(resolve, reject) {
 			self.reject = reject;
 			self.resolve = resolve;
@@ -104,7 +103,6 @@ export default class Filter{
 		let data = {
 			'filter' : JSON.stringify(self.state)
 		}
-		console.log('filter', data);
 		this.promise = new Promise(function(resolve, reject) {
 			self.reject = reject;
 			self.resolve = resolve;
@@ -116,11 +114,9 @@ export default class Filter{
             data: data,
             success: function(response) {
             	if(response){
-            		//console.log(response);
             		self.resolve('/catalog/'+response);
             	}
             	else{
-            		//console.log(response);
             		self.resolve(self.filterListingHref());
             	}
             },
@@ -171,7 +167,6 @@ export default class Filter{
 			$items.each(function(){
 				if(self.state[blockType] !== ''){
 					self.state[blockType] += ','+$(this).data('value');
-					//selectText = 'Выбрано ('+$items.length+')';
 					$countItems.show();
 				}
 				else{

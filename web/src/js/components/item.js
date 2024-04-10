@@ -63,6 +63,23 @@ export default class Item {
 			let blur_phone = $(this).find('.object_fake_phone');
 			let real_phone = $(this).find('.object_real_phone');
 
+			if ($('[data-premium-rest]').length > 0) {
+				let data = new FormData();
+				data.append('gorko_id', $('[data-premium-rest]').data('premium-rest'));
+				data.append('channel', $('[data-channel-id]').data('channel-id'));
+				fetch('/premium/premium-click/', {
+					method: 'POST',
+					body: data,
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data);
+					})
+					.catch((error) => {
+						console.error('Error:', error);
+					});
+			}
+
 			blur_phone.addClass('hidden');
 			real_phone.removeClass('hidden');
 		});

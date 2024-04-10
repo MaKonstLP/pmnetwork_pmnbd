@@ -8,12 +8,17 @@ import Widget from './components/widget';
 import Form from './components/form';
 import YaMap from './components/map';
 import Slider from './components/slider';
+import Premium from './components/premium';
 
 window.$ = $;
 window.jQuery = $;
 
 (function ($) {
     $(function () {
+
+        if ($('[data-premium-rest]').length > 0) {
+			var premium = new Premium();
+		}
 
         if ($('[data-page-type="listing"]').length > 0) {
             var listing = new Listing($('[data-page-type="listing"]'));

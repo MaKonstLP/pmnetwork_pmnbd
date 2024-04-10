@@ -3,7 +3,7 @@
 {{ this.registerMetaTag({'property':'og:type','content':'website'}) }}
 {{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/'~item.restaurant_slug~'/'~item.slug~'/'}) }}
 {{ this.registerMetaTag({'property':'og:image','content':Declension.get_image_src(item.images[0].subpath)}) }}
-<div data-page-type="item">
+<div data-page-type="item" {% if item.restaurant_premium %} data-premium-rest="{{item.restaurant_gorko_id}}" {% endif %}>
     {#<pre style="display:none" 333333333333333333333>{{dump(seo)}}</pre>#}
     <div class="content_block" data-listing-title>
         {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'room_id':item.gorko_id}) | raw }}

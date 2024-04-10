@@ -10,6 +10,7 @@ use backend\modules\pmnbd\models\blog\BlogTag;
 use common\models\Seo;
 use backend\modules\pmnbd\models\blog\BlogPostSubdomen;
 use frontend\modules\pmnbd\components\Breadcrumbs;
+use frontend\modules\pmnbd\models\ElasticItems;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -111,6 +112,13 @@ class BlogController extends BaseFrontendController
 
         $similarPosts = array_merge($similarPostsPrev, $similarPostsNext);
 
+		// ===== schemaOrg Product START =====
+		$rest_gorko_ids = $post->getRestCardsId();
+		if (!empty($rest_gorko_ids)) {
+			$this->setSchema($rest_gorko_ids, $post, $seo);
+		}
+		// ===== schemaOrg Product END =====
+
 
 		return $this->render('post.twig', compact('post', 'similarPosts'));
 	}
@@ -155,5 +163,89 @@ class BlogController extends BaseFrontendController
 		$this->view->title = $seo['title'];
 		$this->view->params['desc'] = $seo['description'];
 		$this->view->params['kw'] = $seo['keywords'];
+	}
+
+	private function setSchema($rest_gorko_ids, $post, $seo)
+	{
+		$restaurants = ElasticItems::find()->query([
+			"bool" => [
+				"must" => [
+					["terms" => ["restaurant_gorko_id" => $rest_gorko_ids]]
+				]
+			]
+		])->limit(100)->all();
+
+		$min_price = 99999;
+		$max_price = 0;
+		$review_count = 0;
+		$total_rating = 0;
+		$best_rating = 0;
+		$rest_with_rating = 0;
+		$average_rating = 0;
+		foreach ($restaurants as $item) {
+			if (
+				isset($item['restaurant_min_check'])
+				&& !empty($item['restaurant_min_check'])
+				&& isset($item['restaurant_max_check'])
+				&& !empty($item['restaurant_max_check'])
+			) {
+				if ($item['restaurant_min_check'] < $min_price) {
+					$min_price = $item['restaurant_min_check'];
+				}
+				if ($item['restaurant_max_check'] > $max_price) {
+					$max_price = $item['restaurant_max_check'];
+				}
+			}
+
+			if (isset($item['restaurant_rev_ya']['count']) && !empty($item['restaurant_rev_ya']['count'])) {
+				$review_count += preg_replace('/[^0-9]/', '', $item['restaurant_rev_ya']['count']);
+			}
+
+			if (isset($item['restaurant_rev_ya']['rate']) && !empty($item['restaurant_rev_ya']['rate'])) {
+				if ($best_rating < $item['restaurant_rev_ya']['rate']) {
+					$best_rating = $item['restaurant_rev_ya']['rate'];
+				}
+				$total_rating += $item['restaurant_rev_ya']['rate'];
+				$rest_with_rating += 1;
+			}
+		}
+		if ($total_rating != 0) {
+			$average_rating = round($total_rating / $rest_with_rating, 1);
+		}
+
+		$json_str = '';
+		$json_str .= '{
+			"@context": "https://schema.org",
+			"@type": [
+				"Product"
+			],
+			"name": "' . $post['name'] . '",
+			"description": "' . $seo['description'] . '"';
+
+		if ($max_price) {
+			$json_str .= ',';
+			$json_str .= '
+			"offers": {
+				"@type": "AggregateOffer",
+				"offerCount": "' . count($restaurants) . '",
+				"priceCurrency": "RUB",
+				"highPrice": "' . $max_price . '",
+				"lowPrice": "' . $min_price . '"
+			}';
+		}
+
+		if ($review_count && $average_rating) {
+			$json_str .= ',';
+			$json_str .= '
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"bestRating": "'.$best_rating.'",
+				"reviewCount": "' . $review_count . '",
+				"ratingValue": "' . $average_rating . '"
+			}';
+		}
+		$json_str .= '}';
+
+		Yii::$app->params['schema_product'] = $json_str;
 	}
 }

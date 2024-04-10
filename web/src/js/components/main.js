@@ -175,7 +175,13 @@ export default class Main {
 
 			// ==== Gorko-calltracking ====
 			let phone = $(this).closest('.rest_book_hidden').find('.popup_real_phone span').text();
-			self.sendCalltracking(phone);
+			if (typeof ym === 'function') {
+				self.sendCalltracking(phone);
+			} else {
+				setTimeout(function () {
+					self.sendCalltracking(phone);
+				}, 3000);
+			}
 		});
 
 		$('body').on('click', '[data-popup-phone-list]', function () {
@@ -187,7 +193,13 @@ export default class Main {
 
 			// ==== Gorko-calltracking ====
 			let phone = $(this).closest('.item_info').find('.popup_real_phone span').text();
-			self.sendCalltracking(phone);
+			if (typeof ym === 'function') {
+				self.sendCalltracking(phone);
+			} else {
+				setTimeout(function () {
+					self.sendCalltracking(phone);
+				}, 3000);
+			}
 		});
 
 		/*$('body').on('click', '.header_city', function () {
@@ -525,10 +537,25 @@ export default class Main {
 				ym('67719148', 'reachGoal', $(this).data('target'));
 				gtag('event', $(this).data('target'), { 'event_category': 'click' });
 
+				// ==== Gorko-calltracking ====
+				let phone = $(this).attr('href');
+				if (typeof ym === 'function') {
+					self.sendCalltracking(phone);
+				} else {
+					setTimeout(function () {
+						self.sendCalltracking(phone);
+					}, 3000);
+				}
+
 				if ($(this).data('target') == 'call') {
 					// ==== Gorko-calltracking ====
-					let phone = $(this).attr('href');
-					self.sendCalltracking(phone);
+					// if (typeof ym === 'function') {
+					// 	self.sendCalltracking(phone);
+					// } else {
+					// 	setTimeout(function () {
+					// 		self.sendCalltracking(phone);
+					// 	}, 3000);
+					// }
 				}
 			}
 			if (typeof ym == 'undefined' || typeof gtag == 'undefined') {
@@ -555,6 +582,11 @@ export default class Main {
 			clientId = tracker.get('clientId');
 		})
 
+		let yaClientId = '';
+		ym(67719148, 'getClientID', function (id) {
+			yaClientId = id;
+		});
+
 		const data = new FormData();
 
 		if (this.mobileMode) {
@@ -563,6 +595,7 @@ export default class Main {
 
 		data.append('phone', phone);
 		data.append('clientId', clientId);
+		data.append('yaClientId', yaClientId);
 
 		$.ajax({
 			type: 'post',

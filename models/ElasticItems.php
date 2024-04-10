@@ -21,6 +21,8 @@ use common\models\RestaurantsYandex;
 use common\models\RestaurantsPremium;
 use common\models\MetroStations;
 use common\models\MetroLines;
+use common\models\RoomsSpec;
+use common\models\premium\PremiumRest;
 use common\components\MetroUpdate;
 use backend\modules\pmnbd\models\Metros;
 use frontend\modules\pmnbd\models\RestaurantRedirect;
@@ -256,6 +258,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			->with('subdomen')
 			->with('yandexReview')
 			// ->where(['active' => 1, 'commission' => 2])
+			//->where(['gorko_id' => 474269])
 			->limit(100000)
 			->all();
 
@@ -271,6 +274,17 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			->asArray()
 			->all();
 		$restaurants_types = ArrayHelper::index($restaurants_types, 'value');
+
+		$connection = new \yii\db\Connection($params['premium_connection_config']);
+		$connection->open();
+		Yii::$app->set('db', $connection);
+
+		$restaurants_premium_base = PremiumRest::find()
+			->where(['active' => 1, 'channel' => 4])
+			->limit(100000)
+			->all();
+		$restaurants_premium_base = ArrayHelper::index($restaurants_premium_base, 'gorko_id');
+
 
 
 		$connection_sat = new \yii\db\Connection($params['site_connection_config']);
@@ -308,6 +322,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			->where(['LIKE', 'same_station_table_id', ','])
 			->all();
 
+		$rooms_spec_module = RoomsSpec::find()
+			->limit(200000)
+			->asArray()
+			->all();
 
 		$connectionSite = new \yii\db\Connection($params['site_connection_config']);
 		$connectionSite->open();
@@ -319,7 +337,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$rest_count = count($restaurants);
 		$rest_iter = 0;
 		foreach ($restaurants as $restaurant) {
-			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station);
+			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base);
 			$all_res .= $res . ' | ';
 			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
@@ -350,7 +368,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		);
 	}
 
-	public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station)
+	public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base)
 	{
 		$isExist = false;
 
@@ -426,9 +444,27 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			case 441099:
 				$record->restaurant_phone = '+7 930 036-84-71';
 				break;
+			case 466745:
+				$record->restaurant_phone = '8 (8452) 491549';
+				break;
+			case 488891:
+				$record->restaurant_phone = '+7 980 098-47-55';
+				break;
+			case 474269:
+				$record->restaurant_phone = '+7 963 627-16-41';
+				break;
 			default:
 				$record->restaurant_phone = $restaurant->phone;
 				break;
+		}
+
+		if(isset($restaurants_premium_base[$restaurant->gorko_id]) && $restaurants_premium_base[$restaurant->gorko_id]->proxy_phone){
+			$proxy_phone = $restaurants_premium_base[$restaurant->gorko_id]->proxy_phone;
+			if(  preg_match( '/^\+\d(\d{3})(\d{3})(\d{2})(\d{2})$/', $proxy_phone,  $matches ) )
+            {
+                $proxy_phone_pretty = '+7 ('.$matches[1].') '.$matches[2].'-'. $matches[3].'-'. $matches[4];
+            }
+			$record->restaurant_phone = $proxy_phone_pretty;
 		}
 
 		$restaurant->rating ? $record->restaurant_rating = $restaurant->rating : $record->restaurant_rating = 90;
@@ -522,6 +558,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$room_ids[] = $room_id;
 			foreach ($images_ext as $image) {
 				$images_sorted[$room_id][$image['event_id']][] = $image;
+				ArrayHelper::multisort($images_sorted[$room_id][$image['event_id']], ['sort'], [SORT_ASC]);
 			}
 		}
 		$specs = [9, 0, 1];
@@ -647,6 +684,20 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
 		foreach ($restaurant->rooms as $idx => $room) {
 
+			$room_spec_white_list = 9; //день рождения
+			$not_suitable_room = true;
+
+			foreach ($rooms_spec_module as $rooms_spec) {
+				if ($room['gorko_id'] == $rooms_spec['gorko_id'] && $room_spec_white_list == $rooms_spec['spec_id']) {
+					$not_suitable_room = false;
+					break;
+				}
+			}
+			
+			if ($not_suitable_room) {
+				continue;
+			}
+
 			$room_arr = [];
 
 			if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $room->gorko_id])->one()) {
@@ -670,6 +721,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$room_arr['gorko_id'] = $room->gorko_id;
 			$room_arr['restaurant_id'] = $room->restaurant_id;
 			$room_arr['price'] = $room->price;
+			if($room->restaurant_id == 474269)
+				$room_arr['price'] = 4500;
+
 			$room_arr['capacity_reception'] = $room->capacity_reception;
 			$room_arr['capacity'] = $room->capacity;
 			$room_arr['capacity_min'] = $room->capacity_min;
@@ -686,6 +740,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			$room_arr['features'] = $room->features;
 			$room_arr['cover_url'] = $room->cover_url;
 			$room_arr['banquet_price_person'] = $room->banquet_price_person;
+			if($room->restaurant_id == 474269)
+				$room_arr['banquet_price_person'] = 4500;
+
 			$room_arr['rent_room_only'] = $room->rent_room_only;
 			$room_arr['banquet_price_min'] = $room->banquet_price_min;
 			$room_arr['payment_model_id'] = $room->payment_model;
@@ -779,6 +836,14 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$record->banquet_price_person_min = $banquet_price_person_min == 1000000 ? 0 : $banquet_price_person_min;
 		$record->rest_banquet_price = $banquet_price_min == 1000000 ? 0 : $banquet_price_min;
 		$record->restaurant_avg_check = (!empty($sum_price) and !empty($count_room)) ? floor($sum_price / $count_room) : 0;
+
+		if($restaurant->gorko_id == 474269){
+			$record->restaurant_min_check = 4500;
+			$record->restaurant_max_check = 4500;
+			$record->restaurant_avg_check = 4500;
+		}
+
+
 
 		try {
 			if (!$isExist) {

@@ -219,6 +219,24 @@ export default class Form {
 		console.log('reachGoal', this.target);
 		ym('67719148', 'reachGoal', this.target);
 		gtag('event', $(this).data('target'), {'event_category': 'click'});
+
+		if ($('[data-premium-rest]').length > 0) {
+			let data_premium = new FormData();
+			data_premium.append('gorko_id', $('[data-premium-rest]').data('premium-rest'));
+			data_premium.append('channel', $('[data-channel-id]').data('channel-id'));
+			data_premium.append('response', JSON.stringify(data.response));
+			fetch('/premium/premium-callback/', {
+				method: 'POST',
+				body: data_premium,
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+				});
+		}
 		// this.$submitButton.removeClass('button__pending');
 	}
 
