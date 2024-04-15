@@ -724,6 +724,8 @@ class TestController extends BaseFrontendController
 		$type_query = [];
 		$location_query = [];
 		$metro_query = [];
+        $specials_query = [];
+        $extra_query = [];
 		foreach ($filter_item_arr as $filter_data) {
 
 			$filter_query = new FilterQueryConstructorElastic($filter_data, $main_table);
@@ -744,7 +746,15 @@ class TestController extends BaseFrontendController
 				if (!isset($metro_query[$filter_query->query_type])) {
 					$metro_query[$filter_query->query_type] = [];
 				}
-			} else {
+			} elseif ($filter_query->specials) {
+                if (!isset($specials_query[$filter_query->query_type])) {
+                    $specials_query[$filter_query->query_type] = [];
+                }
+            } elseif ($filter_query->extra) {
+                if (!isset($extra_query[$filter_query->query_type])) {
+                    $extra_query[$filter_query->query_type] = [];
+                }
+            } else {
 				if (!isset($simple_query[$filter_query->query_type])) {
 					$simple_query[$filter_query->query_type] = [];
 				}
@@ -759,7 +769,11 @@ class TestController extends BaseFrontendController
 					array_push($location_query[$filter_query->query_type], $filter_value);
 				} elseif ($filter_query->metro) {
 					array_push($metro_query[$filter_query->query_type], $filter_value);
-				} else {
+				} elseif ($filter_query->specials) {
+                    array_push($specials_query[$filter_query->query_type], $filter_value);
+                } elseif ($filter_query->extra) {
+                    array_push($extra_query[$filter_query->query_type], $filter_value);
+                } else {
 					array_push($simple_query[$filter_query->query_type], $filter_value);
 				}
 			}
@@ -825,6 +839,30 @@ class TestController extends BaseFrontendController
 				array_push($final_query['bool']['must'], ['nested' => ["path" => "restaurant_metro_stations", "query" => ['bool' => ['must' => ['bool' => ['should' => $temp_type_arr]]]]]]);
 			}
 		}
+
+        foreach ($specials_query as $type => $arr_filter) {
+            $temp_type_arr = [];
+            foreach ($arr_filter as $key => $value) {
+                array_push($temp_type_arr, $value);
+            }
+            if ($main_table == 'rooms') {
+                array_push($final_query['bool']['must'], ['bool' => ['should' => $temp_type_arr]]);
+            } else {
+                array_push($final_query['bool']['must'], ['nested' => ["path" => "restaurant_specials", "query" => ['bool' => ['must' => ['bool' => ['should' => $temp_type_arr]]]]]]);
+            }
+        }
+
+        foreach ($extra_query as $type => $arr_filter) {
+            $temp_type_arr = [];
+            foreach ($arr_filter as $key => $value) {
+                array_push($temp_type_arr, $value);
+            }
+            if ($main_table == 'rooms') {
+                array_push($final_query['bool']['must'], ['bool' => ['should' => $temp_type_arr]]);
+            } else {
+                array_push($final_query['bool']['must'], ['nested' => ["path" => "restaurant_extra", "query" => ['bool' => ['must' => ['bool' => ['should' => $temp_type_arr]]]]]]);
+            }
+        }
 
 		$final_query = [
 			"function_score" => [
