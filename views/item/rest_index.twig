@@ -657,7 +657,11 @@
                         <p class="rest_desc_title _mb">Особенности</p>
                         {% set specials = item.restaurant_special|split(', ') %}
                         {% for special in specials %}
-                            <p class="rest_desc_value _check">{{ special }}</p>
+                            {% if special == 'Музыкальное оборудование' %}
+                                <p class="rest_desc_value _check">Караоке</p>
+                            {% else %}
+                                <p class="rest_desc_value _check">{{ special }}</p>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

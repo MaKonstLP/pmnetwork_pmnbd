@@ -169,16 +169,25 @@ class ListingController extends BaseFrontendController
 
 		// ===== вывод на срезах "Подборок ресторанов" START =====
 		$collection_posts = '';
-		if ($type) {
-			$collection_posts = BlogPost::findWithMedia()
-				->with('blogPostTags')
-				->joinWith('blogPostSlices')
-				->where(['published' => true])
-				->andWhere(['collection' => true])
-				->andWhere([BlogPostSlice::tableName() . '.slice_id' => $slice_id])
-				->andWhere([BlogPostSlice::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
-				->all();
-		}
+		if ($type && !empty($slice_id)) {
+            $collection_posts = BlogPost::findWithMedia()
+                ->with('blogPostTags')
+                ->joinWith('blogPostSlices')
+                ->where(['published' => true])
+                ->andWhere(['collection' => true])
+                ->andWhere([BlogPostSlice::tableName() . '.slice_id' => $slice_id])
+                ->andWhere([BlogPostSlice::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
+                ->all();
+		} else {
+            $collection_posts = BlogPost::findWithMedia()
+                ->with('blogPostTags')
+                ->joinWith('blogPostSlices')
+                ->where(['published' => true])
+                ->where(['in_catalog' => true])
+                ->andWhere(['collection' => true])
+                ->andWhere([BlogPostSlice::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
+                ->all();
+        }
 		// ===== вывод на срезах "Подборок ресторанов" END =====
 
 		// ===== schemaOrg Product START =====
@@ -253,11 +262,6 @@ class ListingController extends BaseFrontendController
 			Yii::$app->params['schema_product'] = $json_str;
 		}
 		// ===== schemaOrg Product END =====
-
-
-		//  echo "<pre>";
-		//  print_r($items->items);
-		//  exit;
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
 		return $this->render('index.twig', array(

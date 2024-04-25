@@ -1,0 +1,19 @@
+<div class="content_block collections_block">
+    <h2>Подборки ресторана</h2>
+    <a class="all_collections" href="/collection/">Все подборки</a>
+    <div class="main_collections items-{{ collection_posts|length }}">
+        {% for post in collection_posts %}
+            <div class="main_collections_item">
+                <div class="main_collections_img">
+                    <a href="{{ post.getUrlCollection() }}"><img loading="lazy" src="{{ post.getFileData('image').src }}"></a>
+                </div>
+                <div class="main_collections_text">
+                    {%set months=["","января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","декабря"]%}
+                    <p class="collection_date">{{ post.published_at|date("d") }} {{ months[post.published_at|date("n")] }} {{ post.published_at|date("Y") }}</p>
+                    <a class="collection_name" href="{{ post.getUrlCollection() }}">{{ post.name }}</a>
+                    <p class="collection_intro">{{ post.short_intro }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

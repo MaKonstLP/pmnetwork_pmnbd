@@ -132,6 +132,7 @@ class SiteController extends BaseFrontendController
 		$mainSlices = array_filter($mainSlices, function ($slice) {
 			return $slice['count'] > 0;
 		});
+
 		$blogPosts = [];
 		if (\Yii::$app->params['subdomen_alias'] == 'msk') {
 			$blogPosts = BlogPost::findWithMedia()
@@ -141,6 +142,13 @@ class SiteController extends BaseFrontendController
 				->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])
 				->all();
 		}
+
+        $collectionPosts = BlogPost::findWithMedia()
+            ->where(['published' => true])
+            ->where(['in_catalog' => true])
+            ->limit(3)
+            ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])
+            ->all();
 
 		$totalRests = $items->total;
 
@@ -226,6 +234,7 @@ class SiteController extends BaseFrontendController
 			'mainRestTypesCounts' => $mainRestTypesCounts,
 			'mainSlices' => $mainSlices,
 			'blogPosts' => $blogPosts,
+			'collectionPosts' => $collectionPosts,
 			'subdomenObjects' => Yii::$app->params['activeSubdomenRecords'],
 			'items' => $items->items,
 		]);

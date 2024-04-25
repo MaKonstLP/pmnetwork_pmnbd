@@ -132,7 +132,7 @@
 
 	{% if mainSlices %}
 		<div class="main_podborki">
-			<h3>Подборки заведений</h2>
+			<h3>Заведения для дня рождения</h3>
 			<div class="content_block">
 				{% for alias, slice in mainSlices %}
 					<div class="restaurant_item">
@@ -149,6 +149,10 @@
 				{% endfor %}
 			</div>
 		</div>
+	{% endif %}
+
+	{% if collectionPosts %}
+		{{ this.render('//components/generic/listing_collections_main_page.twig', {'collection_posts': collectionPosts}) | raw }}
 	{% endif %}
 
 	<div class="bottom_block">
