@@ -146,18 +146,11 @@ class SiteController extends BaseFrontendController
                 ->all();
         }
 
-//        $collectionPosts = BlogPost::findWithMedia()
-//            ->where(['published' => 1])
-//            ->where(['collection' => true])
-//            ->orderBy(['featured' => SORT_DESC, 'published_at' => SORT_DESC])
-//            ->limit(3)
-//            ->all();
-
         $collectionPosts = BlogPost::findWithMedia()
             ->with('blogPostTags')
             ->joinWith('blogPostSubdomens')
-            ->where(['published' => true])
-            ->andWhere(['collection' => true])
+            ->where(['published' => true, 'collection' => true])
+            ->andWhere([BlogPostSubdomen::tableName() . '.subdomen_id' => Yii::$app->params['subdomen_id']])
             ->orderBy(['published_at' => SORT_DESC])
             ->limit(3)
             ->all();
