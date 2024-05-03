@@ -412,7 +412,7 @@ class ListingController extends BaseFrontendController
 		// exit;
 		//получаем ссылки для блока тэгов
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
-			$temp_params->listing_url . Yii::$app->params['subdomen_id'],
+			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_pmnbd',
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
 				//если единичный срез, берем тип его фильтра
 				$filterName = $temp_params->slice_alias ? array_key_first($return['params_filter']) : 'any';
