@@ -28,13 +28,13 @@ class ListingController extends BaseFrontendController
 	//порядок и количество вывода для блока тэгов. Filter->alias => количество кнопок
 	const FAST_FILTERS = [
 		//для одиночного среза, по типу его фильтра
-		'mesto' => ['mesto' => 15, 'vmestimost' => 2, 'dopolnitelno' => 1, 'chek' => 1],
-		'vmestimost' => ['vmestimost' => 5, 'mesto' => 3, 'dopolnitelno' => 1, 'chek' => 1],
-		'dopolnitelno' => ['dopolnitelno' => 10, 'chek' => 2, 'mesto' => 3, 'vmestimost' => 2],
-		'chek' => ['chek' => 10, 'mesto' => 3, 'dopolnitelno' => 2, 'vmestimost' => 2],
-		'metro' => ['mesto' => 4, 'metro' => 4],
+		'mesto' => ['mesto' => 6, 'vmestimost' => 3, 'dopolnitelno' => 4, 'chek' => 1],
+		'vmestimost' => ['vmestimost' => 4, 'mesto' => 4, 'dopolnitelno' => 4, 'chek' => 1],
+		'dopolnitelno' => ['dopolnitelno' => 6, 'chek' => 1, 'mesto' => 4, 'vmestimost' => 2],
+		'chek' => ['chek' => 10, 'mesto' => 4, 'dopolnitelno' => 3, 'vmestimost' => 2],
+		'metro' => ['mesto' => 3, 'vmestimost' => 2, 'dopolnitelno' => 3, 'metro' => 6],
 		//для множественных
-		'any' => ['dopolnitelno' => 2, 'mesto' => 3, 'vmestimost' => 2, 'chek' => 2]
+		'any' => ['dopolnitelno' => 3, 'chek' => 2, 'mesto' => 4, 'vmestimost' => 3]
 	];
 
 	protected $per_page = 36;
@@ -412,11 +412,41 @@ class ListingController extends BaseFrontendController
 		// exit;
 		//получаем ссылки для блока тэгов
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
-			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_pmnbd',
+			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_birthday',
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
 				//если единичный срез, берем тип его фильтра
 				$filterName = $temp_params->slice_alias ? array_key_first($return['params_filter']) : 'any';
-				if (empty($return['params_filter'])) $filterName = 'mesto'; //для /catalog/
+				if (empty($return['params_filter'])) {
+                    $default_slices = [
+                        'restoran'    => 'Рестораны',
+                        'kafe'        => 'Кафе',
+                        'loft'        => 'Лофты',
+                        'veranda'     => 'Веранды',
+                        'karaoke'     => 'Караоке',
+                        'svoy-alko'   => 'Свой алкоголь',
+                        '1000-rub'    => 'Недорогие рестораны',
+                        '15-chelovek' => '20 члеовек',
+                        '30-chelovek' => '30 члеовек',
+				    ];
+
+                    $catalog_slices = [];
+                    foreach ($default_slices as $slice_alias => $slice_name) {
+                        $slice = Slices::findOne(['alias' => $slice_alias]);
+
+                        $sliceFilterParams = $slice->getFilterParams();
+                        $temp_params = new ParamsFromQuery($sliceFilterParams, $this->filter_model, $this->slices_model);
+
+                        $catalog_slices[] = [
+                            'name' => $slice_name,
+                            'alias' => $slice->alias,
+                            'count' => $temp_params->query_hits
+                        ];
+                    }
+
+                    return $catalog_slices;
+
+//                    $filterName = 'mesto'; //для /catalog/
+                }
 				//получаем массив по названию этого фильтра
 				$fastFilters = self::FAST_FILTERS[$filterName] ?? [];
 				$collectedSlices = array_reduce($slices_model, function ($acc, $slice) use ($fastFilters, $filter_model, $temp_params) {
@@ -464,7 +494,7 @@ class ListingController extends BaseFrontendController
 					return array_merge($acc, $slicesToAdd);
 				}, []);
 			},
-			365 * 24 * 60 * 60
+			90 * 24 * 60 * 60
 		);
 		$return['fast_filters'] = array_map("unserialize", array_unique(array_map("serialize", $return['fast_filters'])));
 
