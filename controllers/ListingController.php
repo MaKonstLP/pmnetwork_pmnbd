@@ -436,11 +436,12 @@ class ListingController extends BaseFrontendController
                         $sliceFilterParams = $slice->getFilterParams();
                         $temp_params = new ParamsFromQuery($sliceFilterParams, $this->filter_model, $this->slices_model);
 
-                        $catalog_slices[] = [
-                            'name' => $slice_name,
-                            'alias' => $slice->alias,
-                            'count' => $temp_params->query_hits
-                        ];
+                        if ($temp_params->query_hits)
+                            $catalog_slices[] = [
+                                'name' => $slice_name,
+                                'alias' => $slice->alias,
+                                'count' => $temp_params->query_hits
+                            ];
                     }
 
                     return $catalog_slices;
