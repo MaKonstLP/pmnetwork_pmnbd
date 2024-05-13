@@ -425,8 +425,8 @@ class ListingController extends BaseFrontendController
                         'karaoke'     => 'Караоке',
                         'svoy-alko'   => 'Свой алкоголь',
                         '1000-rub'    => 'Недорогие рестораны',
-                        '15-chelovek' => '20 члеовек',
-                        '30-chelovek' => '30 члеовек',
+                        '15-chelovek' => '20 человек',
+                        '30-chelovek' => '30 человек',
 				    ];
 
                     $catalog_slices = [];
