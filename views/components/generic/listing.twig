@@ -18,6 +18,13 @@
         <a href="/catalog/{{ item.restaurant_slug }}/">
             {# <img loading="lazy" src="{{item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath~'=w360-l100') : '/upload/img/bd/no_photo.png'}}" alt="{{img_alt ? (img_alt | replace({"{название}" : item.restaurant_name})) : "Ресторан "~item.restaurant_name}}"/> #}
             <div class="item_img swiper" data-item-gallery>
+                {% if item.restaurant_rev_ya.rate and item.restaurant_rev_ya.count %}
+                    <div class="rating_mobile">
+                        <img src="/upload/img/item_star.svg" alt="Оценка {{ item.restaurant_name }}">
+                        <div class="rating_mobile_rate">{{ item.restaurant_rev_ya.rate }}</div>
+                        <div class="rating_mobile_count">{{ item.restaurant_rev_ya.count }}</div>
+                    </div>
+                {% endif %}
                 <div class="swiper-wrapper">
                     {# {% for room in item.rooms %} #}
                     {# {% if room.images %} #}

@@ -39,6 +39,11 @@
         background-color: $clrBg;
     }
 
+    @include for-phone {
+        margin-top: 20px;
+        padding-bottom:0px;
+    }
+
     .filter_label{
         position: absolute;
         cursor: initial;
@@ -352,7 +357,7 @@
     height: auto;
 
     .fast_filter{
-        border: 1px solid #C4C4C4;
+        border: 1px solid #FFC24A;
         box-sizing: border-box;
         border-radius: 54px;
         width: max-content;
@@ -375,15 +380,21 @@
             }
         &:hover{
             background-color: #c4c4c43b;
-        } 
+        }
+
+        @include for-phone {
+            margin: 0px 5px;
+        }
     }
     
     @include for-mobile{
-
-        overflow-x: auto;
         flex-wrap: nowrap;
-        //overflow-x: scroll;
         justify-content: left;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        overflow-x: auto;
+        //overflow-x: scroll;
         .mCSB_container{
             padding: 10px 0;
             margin-bottom: 15px!important;

@@ -247,19 +247,19 @@ export default class Main {
 			theme: 'dark-thick',
 		});
 
-		$('.fast_filters').each(function () {
-			if ($(window).width() <= 768) {
-				$(this).mCustomScrollbar({
-					theme: 'dark-thick',
-					axis: 'x',
-					documentTouchScroll: true,
-					contentTouchScroll: 2,
-					advanced: {
-						autoExpandHorizontalScroll: true, //optional (remove or set to false for non-dynamic/static elements)
-					},
-				});
-			}
-		});
+		// $('.fast_filters').each(function () {
+		// 	if ($(window).width() <= 768) {
+		// 		$(this).mCustomScrollbar({
+		// 			theme: 'dark-thick',
+		// 			axis: 'x',
+		// 			documentTouchScroll: true,
+		// 			contentTouchScroll: 2,
+		// 			advanced: {
+		// 				autoExpandHorizontalScroll: true, //optional (remove or set to false for non-dynamic/static elements)
+		// 			},
+		// 		});
+		// 	}
+		// });
 
 		$('[data-seo-text]').each(function () {
 			if ($(this).height() > 200 && $(window).width() < 600) {
@@ -278,23 +278,23 @@ export default class Main {
 					$(this).addClass('_hidden');
 				}
 			});
-			if ($(window).width() <= 768) {
-				$('.fast_filters').each(function () {
-					if (!$(this).hasClass('mCustomScrollbar')) {
-						$(this).mCustomScrollbar({
-							theme: 'dark-thick',
-							axis: 'x',
-							advanced: {
-								autoExpandHorizontalScroll: true, //optional (remove or set to false for non-dynamic/static elements)
-							},
-						});
-					}
-				});
-			} else {
-				$('.fast_filters').each(function () {
-					$(this).mCustomScrollbar('destroy');
-				});
-			}
+			// if ($(window).width() <= 768) {
+			// 	$('.fast_filters').each(function () {
+			// 		if (!$(this).hasClass('mCustomScrollbar')) {
+			// 			$(this).mCustomScrollbar({
+			// 				theme: 'dark-thick',
+			// 				axis: 'x',
+			// 				advanced: {
+			// 					autoExpandHorizontalScroll: true, //optional (remove or set to false for non-dynamic/static elements)
+			// 				},
+			// 			});
+			// 		}
+			// 	});
+			// } else {
+			// 	$('.fast_filters').each(function () {
+			// 		$(this).mCustomScrollbar('destroy');
+			// 	});
+			// }
 		});
 
 		let searchInCityList = function ($input) {
@@ -538,24 +538,30 @@ export default class Main {
 				gtag('event', $(this).data('target'), { 'event_category': 'click' });
 
 				// ==== Gorko-calltracking ====
-				let phone = $(this).attr('href');
-				if (typeof ym === 'function') {
-					self.sendCalltracking(phone);
-				} else {
-					setTimeout(function () {
+				if ($(this).data('show-phone') !== undefined) {
+					let phone = $(this).attr('href');
+					if (!phone) {
+						phone = $(this).find('.object_real_phone').attr('href');
+					}
+					if (typeof ym === 'function') {
 						self.sendCalltracking(phone);
-					}, 3000);
+					} else {
+						setTimeout(function () {
+							self.sendCalltracking(phone);
+						}, 3000);
+					}
 				}
 
+				// ==== Gorko-calltracking ====
 				if ($(this).data('target') == 'call') {
-					// ==== Gorko-calltracking ====
-					// if (typeof ym === 'function') {
-					// 	self.sendCalltracking(phone);
-					// } else {
-					// 	setTimeout(function () {
-					// 		self.sendCalltracking(phone);
-					// 	}, 3000);
-					// }
+					let phone = $(this).attr('href');
+					if (typeof ym === 'function') {
+						self.sendCalltracking(phone);
+					} else {
+						setTimeout(function () {
+							self.sendCalltracking(phone);
+						}, 3000);
+					}
 				}
 			}
 			if (typeof ym == 'undefined' || typeof gtag == 'undefined') {

@@ -1,4 +1,5 @@
 [data-page-type="listing"] {
+
 	.same_blogs_wrap {
 		background: #f8f8f8;
 
@@ -36,15 +37,33 @@
 			display: flex;
 		}
 	}
+
+	@include for-phone {
+		h1 {
+			font-size: 26px;
+			line-height: 34px;
+		}
+
+		.seo_text.before_filter {
+			margin-top: 15px;
+
+			[data-listing-text-top] p:first-of-type {
+				margin-top: 0px;
+			}
+		}
+	}
 }
 .items_list_listing {
 	padding: 24px 0;
+
 	@include for-mobile {
 		padding: 16px;
 	}
+
 	@include for-phone {
 		padding: 24px 0;
 	}
+
 	.items_list {
 		display: flex;
 		flex-wrap: wrap;
@@ -283,9 +302,10 @@
 				}
 				@include for-phone {
 					.item_rating {
-						display: flex;
-						margin-top: 8px;
-						margin-bottom: 6px;
+						display: none;
+						//display: flex;
+						//margin-top: 8px;
+						//margin-bottom: 6px;
 					}
 				}
 			}
@@ -433,6 +453,45 @@
 			text-transform: uppercase;
 			padding-left: 21px;
 		}
+
+		.rating_mobile {
+			display: none;
+
+			img {
+				width: 16px;
+				height: 16px;
+			}
+		}
+
+		.rating_mobile_rate {
+			font-size: 11px;
+			line-height: 20px;
+			color: #1A2824;
+		}
+
+		.rating_mobile_count {
+			font-size: 11px;
+			line-height: 20px;
+			color: $clrGrey;
+		}
+
+		@include for-phone {
+			.rating_mobile {
+				display: block;
+				position: absolute;
+				right: 8px;
+				top: 8px;
+				background-color: $clrBg;
+				border-radius: 2px;
+				padding: 2px 5px;
+				display: flex;
+				flex-wrap: nowrap;
+				align-items: center;
+				justify-content: center;
+				column-gap: 5px;
+				z-index: 10;
+			}
+		}
 	}
 
 	.item.pro {
@@ -531,6 +590,10 @@ div[data-append-items] {
 				background: url("/upload/img/icon_sort_black.svg") no-repeat 100%;
 			}
 		}
+	}
+
+	@include for-phone {
+		margin-top: 20px;
 	}
 }
 
