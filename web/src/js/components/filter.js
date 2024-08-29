@@ -26,7 +26,6 @@ export default class Filter{
 			} else {
 				self.selectBlockClick($parent);
 			}
-				
 		});
 
 		//КЛИК ПО СТРОКЕ В СЕЛЕКТЕ

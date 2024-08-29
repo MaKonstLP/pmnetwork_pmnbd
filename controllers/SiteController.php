@@ -74,7 +74,8 @@ class SiteController extends BaseFrontendController
             ) {
                 $acc[] = [
                     'alias' => $sliceObj->alias,
-                    'plural' => str_replace(" площадок", "", Declension::get_num_ending($item['doc_count'], array_map('mb_strtolower', [$typeObj->text, $typeObj->plural_2, $typeObj->plural_5]))),
+//                    'plural' => str_replace(" площадок", "", Declension::get_num_ending($item['doc_count'], array_map('mb_strtolower', [$typeObj->text, $typeObj->plural_2, $typeObj->plural_5]))),
+                    'plural' => Declension::get_num_ending($item['doc_count'], array_map('mb_strtolower', [$typeObj->text, $typeObj->plural_2, $typeObj->plural_5])),
                     'count' => $item['doc_count']
                 ];
             }

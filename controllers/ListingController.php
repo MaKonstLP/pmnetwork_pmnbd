@@ -78,13 +78,13 @@ class ListingController extends BaseFrontendController
 			
 			$this->view->params['menu'] = $slice;
 			$params = $this->parseGetQuery($slice_obj->params, $this->filter_model, $this->slices_model);
-
+//            echo '<pre>';print_r($this->filter_model);die;
 			isset($_GET['page']) ? $params['page'] = $_GET['page'] : $params['page'];
 			$canonical = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
-			if (isset($_GET['zzz'])) {
-				print_r(count($params['params_filter']['mesto'] ?? []) == 1);
-				die;
-			}
+//			if (isset($_GET['zzz'])) {
+//				print_r(count($params['params_filter']['mesto'] ?? []) == 1);
+//				die;
+//			}
 
 			return $this->actionListing(
 				$page 			=	$params['page'],
@@ -411,6 +411,7 @@ class ListingController extends BaseFrontendController
 		// print_r($temp_params->listing_url . Yii::$app->params['subdomen_id']);
 		// exit;
 		//получаем ссылки для блока тэгов
+//        \Yii::$app->cache->flush();
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
 			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_birthday',
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
@@ -462,18 +463,18 @@ class ListingController extends BaseFrontendController
 							if ($sliceFilterItem = $slice->getFilterItem($filter_model)) {
 								switch ($slice->alias) {
 									case '1000-rub':
-										$slice_name = 'Недорогие';
+                                        $slice->tag_name = 'Недорогие';
 										break;
 									case '3000-rub':
-										$slice_name = 'Дорогие';
+                                        $slice->tag_name = 'Дорогие';
 										break;
-									default:
-										$slice_name = str_replace('/', ' / ', $sliceFilterItem->text);
-										break;
+//									default:
+//                                        $slice->tag_name = str_replace('/', ' / ', $sliceFilterItem->text);
+//										break;
 								}
 								//добавляем его в результирующий массив к другим позициям этого же типа фильтра
 								$acc[$filterAlias][] = [
-									'name' => $slice_name,
+									'name' => $slice->tag_name,
 									'alias' => $slice->alias,
 									'count' => $temp_params->query_hits
 								];

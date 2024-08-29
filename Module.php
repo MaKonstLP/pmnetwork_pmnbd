@@ -156,6 +156,16 @@ class Module extends \yii\base\Module
             'otel' => ['name' => 'Отели', 'type' => 'kind','count' => 0],
             'za-gorodom' => ['name' => 'За городом', 'type' => 'feature','count' => 0],
             'svoy-alko' => ['name' => 'Со своим алкоголем', 'type' => 'feature','count' => 0],
+            'shater' => ['name' => 'Шатры', 'type' => 'kind','count' => 0],
+            'letnyaya-ploshadka' => ['name' => 'Летние площадки', 'type' => 'kind','count' => 0],
+            'karaoke' => ['name' => 'Караоке', 'type' => 'feature','count' => 0],
+            'scena' => ['name' => 'Сцена', 'type' => 'feature','count' => 0],
+            'zhivaya-muzika' => ['name' => 'Живая музыка', 'type' => 'feature','count' => 0],
+            '10-chelovek' => ['name' => '10 человек', 'type' => 'vmestimost','count' => 0],
+            '20-25-chelovek' => ['name' => '20 человек', 'type' => 'vmestimost','count' => 0],
+            '30-chelovek' => ['name' => '30 человек', 'type' => 'vmestimost','count' => 0],
+            '50-chelovek' => ['name' => '50 человек', 'type' => 'vmestimost','count' => 0],
+            '100-chelovek' => ['name' => '100 человек', 'type' => 'vmestimost','count' => 0],
         ];
 		  
         foreach ($footerSlices as $alias => $sliceTexts) {

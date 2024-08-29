@@ -210,7 +210,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                     <a href="/<?= $type_alias ?>/" class="header_nav-link"><?= $meta['name'] ?></a>
                 <?php endforeach; ?>
                 <!-- <a href="/stancii-metro/" class="header_nav-link">Метро</a> -->
-                <a href="/blog/" class="header_nav-link">Блог</a>
+                <a href="/blog/" class="header_nav-link" <?= Yii::$app->params['subdomen_alias'] != 'msk' ? 'target="_blank"' : ''?>>Блог</a>
                 <?php if ($this->params['collectionCount'] > 0): ?>
                     <a href="/collection/" class="header_nav-link">Подборки</a>
                 <?php endif; ?>
@@ -283,6 +283,22 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
                                     foreach ($featureArr as $type_alias => $meta) { ?>
                                         <li class="footer_nav_wrap-sub_el"><a
                                                     href="/catalog/<?= $type_alias ?>/"><?= $meta['name'] ?></a></li>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                            <li class="footer_nav_wrap-el">
+                                <span class="footer_nav_wrap-title">Вместимость</span>
+                                <ul class="footer_nav_wrap-sub">
+                                    <?php
+                                    $featureArr = array_filter(Yii::$app->params['footer_slices'], function ($meta) {
+                                        return $meta['type'] == 'vmestimost';
+                                    });
+                                    foreach ($featureArr as $type_alias => $meta) { ?>
+                                        <li class="footer_nav_wrap-sub_el">
+                                            <a href="/catalog/<?= $type_alias ?>/">
+                                                <?= $meta['name'] ?>
+                                            </a>
+                                        </li>
                                     <?php } ?>
                                 </ul>
                             </li>

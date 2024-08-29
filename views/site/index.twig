@@ -43,7 +43,13 @@
 					<div class="main_rectangle_2"></div>
 					<a href="/catalog/{{item.alias}}/">
 						<div class="main_rectangle_count">{{item.count}}</div>
-						<div class="main_rectangle_type">{{item.plural}}</div>
+						<div class="main_rectangle_type">
+							{% if 'летн' in item.plural %}
+								{{ item.plural|split(' ') | first }}
+							{% else %}
+								{{item.plural}}
+							{% endif %}
+						</div>
 					</a>
 				</div>
 			{% endfor %}
@@ -68,7 +74,7 @@
 	<div class="items_list_listing content_block" data-listing-wrapper>
 		<div class="items_list" data-listing-list>
 
-			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt}) | raw }}
+			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt, 'index_page':true}) | raw }}
 
 		</div>
 		<a href="/catalog/" class="items_list_btn _button" data-listing-list>Полный каталог площадок</a>

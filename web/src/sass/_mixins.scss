@@ -21,6 +21,11 @@
 @mixin for-lowdesc {
  	@media (max-width: 1650px) { @content; }
 }
+
+@mixin for-laptop {
+  @media (max-width: 1280px) { @content; }
+}
+
 @mixin placeholder {
   &::-webkit-input-placeholder { @content; }
   &:-moz-placeholder           { @content; }

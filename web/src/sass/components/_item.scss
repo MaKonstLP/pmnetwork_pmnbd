@@ -1146,21 +1146,29 @@
 
   .item_rating {
     display: flex !important;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+
     img {
       width: 18px;
       height: 18px;
+      margin-right: 3px;
     }
 
     .item_rating-rate {
       font-weight: 700;
       font-size: 17px;
       line-height: 24px;
+      color: #1a2824;
+      margin-right: 6px;
     }
 
     .item_rating-count {
       font-weight: 400;
       font-size: 17px;
       line-height: 25px;
+      color: #848484;
     }
   }
 
