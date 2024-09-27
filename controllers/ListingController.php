@@ -411,7 +411,7 @@ class ListingController extends BaseFrontendController
 		// print_r($temp_params->listing_url . Yii::$app->params['subdomen_id']);
 		// exit;
 		//получаем ссылки для блока тэгов
-//        \Yii::$app->cache->flush();
+        \Yii::$app->cache->flush();
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
 			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_birthday',
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
@@ -472,6 +472,7 @@ class ListingController extends BaseFrontendController
 //                                        $slice->tag_name = str_replace('/', ' / ', $sliceFilterItem->text);
 //										break;
 								}
+
 								//добавляем его в результирующий массив к другим позициям этого же типа фильтра
 								$acc[$filterAlias][] = [
 									'name' => $slice->tag_name,
@@ -483,7 +484,7 @@ class ListingController extends BaseFrontendController
 					}
 					return $acc;
 				}, array_fill_keys(array_keys($fastFilters), []));
-
+				
 				return array_reduce(array_keys($collectedSlices), function ($acc, $filterName) use ($collectedSlices, $fastFilters) {
 					$slicesToAdd = $collectedSlices[$filterName];
 					//если в результирующем массиве для типа фильтра больше позиций чем предопределено в $fastFilters,

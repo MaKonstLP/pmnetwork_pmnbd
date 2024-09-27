@@ -999,9 +999,10 @@ class TestController extends BaseFrontendController
 				->one();
 
 			//находим все метро с таким же именем
-			$metro_with_same_name = MetroStations::find()
-				->where(['alias' => $metro_station->alias])
-				->all();
+            if (isset($metro_station->alias) and !empty($metro_station->alias))
+			    $metro_with_same_name = MetroStations::find()
+			    	->where(['alias' => $metro_station->alias])
+			    	->all();
 
 			//оставляем станции только нужного города
 			$metro_same_name_and_city = [];
@@ -1020,6 +1021,10 @@ class TestController extends BaseFrontendController
 					$same_station_table_id .= ',' . $metro['table_id'];
 				}
 			}
+
+//            echo '<pre>';
+//            print_r($metro_station);
+//            die;
 
 			//добавляем метро в локальную таблицу БД
 			if (Metros::find()->where(['city_id' => $city_id])->andWhere(['alias' => $metro_station->alias])->exists()) {
@@ -1042,6 +1047,19 @@ class TestController extends BaseFrontendController
 
 		echo 'Обновление списка станций метро завершено';
 		exit;
+	}
+
+    public function actionXxxx()
+    {
+        $metro_stations = Metros::find()->all();
+
+        foreach ($metro_stations as $metro) {
+             $slice = Slices::find()->where(['type' => 'metro', 'alias' => 'metro-' . $metro->alias, 'description' => $metro->city_id])->one();
+             if (empty($slice->tag_name)) {
+                 $slice->tag_name = $metro->name;;
+                 $slice->save(false);
+             }
+        }
 	}
 
 	public function actionRefreshMetroFilterItems()
@@ -1079,6 +1097,7 @@ class TestController extends BaseFrontendController
 			if (!Slices::find()->where(['type' => 'metro', 'alias' => 'metro-' . $metro->alias, 'description' => $metro->city_id])->exists()) {
 				$slice = new Slices();
 				$slice->type = 'metro';
+				$slice->tag_name = $metro->name;
 				$slice->alias = 'metro-' . $metro->alias;
 				$slice->description = $metro->city_id;
 				$slice->params = '{"metro":"' . $metro->table_id . '"}';

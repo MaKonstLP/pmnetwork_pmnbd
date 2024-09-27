@@ -116,37 +116,40 @@ class Module extends \yii\base\Module
             ->all();
         Yii::$app->params['slices_model'] = Slices::find()->all();
 
-		  $metro_stations = Metros::find()
-			->joinWith('slicesMetro')
-			->where(['city_id' => Yii::$app->params['subdomen_id']])
-			->andWhere(['>', 'slices_metro_extra.restaurant_count', 0])
-			->asArray()
-			->all();
+		$metro_stations = Metros::find()
+		    ->joinWith('slicesMetro')
+		    ->where(['city_id' => Yii::$app->params['subdomen_id']])
+		    ->andWhere(['>', 'slices_metro_extra.restaurant_count', 0])
+		    ->asArray()
+		    ->all();
 
-			$headerSlices = [
-				'restoran' => ['name' => 'Рестораны', 'type' => 'kind','count' => 0],
-				'kafe' => ['name' => 'Кафе', 'type' => 'kind','count' => 0],
-				'loft' => ['name' => 'Лофты', 'type' => 'kind','count' => 0],
-				'veranda' => ['name' => 'Веранды', 'type' => 'kind','count' => 0],
-				// 'otel' => ['name' => 'Отели', 'type' => 'kind','count' => 0],
-				'za-gorodom' => ['name' => 'За городом', 'type' => 'feature','count' => 0],
-				'svoy-alko' => ['name' => 'Со своим алкоголем', 'type' => 'feature','count' => 0],
-			];
-			if (empty($metro_stations)) {
-				$headerSlices['otel'] = ['name' => 'Отели', 'type' => 'kind','count' => 0];
-			  } else {
-				$headerSlices['stancii-metro'] = ['name' => 'Метро', 'type' => 'metro','count' => 999];
-			  }
-			foreach ($headerSlices as $alias => $sliceTexts) {
-				if ($alias != 'stancii-metro') {
-					$slice_obj = new QueryFromSlice($alias);
-					$temp_params = new ParamsFromQuery($slice_obj->params, Yii::$app->params['filter_model'], Yii::$app->params['slices_model']);
-					$headerSlices[$alias]['count'] = $temp_params->query_hits;
-				}
+		$headerSlices = [
+			'restoran' => ['name' => 'Рестораны', 'type' => 'kind','count' => 0],
+			'kafe' => ['name' => 'Кафе', 'type' => 'kind','count' => 0],
+			'loft' => ['name' => 'Лофты', 'type' => 'kind','count' => 0],
+			'veranda' => ['name' => 'Веранды', 'type' => 'kind','count' => 0],
+			// 'otel' => ['name' => 'Отели', 'type' => 'kind','count' => 0],
+			'za-gorodom' => ['name' => 'За городом', 'type' => 'feature','count' => 0],
+			'svoy-alko' => ['name' => 'Со своим алкоголем', 'type' => 'feature','count' => 0],
+		];
+
+		if (empty($metro_stations)) {
+		    $headerSlices['otel'] = ['name' => 'Отели', 'type' => 'kind','count' => 0];
+		} else {
+			$headerSlices['stancii-metro'] = ['name' => 'Метро', 'type' => 'metro','count' => 999];
+		}
+
+		foreach ($headerSlices as $alias => $sliceTexts) {
+			if ($alias != 'stancii-metro') {
+				$slice_obj = new QueryFromSlice($alias);
+				$temp_params = new ParamsFromQuery($slice_obj->params, Yii::$app->params['filter_model'], Yii::$app->params['slices_model']);
+				$headerSlices[$alias]['count'] = $temp_params->query_hits;
 			}
-			Yii::$app->params['header_slices'] = array_filter($headerSlices, function ($slice) {
+		}
+
+		Yii::$app->params['header_slices'] = array_filter($headerSlices, function ($slice) {
             return $slice['count'] > 0;
-       	 });
+       	});
 
         $footerSlices = [
             'restoran' => ['name' => 'Рестораны', 'type' => 'kind','count' => 0],
