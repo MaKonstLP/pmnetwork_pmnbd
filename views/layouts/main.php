@@ -341,7 +341,7 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
 <div class="popup_wrap ">
     <div class="popup_layout" data-close-popup></div>
     <div class="popup_form">
-        <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'header', 'target' => 'podbor_2']) ?>
+        <?= $this->render('//components/generic/form.twig', ['title' => 'Помочь подобрать зал?', 'type' => 'header', 'without_comment' => true, 'target' => 'podbor_2']) ?>
     </div>
     <div class="popup_img">
         <div class="popup_img_close" data-close-popup></div>
