@@ -290,6 +290,7 @@ export default class Form {
 		this.$formModalMain.hide();
 		data.title && this.$formSuccess.find('[data-form-result-title]').text(data.title);
 		data.body && this.$formSuccess.find('[data-form-result-body]').text(data.body);
+		this.$formSuccess.closest('.popup_wrap').addClass('f_center')
 		this.$formSuccess.show();
 
 		// if (this.$formModal.not('._active').length == 0)
@@ -324,6 +325,7 @@ export default class Form {
 	}
 
 	error() {
+		this.$formSuccess.closest('.popup_wrap').removeClass('f_center')
 		// this.$submitButton.removeClass('button__pending');
 		//modal.showError();
 	}
