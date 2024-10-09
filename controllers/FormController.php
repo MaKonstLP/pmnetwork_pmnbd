@@ -24,14 +24,19 @@ class FormController extends Controller
         $post_data = json_decode(json_encode($_POST), true);
 
         $payload = [];
-
         $payload['city_id'] = Yii::$app->params['subdomen_id'];
-        $payload['event_type'] = "Birthday";
+        $payload['event_type'] = $post_data['event_type'];
+
+        if ($post_data['event_type'] == 'Corporate_NY')
+            unset($post_data['date']);
 
         if(!$post_data['check'])
             return false;
 
         foreach ($post_data as $key => $value) {
+//            if(empty($value))
+//                continue;
+
             switch ($key) {
                 case 'date':
                     if($value)    
@@ -54,6 +59,9 @@ class FormController extends Controller
                     break;
                 case 'comment':
                     $payload['details'] = $value;
+                    break;
+                case 'max_budget':
+                    $payload['max_budget'] = $value;
                     break;
                 case 'url':
                     isset($payload['details']) ? $payload['details'] .= ' Заявка отправлена с '.$value : $payload['details'] = 'Заявка отправлена с '.$value;
@@ -91,7 +99,6 @@ class FormController extends Controller
 
     public function actionFormAdvertising() {
         $from = Yii::$app->params['senderEmail'];
-//        $to = ['anonim050900@gmail.com'];
         $to = ['birthday-place@yandex.ru', 'ab@liderpoiska.ru'];
         $sub = 'Заявка со страницы рекламы на birthday-place.ru';
 

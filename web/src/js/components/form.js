@@ -28,6 +28,33 @@ export default class Form {
 	}
 
 	bind() {
+		let self = this;
+
+		this.calendarInit();
+
+		this.$form.on('click', '.date_wrapper_arrow', (e) => {
+			let $el = $(e.currentTarget);
+			this.calendarInit($el.data('next_date'));
+		})
+
+		this.$form.on('click', 'input[name="date"]', (e) => {
+			let $el = $(e.currentTarget);
+			if ($el.html() == '') {
+				this.calendarInit();
+			} else {
+				this.calendarInit($el.html());
+			}
+
+		})
+
+		this.$form.on('click', '.date_wrapper_week p', (e) => {
+			let $el = $(e.currentTarget);
+			let $elParent = $el.parent();
+			if (!$elParent.hasClass('week_title')) {
+				$elParent.parents('.date_wrapper').find('input').val($el.data('cur_date'));
+				$elParent.parents('.date_wrapper').find('input').trigger('blur')
+			}
+		})
 
 		this.$form.find('[data-dynamic-placeholder]').each(function () {
 			$(this).on('blur',function () {
@@ -39,15 +66,16 @@ export default class Form {
 		})
 
 		this.$form.find('[data-required]').each((i, el) => {
-			$(el).on('blur', (e) => {
-				this.checkField($(e.currentTarget));
-				this.checkValid();
-			});
+				$(el).on('blur', (e) => {
+					console.log('blur')
+					this.checkField($(e.currentTarget));
+					this.checkValid();
+				});
 
 			$(el).on('change', (e) => {
-			  // console.log('input change');
-			  this.checkValid();
-			  // this.checkField($(e.currentTarget));
+			  console.log('change');
+				// this.checkField($(e.currentTarget));
+				this.checkValid();
 			  // this.checkValid();
 			});
 		});
@@ -84,31 +112,81 @@ export default class Form {
 			$input.prop("checked", !$input.prop("checked"));
 		})
 
-		this.calendarInit();
-
-		this.$form.on('click', '.date_wrapper_arrow', (e) => {
-			let $el = $(e.currentTarget);
-			this.calendarInit($el.data('next_date'));
+		// клик по селекту
+		this.$form.find('[data-form-select]').on('click', function() {
+			var $parent = $(this).closest('[data-form-select-block]');
+			self.selectBlockClick($parent);
 		})
 
-		this.$form.on('click', 'input[name="date"]', (e) => {
-			let $el = $(e.currentTarget);
-			if ($el.html() == '') {
-				this.calendarInit();
+		// клик по элементу селекта
+		this.$form.find('[data-form-select-item]').on('click', function () {
+			$(this).siblings('[data-form-select-item]._active').removeClass('_active');
+			$(this).addClass('_active');
+
+			let hasSelectedItem = false;
+			$(this).each(function() {
+				if ($(this).hasClass('_active'))
+					hasSelectedItem = true;
+			})
+
+			//скрываем поле с датой если выбран Корпорат на НГ
+			if ($(this).data('value') == 'Corporate_NY') {
+				$(this).closest('.form_inputs').find('.input_wrapper.date_wrapper').addClass('hidden');
+				$(this).closest('.form_inputs').find('.input_wrapper.date_wrapper input').removeAttr('data-required')
 			} else {
-				this.calendarInit($el.html());
+				$(this).closest('.form_inputs').find('.input_wrapper.date_wrapper').removeClass('hidden');
+				$(this).closest('.form_inputs').find('.input_wrapper.date_wrapper input').attr('data-required', 'true');
 			}
-			
-		})
 
-		this.$form.on('click', '.date_wrapper_week p', (e) => {
-			let $el = $(e.currentTarget);
-			let $elParent = $el.parent();
-			if (!$elParent.hasClass('week_title')) {
-				$elParent.parents('.date_wrapper').find('input').val($el.data('cur_date'));
-			} 
-			
-		})
+			if (hasSelectedItem)
+				$(this).closest('[data-form-select-block]').addClass('_selected')
+			else
+				$(this).closest('[data-form-select-block]').removeClass('_selected')
+
+			self.selectStateRefresh($(this).closest('[data-form-select-block]'));
+		});
+
+		// клик вне выпадашки селекта
+		$('body').click(function (e) {
+			if (!$(e.target).closest('[data-form-select-block]').length) {
+				self.selectBlockActiveClose();
+			}
+
+			if ($(e.target).closest('.options').length) {
+				self.selectBlockActiveClose();
+			}
+		});
+	}
+
+	selectStateRefresh($block) {
+		var self = this;
+		var blockType = $block.data('type');
+		var $item = $block.find('[data-form-select-item]._active');
+		var selectText = '-';
+
+		if ($item.length > 0) {
+			$block.find('[data-selected-option]').prop('value', $($item[0]).data('value'));
+			$block.find('[data-selected-option]').val($($item[0]).data('value'));
+			selectText = $($item[0]).text();
+		}
+
+		$block.find('[data-form-select]').text(selectText);
+	}
+
+	selectBlockClick($block) {
+		if ($block.hasClass('_active')) {
+			$block.removeClass('_active');
+		}
+		else {
+			this.selectBlockActiveClose();
+			$block.addClass('_active');
+		}
+	}
+
+	selectBlockActiveClose() {
+		this.$form.find('[data-form-select-block]._active').each(function () {
+			$(this).removeClass('_active');
+		});
 	}
 
 	checkValid() {
@@ -122,9 +200,14 @@ export default class Form {
 			var valid = true;
 			var name = $field.attr('name');
 			var pattern_email = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
-			var time_cur = Date.parse($field.val());
-			var date_now = new Date();
-			var time_now = new Date(date_now.getFullYear(), date_now.getMonth(), date_now.getDate()).getTime();
+			// var time_cur = Date.parse($field.val());
+			// var date_now = new Date();
+			// var time_now = new Date(date_now.getFullYear(), date_now.getMonth(), date_now.getDate()).getTime();
+
+			// console.log('field name', name)
+			console.log('field value', $field.val())
+			// console.log('time_cur', time_cur)
+			// console.log('time_now', time_now)
 
 			if ($field.val() == '') {
 				valid = false;
@@ -139,10 +222,10 @@ export default class Form {
 					var custom_error = 'Неверный формат электронной почты';
 				}
 
-				if (name === 'date' && time_cur < time_now) {
-					valid = false;
-					var custom_error = 'Вы указали прошедшую дату';
-				}
+				// if (name === 'date' && time_cur < time_now) {
+				// 	valid = false;
+				// 	var custom_error = 'Вы указали прошедшую дату';
+				// }
 
 				if (name === 'guests' && (typeof +$field.val() !== 'number' || +$field.val() !== Math.floor(+$field.val()) || +$field.val() <= 0)) {
 					valid = false;
@@ -314,10 +397,20 @@ export default class Form {
 
 		this.$form.find('.input_wrapper_date_wrapper').html();
 		this.$form.find('.input_wrapper_date_wrapper').html($render);
-		
+
+		if(this.$form.find('.input_wrapper_date_wrapper').find('[data-cur_date]._now').length > 0){
+			this.$form.find('.input_wrapper_date_wrapper').find('[data-cur_date]').each(function(){
+				if($(this).hasClass('_now'))
+					return false;
+
+				$(this).addClass('_disabled');
+			})
+		}
+
 	}
 
 	renderWeek($date, $renderWeek = '') {
+		var self = this;
 		var $curWeekDay = $date.getDay();
 		$curWeekDay = ($curWeekDay == 0) ? 7 : $curWeekDay;
 
@@ -326,9 +419,11 @@ export default class Form {
 		$renderWeek += '<div class="date_wrapper_week">';
 		for (var $i=1; $i<8; $i++){
 			var $weekDay = new Date($firstDayWeek.getFullYear(), $firstDayWeek.getMonth(),$firstDayWeek.getDate()+$i);
-			var $class = (($weekDay.getMonth() != $date.getMonth()) ? 'not_this_month' : '');
-			$class = (($weekDay.getFullYear() == new Date().getFullYear() && $weekDay.getMonth() == new Date().getMonth() && $weekDay.getDate() == new Date().getDate()) ? '_now' : $class);
-			$renderWeek += '<p'+(($class != '') ? (' class="'+$class+'"') : '')+' data-cur_date="'+ $weekDay.getFullYear() + '-' + ((($weekDay.getMonth()+1) <10) ? ('0' + ($weekDay.getMonth()+1)) : ($weekDay.getMonth()+1)) + '-' + (($weekDay.getDate() < 10) ? ('0' + $weekDay.getDate()) : $weekDay.getDate()) +'">'+$weekDay.getDate()+'</p>';
+			var curDate = (($weekDay.getDate() < 10) ? ('0' + $weekDay.getDate()) : $weekDay.getDate()) + '.' + ((($weekDay.getMonth()+1) <10) ? ('0' + ($weekDay.getMonth()+1)) : ($weekDay.getMonth()+1)) + '.' + $weekDay.getFullYear();
+			var disabled_class = ($weekDay.getMonth() != $date.getMonth()) ? 'not_this_month' : '';
+			var now_class = ($weekDay.getFullYear() == new Date().getFullYear() && $weekDay.getMonth() == new Date().getMonth() && $weekDay.getDate() == new Date().getDate()) ? '_now' : '';
+			var active_class = curDate == self.$form.find('[name="date"]').val() ? '_active' : '';
+			$renderWeek += '<p class="'+disabled_class+ ' '+ now_class + ' '+ active_class +'" data-cur_date="'+ curDate +'">'+$weekDay.getDate()+'</p>';
 		}
 		$renderWeek += '</div>';
 

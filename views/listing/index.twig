@@ -58,7 +58,7 @@
 		{% endif %}
 	</div>
 
-	{{ this.render('//components/generic/form.twig', {'title': 'Поможем выбрать зал на день рождения', 'target': 'podval_list'}) | raw }}
+	{{ this.render('//components/generic/form.twig', {'title': 'Поможем выбрать зал на день рождения', 'without_comment' : true, 'target': 'podval_list'}) | raw }}
 
 	<div class="content_loading"></div>
 </div>

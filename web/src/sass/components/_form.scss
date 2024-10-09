@@ -197,12 +197,12 @@
 		margin-top: 15px;
 	}
 
-	.form_inputs{
+	.form_inputs {
 		display: flex;
 		flex-wrap: wrap;
-		/*width: 780px;*/
-		justify-content: space-between;
-   		width: 100%;
+		column-gap: 20px;
+		//justify-content: space-between;
+   		//width: 100%;
 
 		.input_wrapper{
 			/*width: 130px;
@@ -246,7 +246,7 @@
 				//display: none;
 			}
 
-			input{
+			input, .pseudo_input {
 				/*border: 1px solid #C4C4C4;*/
 				border-bottom: 1px solid #C4C4C4;
 				box-sizing: border-box;
@@ -257,17 +257,17 @@
 				padding: 9px 16px 6px 0;
 				font-size: 15px;
 				line-height: 24px;
+				//color: $clrGrey;
 				@include form_placeholder {
-	              color: #848484;
-
+	              color: $clrGrey;
 	            }
 	            &[name="date"] {
 	            	background: url(/upload/img/calendar_icon.svg) no-repeat right, #fff;
 	            	//pointer-events: none;
 	            	cursor: pointer;	
-	            	@include for-phone{
-						width: 55%;
-					}
+	            	//@include for-phone{
+					//	width: 55%;
+					//}
 	            }
 	            &.check_approove:not(.not_check_approove){
 	            	background: url(/upload/img/check_approove.svg) no-repeat right, #fff;
@@ -275,6 +275,13 @@
 	            &._invalid{
 	            	border-bottom: 1px solid #DF0C0C;
 	            }
+			}
+
+			.pseudo_input {
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				padding-right: 20px;
 			}
 
 			.input_desc{
@@ -329,33 +336,6 @@
 				    flex-direction: column;
 					width: 100%;
 				}
-			}
-		}
-
-		@include for-small-desktop{
-			width: initial;
-		    justify-content: space-between;
-
-			.input_wrapper{
-				margin: 0px 7px;
-			}
-		}
-
-		@include for-pad{
-			width: initial;
-			justify-content: space-between;
-
-			.input_wrapper{
-				margin: 0px 7px;
-			}
-		}
-
-		@include for-mobile{
-			width: initial;
-			justify-content: space-between;
-
-			.input_wrapper{
-				margin: 0px 7px;
 			}
 		}
 
@@ -453,6 +433,71 @@
 		}
 	}
 }
+
+.form_block_select {
+	[data-form-select] {
+		cursor: pointer;
+		position: relative;
+
+		&::after {
+			content: '';
+			position: absolute;
+			right: 0;
+			width: 8px;
+			height: 8px;
+			border: solid $clrGrey;
+			border-width: 0 2px 2px 0;
+			transform: rotate(45deg);
+			display: inline-block;
+			top: calc(50% - 4px);
+			right: 12px;
+		}
+	}
+
+	.options {
+		display: none;
+		position: relative;
+		//max-height: calc(5 * 24px);
+		background-color: $clrBg;
+		padding: 4px 4px 12px 8px;
+		border: 1px solid $clrExtraLightGrey;
+		margin-top: -2px;
+		z-index: 100;
+
+		.option {
+			cursor: pointer;
+			font-size: 15px;
+			line-height: 24px;
+			margin: 4px 0;
+
+			&._active {
+				pointer-events: none;
+
+				p { color: $clrGrey; }
+			}
+
+			@include for-hover {
+				&:hover {
+					p { color: $clrBlue; }
+				}
+			}
+		}
+	}
+
+	&._active {
+		.options {
+			display: block;
+		}
+
+		[data-form-select] {
+			&::after {
+				transform: rotate(-135deg);
+				top: calc(50%);
+			}
+		}
+	}
+}
+
 .input_wrapper.date_wrapper{
 	position: relative;
 }
@@ -519,6 +564,16 @@
 		    	background-color: #FFC839;
     			border-radius: 50%;
 		    }
+
+			&._disabled {
+				pointer-events: none;
+				opacity: .35;
+			}
+
+			&._active {
+				background-color: #FFF4D7;
+				border-radius: 50%;
+			}
 
 	    }
     	&.week_title{
@@ -631,9 +686,9 @@
 	    	}
 	    	input[name=date] {
     			background: url(/upload/img/calendar_icon.svg) no-repeat right, $clrBackground;
-				@include for-phone{
-					width: 50%;
-				}
+				//@include for-phone{
+				//	width: 50%;
+				//}
     		}
 	    	//&:nth-child(1){
 	    	//	margin-right: 25px;
@@ -644,9 +699,9 @@
 		    //		margin: 0;
 		    //	}
 	    	//}
-			&:nth-child(3){
-				width: 100%;
-			}
+			//&:nth-child(3){
+			//	width: 100%;
+			//}
 	    	//&:nth-child(4){
 	    	//	width: 30%;
 	    	//	@include for-small-desktop{

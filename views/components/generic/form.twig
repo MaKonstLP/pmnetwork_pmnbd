@@ -25,15 +25,37 @@
 {#					<input type="text" name="email" placeholder="Email" />#}
 {#					<input type="text" name="email" placeholder="Электронная почта" />#}
 {#				</div>#}
-				{# <div class="input_wrapper date_wrapper">
-					<input type="text" name="date" readonly placeholder="Желаемая дата" class="not_check_approove"/>
-					<div class="input_wrapper_date_wrapper" style="display: none;">
-						
+
+				<div class="input_wrapper form_block_select" data-form-select-block data-type="event_type">
+					<input type="hidden" name="event_type" value="Birthday" data-selected-option data-required/>
+					<div class="pseudo_input" data-form-select>День рождения</div>
+					<div class="options" data-scroll-block>
+						<div class="option _active" data-value="Birthday" data-form-select-item data-prazdnik-spec-id="9"><p>День рождения</p></div>
+						<div class="option" data-value="Corporate" data-form-select-item data-prazdnik-spec-id="15"><p>Корпоратив</p></div>
+						<div class="option" data-value="Wedding" data-form-select-item data-prazdnik-spec-id="1"><p>Свадьба</p></div>
+						<div class="option" data-value="children holiday" data-form-select-item data-prazdnik-spec-id="12"><p>Детский праздник</p></div>
+						<div class="option" data-value="High school graduation" data-form-select-item data-prazdnik-spec-id="11"><p>Выпускной</p></div>
+						<div class="option" data-value="Corporate_NY" data-form-select-item data-prazdnik-spec-id="17"><p>Корпоратив на Новый Год</p></div>
+						<div class="option" data-value="Unknown" data-form-select-item data-prazdnik-spec-id><p>Другое</p></div>
 					</div>
-				</div> #}
-				<div class="input_wrapper _big_width">
-					<input type="text" name="comment" placeholder="Комментарий" />
 				</div>
+
+				 <div class="input_wrapper date_wrapper">
+					<input type="text" name="date" readonly placeholder="Дата мероприятия" class="not_check_approove" data-required/>
+					<div class="input_wrapper_date_wrapper" style="display: none;">
+
+					</div>
+				</div>
+
+				<div class="input_wrapper">
+					<input type="number" min="1" name="max_budget" placeholder="Максимальный бюджет" />
+				</div>
+
+				{% if not without_comment %}
+					<div class="input_wrapper _big_width">
+						<input type="text" name="comment" placeholder="Комментарий" />
+					</div>
+				{% endif %}
 			</div>
 			
 			{% if venue_id is defined %}

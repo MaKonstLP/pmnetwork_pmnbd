@@ -246,6 +246,9 @@ export default class Main {
 		$('.main_search_type_room_list').mCustomScrollbar({
 			theme: 'dark-thick',
 		});
+		// $('[data-scroll-block]').mCustomScrollbar({
+		// 	theme: 'dark-thick',
+		// });
 
 		// $('.fast_filters').each(function () {
 		// 	if ($(window).width() <= 768) {

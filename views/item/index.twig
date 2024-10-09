@@ -288,7 +288,7 @@
                 </div>
             </div>
             <div class="object_form">
-                {{ this.render('//components/generic/form.twig',{'title': 'Хотите день рождения в этом зале?', 'type' : 'room', 'target': 'zal', 'venue_id': rest_item.restaurant_gorko_id}) | raw }}
+                {{ this.render('//components/generic/form.twig',{'title': 'Хотите день рождения в этом зале?', 'type' : 'room', 'target': 'zal', 'without_comment' : true,'venue_id': rest_item.restaurant_gorko_id}) | raw }}
             </div>
         </div>
     </div>
