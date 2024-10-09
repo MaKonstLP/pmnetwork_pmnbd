@@ -140,7 +140,9 @@ export default class Main {
 			$('.popup_wrap .popup_img').hide();
 			$('.popup_wrap .popup_form .form_main').show();
 			$('.popup_wrap .popup_form .form_success').hide();
-			bodyOverflow();
+
+			if ($('body').hasClass('_popup_overflow'))
+				bodyOverflow();
 		});
 
 		$('body').on('click', '[data-close-popup-phone]', function () {
