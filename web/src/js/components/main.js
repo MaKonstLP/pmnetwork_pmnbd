@@ -136,7 +136,6 @@ export default class Main {
 
 		$('body').on('click', '[data-close-popup]', function () {
 			$('.popup_wrap').removeClass('_active');
-			$('.popup_wrap').removeClass('f_center');
 			$('.popup_wrap .popup_form').show();
 			$('.popup_wrap .popup_img').hide();
 			$('.popup_wrap .popup_form .form_main').show();
@@ -146,7 +145,6 @@ export default class Main {
 
 		$('body').on('click', '[data-close-popup-phone]', function () {
 			$('.popup_wrap').removeClass('_active');
-			$('.popup_wrap').removeClass('f_center');
 			$('.popup_wrap .popup_form').show();
 			$('.popup_wrap .popup_img').hide();
 			$('.popup_wrap .popup_form .form_main').show();
