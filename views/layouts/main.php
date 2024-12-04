@@ -41,12 +41,12 @@ frontend\modules\pmnbd\assets\AppAsset::register($this);
     <?php if (!empty($this->params['kw'])) echo "<meta name='keywords' content='" . $this->params['kw'] . "'>"; ?>
     <?= Html::csrfMetaTags() ?>
 
-	 <!-- schemaOrg START -->
-	 <?php if (isset(Yii::$app->params['schema_product']) && !empty(Yii::$app->params['schema_product'])) {
+	 <?php if (isset(Yii::$app->params['schema_product']) && !empty(Yii::$app->params['schema_product']) && Yii::$app->request->url != '/') {
+//      schemaOrg START
 		echo '<script type="application/ld+json">' . Yii::$app->params['schema_product'] . '</script>';
+//      schemaOrg END
 	 }
 	 ?>
-	 <!-- schemaOrg END -->
 
     <style>
         <?php

@@ -795,3 +795,26 @@
 		justify-content: center;
 	}
 }
+
+a {
+	&.link-decoration {
+		text-decoration: underline;
+		text-underline-offset: 4px;
+		text-decoration-thickness: 1px;
+
+		&._dashed {
+			text-decoration-style: dashed;
+		}
+
+		&._dotted {
+			text-decoration-style: dotted;
+		}
+
+		@include for-hover {
+			&:hover {
+				text-decoration: none;
+				transition: all .3s ease;
+			}
+		}
+	}
+}

@@ -72,6 +72,11 @@ class Breadcrumbs
                     && ($slice = ParamsFromQuery::getSlice([$filterName => $filterItemId], $slices_model))
                     && ($filterItem = $slice->getFilterItem($filter_model))
                 ) {
+
+                    if ($filterItem->text == 'Веранды/Террасы') $filterItem->text = 'Веранды';
+                    if ($filterItem->text == 'Отели/Гостиницы') $filterItem->text = 'Отели';
+                    if ($filterItem->text == 'Бани/сауны') $filterItem->text = 'Сауны';
+
                     return array_merge(
                         self::get_breadcrumbs(2),
                         [[
@@ -100,6 +105,11 @@ class Breadcrumbs
                 && ($sliceObj = $restTypeSlice->slice)
                 && ($filterItemObj = $sliceObj->getFilterItem($filter_model))
             ) {
+
+                if ($filterItemObj->text == 'Веранды/Террасы') $filterItemObj->text = 'Веранды';
+                if ($filterItemObj->text == 'Отели/Гостиницы') $filterItemObj->text = 'Отели';
+                if ($filterItemObj->text == 'Бани/сауны') $filterItemObj->text = 'Сауны';
+
                 $acc[str_replace('/', ' / ', $filterItemObj->text)] = [
                     'type' => 'multiple',
                     'link' => "/catalog/{$sliceObj->alias}/",

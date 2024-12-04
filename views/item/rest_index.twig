@@ -623,7 +623,11 @@
                     <p class="rest_desc_title">Тип ресторана</p>
                     <p class="rest_desc_value">
                         {% for type in item.restaurant_types %}
-                            {{ loop.first ? type.name : type.name|lower }}{{ loop.last ? '' : ', ' }}
+                            {% if type.link %}
+                                <a href="/catalog/{{ type.link }}/">{{ loop.first ? type.name : type.name|lower }}{{ loop.last ? '' : ', ' }}</a>
+                            {% else %}
+                                <span>{{ loop.first ? type.name : type.name|lower }}{{ loop.last ? '' : ', ' }}</span>
+                            {% endif %}
                         {% endfor %}
                     </p>
                 </div>
@@ -639,7 +643,7 @@
                 <div class="rest_desc_item">
                     <p class="rest_desc_title">Алкоголь</p>
                     {{ item.restaurant_alcohol == 1 ? '<p class="rest_desc_value _check">В наличии</p>':'' }}
-                    <p class="rest_desc_value _check">{{ item.restaurant_own_alcohol|replace({' алкоголь': ''}) }}</p>
+                    <p class="rest_desc_value _check"><a href="/catalog/svoy-alko/">{{ item.restaurant_own_alcohol|replace({' алкоголь': ''}) }}</p></a>
                 </div>
                 <div class="rest_desc_item">
                     <p class="rest_desc_title">Парковка</p>
@@ -651,30 +655,41 @@
                 </div>
             </div>
 
-            {% if item.restaurant_special %}
+            {% if item.restaurant_special_array %}
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title _mb">Особенности</p>
-                        {% set specials = item.restaurant_special|split(', ') %}
-                        {% for special in specials %}
-                            {% if special == 'Музыкальное оборудование' %}
-                                <p class="rest_desc_value _check">Караоке</p>
+                        {% for spec in item.restaurant_special_array %}
+                            {% if spec.link %}
+                                {% if spec.name == 'Музыкальное оборудование' %}
+                                    <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">Караоке</a></p>
+                                {% else %}
+                                    <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">{{ spec.name }}</a></p>
+                                {% endif %}
                             {% else %}
-                                <p class="rest_desc_value _check">{{ special }}</p>
+                                {% if special.name == 'Музыкальное оборудование' %}
+                                    <p class="rest_desc_value _check">Караоке</p>
+                                {% else %}
+                                    <p class="rest_desc_value _check">{{ spec.name }}</p>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
             {% endif %}
 
-            {% if item.restaurant_extra_services %}
-                {% set extras = item.restaurant_extra_services|split(', ') %}
+            {% if item.restaurant_extra %}
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title _mb">За дополнительную плату</p>
-
-                        {% for extra in extras %}
-                            <p class="rest_desc_value _check">{{ extra }}</p>
+                        {% for extra in item.restaurant_extra %}
+                            {% if extra.link %}
+                                <p class="rest_desc_value _check">
+                                    <a href="/catalog/{{ extra.link }}/">{{ extra.name }}</a>
+                                </p>
+                            {% else %}
+                                <p class="rest_desc_value _check">{{ extra.name }}</p>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

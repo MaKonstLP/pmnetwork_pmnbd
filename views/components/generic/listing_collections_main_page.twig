@@ -1,5 +1,5 @@
 <div class="content_block collections_block">
-    <h2>Подборки ресторана</h2>
+    <h2>Подборки ресторанов в {{ app.params['subdomen_dec'] }}</h2>
     <a class="all_collections" href="/collection/">Все подборки</a>
     <div class="main_collections items-{{ collection_posts|length }}">
         {% for post in collection_posts %}

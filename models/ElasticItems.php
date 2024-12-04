@@ -7,6 +7,8 @@ use common\models\Restaurants;
 use common\models\RestaurantsModule;
 use common\models\RoomsModule;
 use common\models\RestaurantsTypes;
+use common\models\RestaurantsSpecial;
+use common\models\RestaurantsExtra;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use common\models\ImagesModule;
@@ -22,6 +24,7 @@ use common\models\RestaurantsPremium;
 use common\models\MetroStations;
 use common\models\MetroLines;
 use common\models\RoomsSpec;
+use common\models\Slices;
 use common\models\premium\PremiumRest;
 use common\components\MetroUpdate;
 use backend\modules\pmnbd\models\Metros;
@@ -58,6 +61,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             'restaurant_extra_services',
             'restaurant_payment',
             'restaurant_special',
+            'restaurant_special_array',
             'restaurant_specials',
             'restaurant_phone',
             'restaurant_images',
@@ -82,7 +86,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
     public static function index()
     {
         return 'pmn_bd_restaurants';
-        // return 'pmn_bd_dev_restaurants';
+//         return 'pmn_bd_dev_restaurants';
     }
 
     public static function type()
@@ -124,6 +128,11 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                     'restaurant_extra_services' => ['type' => 'text'],
                     'restaurant_payment' => ['type' => 'text'],
                     'restaurant_special' => ['type' => 'text'],
+                    'restaurant_special_array' => ['type' => 'nested', 'properties' => [
+                        'id' => ['type' => 'integer'],
+                        'name' => ['type' => 'text'],
+                        'link' => ['type' => 'text'],
+                    ]],
                     'restaurant_phone' => ['type' => 'text'],
                     'restaurant_main_type' => ['type' => 'text'],
                     'restaurant_commission' => ['type' => 'integer'],
@@ -131,6 +140,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                     'restaurant_types' => ['type' => 'nested', 'properties' => [
                         'id' => ['type' => 'integer'],
                         'name' => ['type' => 'text'],
+                        'link' => ['type' => 'text'],
                     ]],
                     'restaurant_location' => ['type' => 'nested', 'properties' => [
                         'id' => ['type' => 'integer'],
@@ -283,6 +293,18 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->all();
         $restaurants_types = ArrayHelper::index($restaurants_types, 'value');
 
+        $restaurants_specs = RestaurantsSpecial::find()
+            ->limit(100000)
+            ->asArray()
+            ->all();
+        $restaurants_specs = ArrayHelper::index($restaurants_specs, 'value');
+
+        $restaurants_extra = RestaurantsExtra::find()
+            ->limit(100000)
+            ->asArray()
+            ->all();
+        $restaurants_extra = ArrayHelper::index($restaurants_extra, 'value');
+
         $connection = new \yii\db\Connection($params['premium_connection_config']);
         $connection->open();
         Yii::$app->set('db', $connection);
@@ -306,7 +328,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $images_module = ArrayHelper::index($images_module, 'gorko_id');
 
         $restaurants_premium = RestaurantsPremium::find()
-            ->where(['>', 'finish', time()])
+//            ->where(['>', 'finish', time()])
             ->limit(100000)
             ->asArray()
             ->all();
@@ -335,6 +357,8 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->asArray()
             ->all();
 
+        $slices = Slices::find()->all();
+
         $connectionSite = new \yii\db\Connection($params['site_connection_config']);
         $connectionSite->open();
         Yii::$app->set('db', $connectionSite);
@@ -345,7 +369,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$rest_count = count($restaurants);
 		$rest_iter = 0;
 		foreach ($restaurants as $restaurant) {
-			$res = self::addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base);
+			$res = self::addRecord($restaurant, $restaurants_types, $restaurants_specs, $restaurants_extra, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base, $slices);
 			$all_res .= $res . ' | ';
 			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
@@ -376,9 +400,14 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         );
     }
 
-    public static function addRecord($restaurant, $restaurants_types, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base)
+    public static function addRecord($restaurant, $restaurants_types, $restaurants_specs, $restaurants_extra, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base, $slices)
     {
         $isExist = false;
+
+        if ($restaurant->gorko_id === 484179) {//рест скрыт по просьбе Жени - https://liderpoiska.planfix.ru/task/133229/
+            return true;
+        }
+
 
         //   $restaurant_spec_white_list = [9];
         //   $restaurant_spec_rest = explode(',', $restaurant->restaurants_spec);
@@ -391,6 +420,11 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         //   }
 
         $premium = isset($restaurants_premium[$restaurant->gorko_id]);
+
+        if($restaurant->premium_active == 1 && !isset($restaurants_premium_base[$restaurant->gorko_id])){
+            return true;
+        }
+
         if (!$premium) {
             $restaurant_spec_white_list = [9];
             $restaurant_spec_rest = explode(',', $restaurant->restaurants_spec);
@@ -444,6 +478,42 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $record->restaurant_extra_services = $restaurant->extra_services;
         $record->restaurant_payment = $restaurant->payment;
         $record->restaurant_special = $restaurant->special;
+
+
+
+        //Особенности реста
+        //'value в restaurants_specials' => 'значение params в slices'
+        $specs_arr = [
+            '49' => '12', //Караоке
+            '53' => '5', //Велком зона
+            '8' => '6', //Вай фай
+            '9' => '4', //Сцена
+            '10' => '7', //Проектор
+            '11' => '10', //ТВ экран
+            '22' => '9', //Детское меню
+        ];
+        $restaurant_specs = [];
+        $restaurant_specs_rest = explode(',', $restaurant->special_ids);
+        foreach ($restaurant_specs_rest as $key => $value) {
+            $restaurant_specs_arr = [];
+            $restaurant_specs_arr['id'] = $value;
+            $restaurant_specs_arr['name'] = isset($restaurants_specs[$value]['text']) ? $restaurants_specs[$value]['text'] : '';
+
+            foreach ($slices as $slice) {
+                $slice_params = json_decode($slice['params'], true);
+                $rest_spec_id = isset($specs_arr[$value]) ? $specs_arr[$value] : '';
+
+                if (count($slice_params) == 1 && isset($slice_params['dopolnitelno']) && $slice_params['dopolnitelno'] == $rest_spec_id) {
+                    $restaurant_specs_arr['link'] = $slice['alias'];
+                }
+            }
+
+            array_push($restaurant_specs, $restaurant_specs_arr);
+        }
+        $record->restaurant_special_array = $restaurant_specs;
+
+
+
 
         switch ($restaurant->gorko_id) {
             case 483343:
@@ -620,12 +690,35 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 
 
         //Тип помещения
+        $type_arr = [
+            '1' => '1', //Ресторан
+            '30' => '8', //Веранда
+            '14' => '11', //Шатер
+            '17' => '10', //Летняя площадка
+            '15' => '9', //Коттедж
+            '3' => '2', //Кафе
+            '4' => '7', //Бар
+            '36' => '4', //Лофт
+            '25' => '3', //Отель
+            '13' => '5', //База отдыха
+            '32' => '12', //Детские
+        ];
         $restaurant_types = [];
         $restaurant_types_rest = explode(',', $restaurant->type);
         foreach ($restaurant_types_rest as $key => $value) {
             $restaurant_types_arr = [];
             $restaurant_types_arr['id'] = $value;
             $restaurant_types_arr['name'] = isset($restaurants_types[$value]['text']) ? $restaurants_types[$value]['text'] : '';
+
+            foreach ($slices as $slice) {
+                $slice_params = json_decode($slice['params'], true);
+                $rest_type_id = isset($type_arr[$value]) ? $type_arr[$value] : '';
+
+                if (count($slice_params) == 1 && isset($slice_params['mesto']) && $slice_params['mesto'] == $rest_type_id) {
+                    $restaurant_types_arr['link'] = $slice['alias'];
+                }
+            }
+
             array_push($restaurant_types, $restaurant_types_arr);
         }
         $record->restaurant_types = $restaurant_types;
@@ -665,11 +758,27 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $record->restaurant_specials = $restaurant_specials;
 
         //Extra
+        //'value в restaurants_extra' => 'значение params в slices'
+        $extra_arr = [
+            '6' => '8', //Живая музыка
+            '7' => '11', //Ведущий
+        ];
         $restaurant_extra = [];
         $restaurant_extra_rest = explode(',', $restaurant->extra_services_ids);
         foreach ($restaurant_extra_rest as $key => $value) {
             $restaurant_extra_arr = [];
             $restaurant_extra_arr['id'] = $value;
+            $restaurant_extra_arr['name'] = isset($restaurants_extra[$value]['text']) ? $restaurants_extra[$value]['text'] : '';
+
+            foreach ($slices as $slice) {
+                $slice_params = json_decode($slice['params'], true);
+                $rest_extra_id = isset($extra_arr[$value]) ? $extra_arr[$value] : '';
+
+                if (count($slice_params) == 1 && isset($slice_params['dopolnitelno']) && $slice_params['dopolnitelno'] == $rest_extra_id) {
+                    $restaurant_extra_arr['link'] = $slice['alias'];
+                }
+            }
+
             array_push($restaurant_extra, $restaurant_extra_arr);
         }
         $record->restaurant_extra = $restaurant_extra;

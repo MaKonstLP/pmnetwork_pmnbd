@@ -72,6 +72,9 @@
 	</div> #}
 
 	<div class="items_list_listing content_block" data-listing-wrapper>
+
+		<h2>Каталог мест на день рождения</h2>
+
 		<div class="items_list" data-listing-list>
 
 			{{ this.render('//components/generic/listing.twig', {'items':items, 'img_alt':seo.img_alt, 'index_page':true}) | raw }}
@@ -108,7 +111,7 @@
 
 	{% if blogPosts %}
 		<div class="main_blog">
-			<h3>Последние записи блога</h2>
+			<h3>Последние записи блога</h3>
 			<a class="all_articles" href="/blog/">Все статьи</a>
 			<div class="content_block">
 				{% for key,post in blogPosts %}
