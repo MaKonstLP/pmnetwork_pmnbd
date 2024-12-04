@@ -643,7 +643,11 @@
                 <div class="rest_desc_item">
                     <p class="rest_desc_title">Алкоголь</p>
                     {{ item.restaurant_alcohol == 1 ? '<p class="rest_desc_value _check">В наличии</p>':'' }}
-                    <p class="rest_desc_value _check"><a href="/catalog/svoy-alko/">{{ item.restaurant_own_alcohol|replace({' алкоголь': ''}) }}</p></a>
+                    {% if item.restaurant_own_alcohol != 'Нельзя свой алкоголь' %}
+                        <p class="rest_desc_value _check"><a href="/catalog/svoy-alko/">{{item.restaurant_own_alcohol|replace({' алкоголь': ''})}}</a></p>
+                    {% else %}
+                        <p class="rest_desc_value _check">{{item.restaurant_own_alcohol|replace({' алкоголь': ''})}}</p>
+                    {% endif %}
                 </div>
                 <div class="rest_desc_item">
                     <p class="rest_desc_title">Парковка</p>
