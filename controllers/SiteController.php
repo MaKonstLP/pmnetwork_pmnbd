@@ -115,10 +115,10 @@ class SiteController extends BaseFrontendController
         ];
 
         $mainSliceMsk = [
-            '1500-rub'    => ['name' => 'Недорогие рестораны', 'count' => 0],
+            'nedorogo'    => ['name' => 'Недорогие рестораны', 'count' => 0],
         ];
         $mainSliceOther = [
-            '1000-rub'    => ['name' => 'Недорогие рестораны', 'count' => 0],
+            'nedorogo'    => ['name' => 'Недорогие рестораны', 'count' => 0],
         ];
 
         if (Yii::$app->params['subdomen_id'] == 4400) {

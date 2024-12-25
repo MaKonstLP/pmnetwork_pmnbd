@@ -54,6 +54,7 @@ class ListingController extends BaseFrontendController
 		$this->slices_model = Yii::$app->params['slices_model'];
 
 		$page = \Yii::$app->request->getQueryParam('page');
+
 		if (isset($page) && ($page == 0 || $page == 1)) {
 			$url = Url::current(['page' => null, 'q' => null]);
 			\Yii::$app->response->redirect(Url::to($url, 'https'), 301);
@@ -68,6 +69,17 @@ class ListingController extends BaseFrontendController
 		if (strpos($slice, 'metro-') !== false) {
 			$is_metro = true;
 		}
+
+		$redirect_map_prices = [
+			'1000-rub' => 'nedorogo',
+			'1500-rub' => 'nedorogo',
+			'2500-rub' => '3000-rub',
+		];
+
+		if (isset($redirect_map_prices[$slice])) {
+			return $this->redirect(Yii::$app->params['siteProtocol'] . '://' .  Yii::$app->params['domen'] .'/catalog/' . $redirect_map_prices[$slice] . '/', 302);
+		}
+
 		
 		$slice_obj = new QueryFromSlice($slice, $is_metro);
 
@@ -85,6 +97,10 @@ class ListingController extends BaseFrontendController
 //				print_r(count($params['params_filter']['mesto'] ?? []) == 1);
 //				die;
 //			}
+
+// echo '<pre>';
+// print_r($params);
+// die;
 
 			return $this->actionListing(
 				$page 			=	$params['page'],
@@ -141,6 +157,7 @@ class ListingController extends BaseFrontendController
 
 	public function actionListing($page, $per_page, $params_filter, $breadcrumbs, $canonical, $type = false, $fastFilters = [], $itemTypeName = "", $slice_id = false)
 	{
+		$get = $_GET;
 		$elastic_model = new ElasticItems;
 		// $items = new ItemsFilterElastic($params_filter, $per_page, $page, false, 'restaurants', $elastic_model);
 		$items = PremiumMixer::getItemsWithPremium($params_filter, $per_page, $page, false, 'restaurants', $elastic_model, false, false, false, false, false, true);
@@ -156,9 +173,24 @@ class ListingController extends BaseFrontendController
 			'current' => $page,
 		]);
 
-
 		$seo_type = $type ? $type : 'listing';
 		$seo = $this->getSeo($seo_type, $page, $items->total);
+
+		if (isset($get['chek'])) {
+			switch ($get['chek']) {
+				case 1:
+					return Yii::$app->response->redirect(Url::to(['/catalog/nedorogo']), 301);
+				case 2:
+					return Yii::$app->response->redirect(Url::to(['/catalog/2000-rub']), 301);
+				case 3:
+					return Yii::$app->response->redirect(Url::to(['/catalog/3000-rub']), 301);
+				case 4:
+					return Yii::$app->response->redirect(Url::to(['/catalog/4000-rub']), 301);
+				case 5:
+					return Yii::$app->response->redirect(Url::to(['/catalog/dorogie']), 301);
+			}
+		}
+
 		$seo['breadcrumbs'] = $breadcrumbs;
 		$this->setSeo($seo, $page, $canonical, $items->total, $params_filter);
 
@@ -411,7 +443,7 @@ class ListingController extends BaseFrontendController
 		// print_r($temp_params->listing_url . Yii::$app->params['subdomen_id']);
 		// exit;
 		//получаем ссылки для блока тэгов
-//        \Yii::$app->cache->flush();
+    //    \Yii::$app->cache->flush();
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
 			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_birthday',
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
@@ -462,12 +494,12 @@ class ListingController extends BaseFrontendController
 						if (!empty($fastFilters[$filterAlias])) {
 							if ($sliceFilterItem = $slice->getFilterItem($filter_model)) {
 								switch ($slice->alias) {
-									case '1000-rub':
-                                        $slice->tag_name = 'Недорогие';
-										break;
-									case '3000-rub':
-                                        $slice->tag_name = 'Дорогие';
-										break;
+									// case '1000-rub':
+                                    //     $slice->tag_name = 'Недорогие';
+									// 	break;
+									// case '3000-rub':
+                                    //     $slice->tag_name = 'Дорогие';
+									// 	break;
 //									default:
 //                                        $slice->tag_name = str_replace('/', ' / ', $sliceFilterItem->text);
 //										break;
