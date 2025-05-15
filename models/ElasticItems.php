@@ -276,7 +276,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->with('subdomen')
             ->with('yandexReview')
             // ->where(['active' => 1, 'commission' => 2])
-            //->where(['gorko_id' => 474269])
+            // ->where(['gorko_id' => 499903])
             ->limit(100000)
             ->all();
 
@@ -405,6 +405,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $isExist = false;
 
         if ($restaurant->gorko_id === 484179) {//рест скрыт по просьбе Жени - https://liderpoiska.planfix.ru/task/133229/
+            return true;
+        }
+
+        if ($restaurant->gorko_id === 474269) {//рест Кафе «Меама» в Москве
             return true;
         }
 

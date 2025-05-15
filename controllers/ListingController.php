@@ -443,7 +443,7 @@ class ListingController extends BaseFrontendController
 		// print_r($temp_params->listing_url . Yii::$app->params['subdomen_id']);
 		// exit;
 		//получаем ссылки для блока тэгов
-    //    \Yii::$app->cache->flush();
+//        \Yii::$app->cache->flush();
 		$return['fast_filters'] = \Yii::$app->cache->getOrSet(
 			$temp_params->listing_url . Yii::$app->params['subdomen_id'].'_birthday',
 			function () use ($temp_params, $filter_model, $slices_model, $return) {
@@ -457,7 +457,7 @@ class ListingController extends BaseFrontendController
                         'veranda'     => 'Веранды',
                         'karaoke'     => 'Караоке',
                         'svoy-alko'   => 'Свой алкоголь',
-                        '1000-rub'    => 'Недорогие рестораны',
+                        'nedorogo'    => 'Недорогие рестораны',
                         '15-chelovek' => '20 человек',
                         '30-chelovek' => '30 человек',
 				    ];

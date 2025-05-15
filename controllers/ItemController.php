@@ -134,9 +134,11 @@ class ItemController extends BaseFrontendController
 		$this->setSchema($rest_item);
 		// ===== schemaOrg Product END =====
 
-		//		 echo ('<pre>');
-		//		 print_r($rest_item);
-		//		 exit;
+        if (isset($_GET['test']) and $_GET['test']==1) {
+            echo ('<pre>');
+            print_r($rest_item);
+            die();
+        }
 
 		return $this->render('rest_index.twig', array(
 			'item' => $rest_item,
