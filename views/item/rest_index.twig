@@ -1,8 +1,14 @@
+{% if item.restaurant_images[0].subpath %}
+    {% set img_src = item.restaurant_images[0].subpath %}
+{% else %}
+    {% set img_src = item.restaurant_images[0].realpath %}
+{% endif %}
+
 {{ this.registerMetaTag({'property':'og:title','content':seo.h1|raw}) }}
 {{ this.registerMetaTag({'property':'og:description','content':(this.params['desc'] ? this.params['desc'] : seo.h1|raw)}) }}
 {{ this.registerMetaTag({'property':'og:type','content':'website'}) }}
 {{ this.registerMetaTag({'property':'og:url','content':app.params.siteProtocol~'://'~app.params.domen~'/catalog/'~item.restaurant_slug~'/'}) }}
-{{ this.registerMetaTag({'property':'og:image','content':(item.restaurant_images ? Declension.get_image_src(item.restaurant_images[0].subpath) : '/upload/img/bd/no_photo.png')}) }}
+{{ this.registerMetaTag({'property':'og:image','content':(item.restaurant_images ? Declension.get_image_src(img_src) : '/upload/img/bd/no_photo.png')}) }}
 <div data-page-type="item" {% if item.restaurant_premium %} data-premium-rest="{{item.restaurant_gorko_id}}" {% endif %}>
     <div class="content_block" data-listing-title>
         {{ this.render('//components/generic/item_title.twig', {'seo':seo, 'item':item}) | raw }}
@@ -393,6 +399,11 @@
                     {% set last = item.restaurant_images | length %}
                     {% set lazy = '' %}
                     {% for image in item.restaurant_images %}
+                        {% if image.waterpath %}
+                            {% set img_src = image.waterpath %}
+                        {% else %}
+                            {% set img_src = image.realpath %}
+                        {% endif %}
                         {% set counter = counter + 1 %}
                         {% if counter == last %}
                             {% set lazy = '' %}
@@ -401,8 +412,8 @@
                         <div class="object swiper-slide">
                             <div class="object_img">
                                 <img {{ lazy }}
-                                     src="{{ Declension.get_image_src(image.waterpath~'=w800-h600-l100') }}"
-                                     data-gallery-img-view/>
+                                    src="{{ Declension.get_image_src(img_src~'=w800-h600-l100') }}"
+                                    data-gallery-img-view/>
                             </div>
                         </div>
                         {% set lazyCount = lazyCount - 1 %}
@@ -417,9 +428,14 @@
                 <div class="object_gallery_container swiper-container" data-gallery-thumb-swiper style="">
                     <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
                         {% for image in item.restaurant_images %}
+                            {% if image.subpath %}
+                                {% set img_src = image.subpath %}
+                            {% else %}
+                                {% set img_src = image.realpath %}
+                            {% endif %}
                             <div class="object swiper-slide">
                                 <img loading="lazy"
-                                     src="{{ Declension.get_image_src(image.subpath~'=w150-h90-l80') }}"/>
+                                    src="{{ Declension.get_image_src(img_src~'=w150-h90-l80') }}"/>
                             </div>
                         {% endfor %}
                     </div>
@@ -432,15 +448,20 @@
             <div class="listing_widget_arrow _next"></div>
             <div class="object_gallery_container swiper-container" data-gallery-main-swiper data-gallery-swiper>
                 <div class="object_gallery_swiper swiper-wrapper" data-gallery-list>
-                    {% set breakLoop = false %}
-                    {% for room in item.rooms if breakLoop == false %}
+                   {% set breakLoop = false %}
+                   {% for room in item.rooms if breakLoop == false %}
                         {% if room.images %}
                             {% set breakLoop = true %}
                             {% for image in room.images %}
+                                {% if image.waterpath %}
+                                    {% set img_src = image.waterpath %}
+                                {% else %}
+                                    {% set img_src = image.realpath %}
+                                {% endif %}
                                 <div class="object swiper-slide">
                                     <div class="object_img">
                                         <img loading="lazy"
-                                             src="{{ Declension.get_image_src(image.waterpath~'=w800-h600-l100') }}"
+                                             src="{{ Declension.get_image_src(img_src~'=w800-h600-l100') }}"
                                              data-gallery-img-view/>
                                     </div>
                                 </div>
@@ -460,9 +481,14 @@
                             {% if room.images %}
                                 {% set breakLoop = true %}
                                 {% for image in room.images %}
+                                    {% if image.waterpath %}
+                                        {% set img_src = image.waterpath %}
+                                    {% else %}
+                                        {% set img_src = image.realpath %}
+                                    {% endif %}
                                     <div class="object swiper-slide">
                                         <img loading="lazy"
-                                             src="{{ Declension.get_image_src(image.subpath~'=w150-h90-l80') }}"/>
+                                             src="{{ Declension.get_image_src(img_src~'=w150-h90-l80') }}"/>
                                     </div>
                                 {% endfor %}
                             {% endif %}
@@ -753,19 +779,20 @@
                 <div class="room_object">
 					 	<div class="room_object_slider" data-room-slider>
                     <div class="room_object_img swiper-wrapper">
-                        <div class="room_object_img_item swiper-slide">
-                            {# <img loading="lazy" src="{{ Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') }}"> #}
-                            <img loading="lazy"
-                                 src="{{ same_object.images ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png' }}">
-                        </div>
-                        <div class="room_object_img_item swiper-slide">
-                            <img loading="lazy"
-                                 src="{{ same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : (same_object.images[0] ? Declension.get_image_src(same_object.images[0].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
-                        </div>
-                        <div class="room_object_img_item swiper-slide">
-                            <img loading="lazy"
-                                 src="{{ same_object.images[2] ? Declension.get_image_src(same_object.images[2].subpath~'=w445-h302-n-l95') : (same_object.images[1] ? Declension.get_image_src(same_object.images[1].subpath~'=w445-h302-n-l95') : '/upload/img/bd/no_photo_s.png') }}">
-                        </div>
+                        {% for i in 0..2 %}
+                            {% if same_object.images %}
+                                {% if same_object.images[i].subpath %}
+                                    {% set img_src = Declension.get_image_src(same_object.images[i].subpath~'=w445-h302-n-l95') %}
+                                {% else %}
+                                    {% set img_src = Declension.get_image_src(same_object.images[i].realpath~'=w445-h302-n-l95') %}
+                                {% endif %}
+                            {% else %}
+                                {% set img_src = '/upload/img/bd/no_photo_s.png' %}
+                            {% endif %}
+                            <div class="room_object_img_item swiper-slide">
+                                <img loading="lazy" src="{{ img_src }}">
+                            </div>
+                        {% endfor %}
                     </div>
 						  <div class="swiper-pagination item-gallery-pagination"></div>
 						</div>
@@ -875,8 +902,13 @@
     <div class="map_data_wrap">
         <div class="map_data">
             <div class="map_img_wrap">
+                {% if item.restaurant_images[0].subpath %}
+                    {% set img_src = item.restaurant_images[0].subpath %}
+                {% else %}
+                    {% set img_src = item.restaurant_images[0].realpath %}
+                {% endif %}
                 <img loading="lazy" class="map_img"
-                     src="{{ Declension.get_image_src(item.restaurant_images[0].subpath~'=w710-h472-n-l95') }}">
+                     src="{{ Declension.get_image_src(img_src~'=w710-h472-n-l95') }}">
             </div>
 
             <a href="/catalog/{{ item.restaurant_slug }}/"
