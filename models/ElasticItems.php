@@ -77,9 +77,11 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             'restaurant_max_check',
             'restaurant_avg_check',
             'restaurant_premium',
+			'restaurant_premium_features',
             'rent_room_only_min',
             'rest_banquet_price',
             'banquet_price_person_min',
+			'premium_url',
         ];
     }
 
@@ -137,6 +139,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                     'restaurant_main_type' => ['type' => 'text'],
                     'restaurant_commission' => ['type' => 'integer'],
                     'restaurant_premium'            => ['type' => 'integer'],
+                    'restaurant_premium_features'      => ['type' => 'nested', 'properties' => [
+						'field'      => ['type' => 'text'],
+						'value'      => ['type' => 'object','dynamic' => true],
+					]],
                     'restaurant_types' => ['type' => 'nested', 'properties' => [
                         'id' => ['type' => 'integer'],
                         'name' => ['type' => 'text'],
@@ -208,6 +214,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                     'rent_room_only_min' => ['type' => 'integer'],
                     'banquet_price_person_min' => ['type' => 'integer'],
                     'rest_banquet_price' => ['type' => 'integer'],
+                    'premium_url'                             	=> ['type' => 'text'],
                 ]
             ],
         ];
@@ -260,6 +267,17 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $res = self::updateIndex($params);
     }
 
+    public static function refreshItem($params)
+	{
+		$item = self::findOne($params['gorko_id']);
+
+		if($item){
+			$item->delete();
+		}
+
+		$res = self::updateIndex($params);
+	}
+
     public static function updateIndex($params)
     {
         $connectionMain = new \yii\db\Connection($params['main_connection_config']);
@@ -277,9 +295,18 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->with('yandexReview')
             // ->where(['active' => 1, 'commission' => 2])
             // ->where(['gorko_id' => 499903])
-            ->limit(100000)
-            ->all();
+            ->limit(100000);
 
+        if (!empty($params['gorko_id'])) {
+			$restaurants->andWhere(['gorko_id' => $params['gorko_id']]);
+		}
+
+		$restaurants = $restaurants->all();
+
+        $subdomens = Subdomen::find()
+			->select(['alias', 'city_id'])
+			->indexBy('city_id')
+			->column();
 
         $metroStations = MetroStations::find()->limit(100000)->asArray()->all($connectionMain);
         $metroLines = MetroLines::find()->limit(100000)->asArray()->all($connectionMain);
@@ -309,13 +336,19 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         $connection->open();
         Yii::$app->set('db', $connection);
 
-        $restaurants_premium_base = PremiumRest::find()
-            ->where(['active' => 1, 'channel' => 4])
-            ->limit(100000)
-            ->all();
-        $restaurants_premium_base = ArrayHelper::index($restaurants_premium_base, 'gorko_id');
-
-
+        $now = time();
+		$channel_id = 4;
+		$restaurants_premium_base = ArrayHelper::map(
+			PremiumRest::find()
+				->where(['wait' => 0, 'channel' => $channel_id, 'active' => 1])
+				// ->andWhere(['>', 'finish', $now])
+				->with('premiumFeature')
+				->orderBy(['gorko_id'=>SORT_ASC])
+				->limit(100000)
+				->all(),
+			'gorko_id', 
+			function($model){ return $model->toArray([], ['premiumFeature.elasticValue']); }
+		);
 
         $connection_sat = new \yii\db\Connection($params['site_connection_config']);
         $connection_sat->open();
@@ -326,13 +359,6 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             ->asArray()
             ->all();
         $images_module = ArrayHelper::index($images_module, 'gorko_id');
-
-        $restaurants_premium = RestaurantsPremium::find()
-//            ->where(['>', 'finish', time()])
-            ->limit(100000)
-            ->asArray()
-            ->all();
-        $restaurants_premium = ArrayHelper::index($restaurants_premium, 'gorko_id');
 
         $restaurants_module = RestaurantsModule::find()
             ->limit(100000)
@@ -369,7 +395,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 		$rest_count = count($restaurants);
 		$rest_iter = 0;
 		foreach ($restaurants as $restaurant) {
-			$res = self::addRecord($restaurant, $restaurants_types, $restaurants_specs, $restaurants_extra, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base, $slices);
+			$res = self::addRecord($restaurant, $restaurants_types, $restaurants_specs, $restaurants_extra, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $subdomens, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base, $slices);
 			$all_res .= $res . ' | ';
 			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
@@ -400,7 +426,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         );
     }
 
-    public static function addRecord($restaurant, $restaurants_types, $restaurants_specs, $restaurants_extra, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $restaurants_premium, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base, $slices)
+    public static function addRecord($restaurant, $restaurants_types, $restaurants_specs, $restaurants_extra, $images_module, $restaurants_module, $params, $allLocations, $connectionMain, $connectionSite, $subdomens, $metros_with_same_station, $rooms_spec_module, $restaurants_premium_base, $slices)
     {
         $isExist = false;
 
@@ -423,7 +449,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         //       return 'Не платный';
         //   }
 
-        $premium = isset($restaurants_premium[$restaurant->gorko_id]);
+        $premium = isset($restaurants_premium_base[$restaurant->gorko_id]);
 
         if($restaurant->premium_active == 1 && !isset($restaurants_premium_base[$restaurant->gorko_id])){
             return true;
@@ -446,16 +472,16 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         }
 
         try {
-            $record = self::get($restaurant->id);
+            $record = self::get($restaurant->gorko_id);
             if (!$record) {
                 $record = new self();
-                $record->setPrimaryKey($restaurant->id);
+                $record->setPrimaryKey($restaurant->gorko_id);
             } else {
                 $isExist = true;
             }
         } catch (\Exception $e) {
             $record = new self();
-            $record->setPrimaryKey($restaurant->id);
+            $record->setPrimaryKey($restaurant->gorko_id);
         }
 
 
@@ -540,8 +566,36 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                 break;
         }
 
-        if(isset($restaurants_premium_base[$restaurant->gorko_id]) && $restaurants_premium_base[$restaurant->gorko_id]->proxy_phone){
-            $proxy_phone = $restaurants_premium_base[$restaurant->gorko_id]->proxy_phone;
+        $premium_restaurant_price = 0;
+		$rooms_name = [];
+		$rooms_hide = [];
+		$rooms_price = [];
+
+        $record->restaurant_premium = 0;
+        if ($premium){
+            $record->restaurant_premium = 1;
+        }
+
+        if(!empty($restaurants_premium_base[$restaurant->gorko_id]['premiumFeature'])){
+			$premium_features = [];
+			foreach ($restaurants_premium_base[$restaurant->gorko_id]['premiumFeature'] as $premium_feature) {
+				$premium_features[$premium_feature['feature_id']] = [
+					'field' => $premium_feature['feature_id'],
+					'value' => $premium_feature['elasticValue'],
+				];
+			}
+			$record->restaurant_premium_features = $premium_features;
+
+			/** begin - применение свойств из премиум базы */
+			if(!empty($premium_features[15]['value'])) $rooms_hide = $premium_features[15]['value']; // скрытие зала
+			if(!empty($premium_features[14]['value'])) $rooms_name = $premium_features[14]['value']; // название зала
+			if(!empty($premium_features[18]['value'])) $premium_restaurant_price = $premium_features[18]['value'];
+			if(!empty($premium_features[19]['value'])) $rooms_price = $premium_features[19]['value'];
+			/** end */
+		}
+
+        if(!empty($restaurants_premium_base[$restaurant->gorko_id]['proxy_phone']) ){
+            $proxy_phone = $restaurants_premium_base[$restaurant->gorko_id]['proxy_phone'];
             if(  preg_match( '/^\+\d(\d{3})(\d{3})(\d{2})(\d{2})$/', $proxy_phone,  $matches ) )
             {
                 $proxy_phone_pretty = '+7 ('.$matches[1].') '.$matches[2].'-'. $matches[3].'-'. $matches[4];
@@ -687,12 +741,6 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         }
         $record->restaurant_images = $images;
 
-        //Локальный премиум
-        $record->restaurant_premium = 0;
-        if ($premium)
-            $record->restaurant_premium = 1;
-
-
         //Тип помещения
         $type_arr = [
             '1' => '1', //Ресторан
@@ -812,6 +860,15 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             }
         }
 
+        if(isset($subdomens[$restaurant->city_id])) {
+			$record->premium_url = sprintf(
+				'https://%s%s/catalog/%s/', 
+				($subdomens[$restaurant->city_id] == '' ? '' : $subdomens[$restaurant->city_id] . '.'), 
+				'birthday-place.ru',
+				$record->restaurant_slug
+			);
+		}
+
 
         //Св-ва залов
         $rooms = [];
@@ -839,6 +896,34 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                 continue;
             }
 
+            if(is_array($rooms_hide) && !empty($rooms_hide) && in_array($room->gorko_id, $rooms_hide)){
+				continue;
+			}
+
+            $name = $room->name;
+			if(!empty($rooms_name[$room->gorko_id])){
+				$name = $rooms_name[$room->gorko_id];
+			}
+
+            $room_payment_model = $room->payment_model;
+			$room_price = $room->price;
+			$room_banquet_price = $room->banquet_price;
+			$room_banquet_price_person = $room->banquet_price_person;
+			$room_banquet_price_min = $room->banquet_price_min;
+			$room_rent_only = $room->rent_only;
+			$room_rent_room_only = $room->rent_room_only;
+			if(!empty($rooms_price[$room->gorko_id])){
+				$rooms_price_item = $rooms_price[$room->gorko_id];
+
+				if(isset($rooms_price_item['payment_model']) and $rooms_price_item['payment_model'] !== '') $room_payment_model = $rooms_price_item['payment_model'];
+				if(isset($rooms_price_item['price']) and $rooms_price_item['price'] !== '') $room_price = $rooms_price_item['price'];
+				if(isset($rooms_price_item['banquet_price']) and $rooms_price_item['banquet_price'] !== '') $room_banquet_price = $rooms_price_item['banquet_price'];
+				if(isset($rooms_price_item['banquet_price_person']) and $rooms_price_item['banquet_price_person'] !== '') $room_banquet_price_person = $rooms_price_item['banquet_price_person'];
+				if(isset($rooms_price_item['banquet_price_min']) and $rooms_price_item['banquet_price_min'] !== '') $room_banquet_price_min = $rooms_price_item['banquet_price_min'];
+				if(isset($rooms_price_item['rent_only']) and $rooms_price_item['rent_only'] !== '') $room_rent_only = $rooms_price_item['rent_only'];
+				if(isset($rooms_price_item['rent_room_only']) and $rooms_price_item['rent_room_only'] !== '') $room_rent_room_only = $rooms_price_item['rent_room_only'];
+			}
+
             $room_arr = [];
 
             if ($row = (new \yii\db\Query())->select('slug')->from('restaurant_slug')->where(['gorko_id' => $room->gorko_id])->one()) {
@@ -855,39 +940,35 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             }
 
             // dj не должен попадать в залы
-            if ($room->id == '33324')
-                continue;
+            if ($room->id == '33324') continue;
 
             $room_arr['id'] = $room->id;
             $room_arr['gorko_id'] = $room->gorko_id;
             $room_arr['restaurant_id'] = $room->restaurant_id;
-            $room_arr['price'] = $room->price;
+            $room_arr['price'] = $room_price;
             if($room->restaurant_id == 474269)
-                $room_arr['price'] = 4500;
+                
 
             $room_arr['capacity_reception'] = $room->capacity_reception;
             $room_arr['capacity'] = $room->capacity;
             $room_arr['capacity_min'] = $room->capacity_min;
             $room_arr['type'] = $room->type;
             $room_arr['rent_only'] = $room->rent_only;
-            $room_arr['banquet_price'] = $room->banquet_price;
+            $room_arr['banquet_price'] = $room_banquet_price;
             $room_arr['bright_room'] = $room->bright_room;
             $room_arr['separate_entrance'] = $room->separate_entrance;
             $room_arr['type_name'] = $room->type_name;
-            $room_arr['name'] = $room->name;
+            $room_arr['name'] = $name;
             $room_arr['restaurant_slug'] = $record->restaurant_slug;
             $room_arr['restaurant_name'] = $restaurant->name;
             $room_arr['restaurant_main_type'] = $record->restaurant_main_type;
             $room_arr['features'] = $room->features;
             $room_arr['cover_url'] = $room->cover_url;
-            $room_arr['banquet_price_person'] = $room->banquet_price_person;
-            if($room->restaurant_id == 474269)
-                $room_arr['banquet_price_person'] = 4500;
-
-            $room_arr['rent_room_only'] = $room->rent_room_only;
-            $room_arr['banquet_price_min'] = $room->banquet_price_min;
-            $room_arr['payment_model_id'] = $room->payment_model;
-            switch ($room->payment_model) {
+            $room_arr['banquet_price_person'] = $room_banquet_price_person;
+            $room_arr['rent_room_only'] = $room_rent_room_only;
+            $room_arr['banquet_price_min'] = $room_banquet_price_min;
+            $room_arr['payment_model_id'] = $room_payment_model;
+            switch ($room_payment_model) {
                 case 1:
                     $room_arr['payment_model'] = 'Только за еду и напитки';
                     break;
@@ -900,6 +981,11 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                 default:
                     $room_arr['payment_model'] = '';
                     break;
+            }
+
+            if($room->restaurant_id == 474269){
+                $room_arr['price'] = 4500;
+                $room_arr['banquet_price_person'] = 4500;
             }
 
             //Картинки залов
@@ -944,10 +1030,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             }
             $room_arr['images'] = $images;
 
-            if (!empty($room->price)) {
-                $min_price = $min_price > $room->price ? $room->price : $min_price;
-                $max_price = $max_price < $room->price ? $room->price : $max_price;
-                $sum_price += $room->price;
+            if (!empty($room_price)) {
+                $min_price = $min_price > $room_price ? $room_price : $min_price;
+                $max_price = $max_price < $room_price ? $room_price : $max_price;
+                $sum_price += $room_price;
                 $count_room++;
             }
 

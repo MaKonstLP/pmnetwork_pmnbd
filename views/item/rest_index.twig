@@ -659,42 +659,54 @@
                 </div>
             </div>
 
-            {% if item.restaurant_special_array %}
+            {% if item.restaurant_special_array or item.restaurant_premium_features[3].value %}
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title _mb">Особенности</p>
-                        {% for spec in item.restaurant_special_array %}
-                            {% if spec.link %}
-                                {% if spec.name == 'Музыкальное оборудование' %}
-                                    <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">Караоке</a></p>
+                        {% if item.restaurant_premium_features[3].value %}
+                            {% for spec in item.restaurant_premium_features[3].value|split(',')  %}
+                                <p class="rest_desc_value _check">{{ spec }}</p>
+                            {% endfor %}
+                        {% else %}
+                            {% for spec in item.restaurant_special_array %}
+                                {% if spec.link %}
+                                    {% if spec.name == 'Музыкальное оборудование' %}
+                                        <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">Караоке</a></p>
+                                    {% else %}
+                                        <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">{{ spec.name }}</a></p>
+                                    {% endif %}
                                 {% else %}
-                                    <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">{{ spec.name }}</a></p>
+                                    {% if special.name == 'Музыкальное оборудование' %}
+                                        <p class="rest_desc_value _check">Караоке</p>
+                                    {% else %}
+                                        <p class="rest_desc_value _check">{{ spec.name }}</p>
+                                    {% endif %}
                                 {% endif %}
-                            {% else %}
-                                {% if special.name == 'Музыкальное оборудование' %}
-                                    <p class="rest_desc_value _check">Караоке</p>
-                                {% else %}
-                                    <p class="rest_desc_value _check">{{ spec.name }}</p>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
 
-            {% if item.restaurant_extra %}
+            {% if item.restaurant_extra or item.restaurant_premium_features[2].value %}
                 <div class="rest_desc_col">
                     <div class="rest_desc_item">
                         <p class="rest_desc_title _mb">За дополнительную плату</p>
-                        {% for extra in item.restaurant_extra %}
-                            {% if extra.link %}
-                                <p class="rest_desc_value _check">
-                                    <a href="/catalog/{{ extra.link }}/">{{ extra.name }}</a>
-                                </p>
-                            {% else %}
-                                <p class="rest_desc_value _check">{{ extra.name }}</p>
-                            {% endif %}
-                        {% endfor %}
+                        {% if item.restaurant_premium_features[2].value %}
+                            {% for extra in item.restaurant_premium_features[2].value|split(',')  %}
+                                <p class="rest_desc_value _check">{{ extra }}</p>
+                            {% endfor %}
+                        {% else %}
+                            {% for extra in item.restaurant_extra %}
+                                {% if extra.link %}
+                                    <p class="rest_desc_value _check">
+                                        <a href="/catalog/{{ extra.link }}/">{{ extra.name }}</a>
+                                    </p>
+                                {% else %}
+                                    <p class="rest_desc_value _check">{{ extra.name }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -709,6 +721,20 @@
                     {#<p class="rest_desc_title">Описание</p>#}
                     <div class="rest_desc_value">
                         {{ seo.text_1|raw }}
+                    </div>
+                    {# <div class="seo_text_control" data-seo-control>
+                        <p class="_link">Показать полностью</p>
+                    </div> #}
+                </div>
+            </div>
+        {% endif %}
+        {% if item.restaurant_premium_features[1].value %}
+            <div class="rest_desc_text">
+                {# <div class="rest_desc_item seo_text" data-seo-text> #}
+                <div class="rest_desc_item seo_text">
+                    {#<p class="rest_desc_title">Описание</p>#}
+                    <div class="rest_desc_value">
+                        {{ item.restaurant_premium_features[1].value|raw }}
                     </div>
                     {# <div class="seo_text_control" data-seo-control>
                         <p class="_link">Показать полностью</p>
