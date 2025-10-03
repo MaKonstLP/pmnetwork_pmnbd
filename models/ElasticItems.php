@@ -486,6 +486,13 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             $record->setPrimaryKey($restaurant->gorko_id);
         }
 
+        $has_karaoke_room = false;
+        foreach ($restaurant->rooms as $idx => $room) {
+            $has_karaoke_room = str_contains(mb_strtolower($room->name), 'караоке');
+
+            if($has_karaoke_room) break;
+        }
+
 
         //Св-ва ресторана
         $record->id = $restaurant->id;
@@ -516,7 +523,7 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         //Особенности реста
         //'value в restaurants_specials' => 'значение params в slices'
         $specs_arr = [
-            '49' => '12', //Караоке
+            '49' => '12', //Музыкальное оборудование
             '53' => '5', //Велком зона
             '8' => '6', //Вай фай
             '9' => '4', //Сцена
@@ -535,6 +542,10 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
                 $slice_params = json_decode($slice['params'], true);
                 $rest_spec_id = isset($specs_arr[$value]) ? $specs_arr[$value] : '';
 
+                if ($has_karaoke_room) {
+                    $rest_spec_id = 999;
+                }
+
                 if (count($slice_params) == 1 && isset($slice_params['dopolnitelno']) && $slice_params['dopolnitelno'] == $rest_spec_id) {
                     $restaurant_specs_arr['link'] = $slice['alias'];
                 }
@@ -544,7 +555,11 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
         }
         $record->restaurant_special_array = $restaurant_specs;
 
-
+        if ($has_karaoke_room) {
+            $specialArray = $record->restaurant_special_array;
+            $specialArray[] = ['id' => 999, 'name' => 'Караоке'];
+            $record->restaurant_special_array = $specialArray;
+        }
 
 
         switch ($restaurant->gorko_id) {
@@ -810,6 +825,12 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
             array_push($restaurant_specials, $restaurant_specials_arr);
         }
         $record->restaurant_specials = $restaurant_specials;
+
+        if ($has_karaoke_room) {
+            $specialsArray = $record->restaurant_specials;
+            $specialsArray[] = ['id' => 999];
+            $record->restaurant_specials = $specialsArray;
+        }
 
         //Extra
         //'value в restaurants_extra' => 'значение params в slices'

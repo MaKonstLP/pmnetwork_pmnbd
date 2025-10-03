@@ -696,17 +696,9 @@
                         {% else %}
                             {% for spec in item.restaurant_special_array %}
                                 {% if spec.link %}
-                                    {% if spec.name == 'Музыкальное оборудование' %}
-                                        <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">Караоке</a></p>
-                                    {% else %}
                                         <p class="rest_desc_value _check"><a href="/catalog/{{ spec.link }}/">{{ spec.name }}</a></p>
-                                    {% endif %}
                                 {% else %}
-                                    {% if special.name == 'Музыкальное оборудование' %}
-                                        <p class="rest_desc_value _check">Караоке</p>
-                                    {% else %}
                                         <p class="rest_desc_value _check">{{ spec.name }}</p>
-                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}

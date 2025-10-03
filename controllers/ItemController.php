@@ -111,9 +111,6 @@ class ItemController extends BaseFrontendController
 			// ===== schemaOrg Product START =====
 			$this->setSchema($rest_item, $room);
 			// ===== schemaOrg Product END =====
-			
-
-			
 
 
 			return $this->render('index.twig', array(
