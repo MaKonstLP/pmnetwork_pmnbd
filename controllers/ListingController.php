@@ -296,6 +296,7 @@ class ListingController extends BaseFrontendController
 		// ===== schemaOrg Product END =====
 
 		$main_flag = ($seo_type == 'listing' and count($params_filter) == 0);
+
 		return $this->render('index.twig', array(
 			'items' => $items->items,
 			'filter' => $filter,

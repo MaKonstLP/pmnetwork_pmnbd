@@ -37,8 +37,13 @@
 
                     {% if item.restaurant_images %}
                         {% for key,image_src in item.restaurant_images %}
+                            {% if image_src.subpath %}
+                                {% set img_src = image_src.subpath %}
+                            {% else %}
+                                {% set img_src = image_src.realpath %}
+                            {% endif %}
                             <div class="swiper-slide">
-                                <img loading="lazy" src="{{ image_src.subpath~'=w360-l100-rw' }}"
+                                <img loading="lazy" src="{{ img_src~'=w360-l100-rw' }}"
                                      {% if index_page %}
                                          {% set key = key + 1 %}
                                          {% if key == 1 %}
@@ -113,8 +118,13 @@
                 {# >{{ item.restaurant_address }}</p> #}
                 {# <!--p class="item_parent_name 11111111111">{{ item.restaurant_name }}</p--> #}
                 {# {% endif %} #}
+                {% if image_src.restaurant_images[0].subpath %}
+                    {% set img_src = image_src.restaurant_images[0].subpath %}
+                {% else %}
+                    {% set img_src = image_src.restaurant_images[0].realpath %}
+                {% endif %}
                 <div class="item_meta-item" data-single-map
-                     data-map_img="{{ Declension.get_image_src(item.restaurant_images[0].subpath~'=w710-h472-n-l95') }}"
+                     data-map_img="{{ Declension.get_image_src(img_src~'=w710-h472-n-l95') }}"
                      data-map_rest_name="{{ item.restaurant_name }}"
                      data-map_rest_href="/catalog/{{ item.restaurant_slug }}/"
                      data-map_rest_address="{{ item.restaurant_address }}"

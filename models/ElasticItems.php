@@ -400,7 +400,9 @@ class ElasticItems extends \yii\elasticsearch\ActiveRecord
 			echo ProgressWidget::widget(['done' => $rest_iter++, 'total' => $rest_count]);
 		}
 
-        self::subdomenCheck($connection_core);
+        if(empty($params['gorko_id'])) {
+            self::subdomenCheck($connection_core);
+        }
 
         echo 'Обновление индекса ' . self::index() . ' ' . self::type() . ' завершено<br>';
         return true;
